@@ -1,3 +1,4 @@
+/*
 import React, {useState} from 'react';
 import LoginForm from './components/Auth/LoginForm';
 import LogoutButton from './components/Auth/LogoutButton';
@@ -5,44 +6,6 @@ import SignupForm from './components/Auth/SignupForm';
 import './App.css';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-
-// 나중에 로그인 이후 로그인폼 감추고 메인만 보이도록 정리하거나.. 페이지 관리 필요 
-// 정하 코드!!
-
-// export default function App() {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-//   const handleLoginSuccess=()=>{
-//     setIsLoggedIn(true);
-//   };
-//   const handleLogout=()=>{
-//     setIsLoggedIn(false);
-//     console.log("로그아웃 되었습니다.");
-//   };
-
-//   return (
-//     <main>
-//       <MainPage />
-//       <ActivityEditorPage />
-//       {isLoggedIn ? (
-//         <>
-//         <h2>환영합니다앙</h2>
-//         <LogoutButton onLogout={handleLogout}/>
-//         <MainPage />
-
-//         </>) : (
-//         <>
-//         <LoginPage onLoginSuccess={handleLoginSuccess}/>
-//         <SignupPage onLoginSuccess={handleLoginSuccess} />
-//         </>
-//         )
-//       }
-//     </main>
-//   );
-// }
-
-// App.jsx (일단 로그인 띄고 메인페이지만 보아게 수정)
-// 단비 코드 !!
 
 import Header from './components/Header/Header';
 import Sidebar from './components/Sidebar/Sidebar';
@@ -54,7 +17,7 @@ function App() {
 
       const handleLoginSuccess=()=>{
         setIsLoggedIn(true);
-      };
+      };/!**!/
       const handleLogout=()=>{
         setIsLoggedIn(false);
         console.log("로그아웃 되었습니다.");
@@ -62,12 +25,12 @@ function App() {
 
     return (
         <div className="App">
-            {/* 사이드바, 메인 영역  배치 */}
+            {/!* 사이드바, 메인 영역  배치 *!/}
             <div style={{display: 'flex', minHeight: '100vh'}}>
-                {/* 왼쪽 사이드바 */}
+                {/!* 왼쪽 사이드바 *!/}
                 <Sidebar/>
 
-                {/* 가운데 메인 영역 */}
+                {/!* 가운데 메인 영역 *!/}
                 <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <Header/>
                     <div style={{padding: '20px', backgroundColor: '#f9fafb', flex: 1}}>
@@ -93,9 +56,19 @@ function App() {
                   }
                 </div>
 
-                {/* 오른쪽 패널 */}
+                {/!* 오른쪽 패널 *!/}
                 <RightPanel/>
             </div>
+        </div>
+    );
+}
+export default App;
+*/
+
+function App() {
+    return (
+        <div className="App">
+            {/* 빈 화면 */}
         </div>
     );
 }
