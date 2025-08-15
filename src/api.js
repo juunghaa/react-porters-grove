@@ -1,9 +1,9 @@
 
-const BASE_URL = process.env.REACT_APP_API_URL;
+// const BASE_URL = process.env.REACT_APP_API_URL;
 
 // 로그인
 export const login = async (email, password) => {
-  const res = await fetch(`${BASE_URL}/api/auth/login/`, {
+  const res = await fetch(`/api/auth/login/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const login = async (email, password) => {
 
 // 내 프로필 조회
 export const getMyProfile = async (token) => {
-  const res = await fetch(`${BASE_URL}/api/profiles/me/`, {
+  const res = await fetch(`/api/profiles/me/`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
