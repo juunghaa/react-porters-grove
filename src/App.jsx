@@ -64,13 +64,52 @@ function App() {
 }
 export default App;
 */
+// import React from "react";
+// import LeftPanel from "./components/LeftPanel/LeftPanel";
+// import MainHome from "./components/MainHome/MainHome";
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <LeftPanel />
+//       <div
+//         className="main-content"
+//         style={{ marginLeft: "240px", transition: "margin-left 0.3s ease" }}
+//       >
+//         <MainHome />
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+import React, { useState } from "react";
+import LeftPanel from "./components/LeftPanel/LeftPanel";
+import MainHome from "./components/MainHome/MainHome";
 
 function App() {
-    return (
-        <div className="App">
-            {/* 빈 화면 */}
-        </div>
-    );
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+
+  const handlePanelToggle = () => {
+    setIsPanelCollapsed(!isPanelCollapsed);
+  };
+
+  return (
+    <div className="App">
+      <LeftPanel isCollapsed={isPanelCollapsed} onToggle={handlePanelToggle} />
+      <div
+        className="main-content"
+        style={{
+          marginLeft: isPanelCollapsed ? "60px" : "240px",
+          transition: "margin-left 0.3s ease",
+          width: `calc(100% - ${isPanelCollapsed ? "60px" : "240px"})`,
+        }}
+      >
+        <MainHome />
+      </div>
+    </div>
+  );
 }
 
 export default App;
