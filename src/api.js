@@ -54,18 +54,37 @@ export const register = async (email, password1, password2) => {
 };
 
 // 구글 로그인 - 소셜 로그인 
-export const googleLogin = async (access_token) => {
-  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google/implicit/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ access_token }),
-  });
+// export const googleLogin = async (access_token) => {
+//   const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google/implicit/`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ access_token }),
+//   });
 
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || 'Google 로그인 실패');
-  }
-  return await res.data; // access, refresh, user
-};
+//   if (!res.ok) {
+//     const error = await res.json();
+//     throw new Error(error.message || 'Google 로그인 실패');
+//   }
+//   return await res.data; // access, refresh, user
+// };
+
+// api/index.js 등
+export const googleLogin = async (code) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ code }),
+    });
+  
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || 'Google 로그인 실패');
+    }
+  
+    return await res.json();  // ✅ access, refresh 토큰이 포함된 응답 객체
+  };
+  
