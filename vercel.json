@@ -1,0 +1,10 @@
+
+  {
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "http://YOUR_HTTP_BACKEND/$1"
+      }
+    ]
+  }
+  
