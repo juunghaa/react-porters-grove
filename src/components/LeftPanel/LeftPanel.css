@@ -1,0 +1,229 @@
+.left-panel {
+  width: 240px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.left-panel.collapsed {
+  width: 60px;
+}
+
+.panel-header {
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  white-space: nowrap;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.toggle-icon {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.navigation {
+  padding: 0 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background-color: #c3e9a0;
+  color: #065f46;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bottom-section {
+  padding: 0 8px;
+  margin-top: auto;
+}
+
+.github-status {
+  padding: 16px 0;
+  border-top: 1px solid #e9ecef;
+  margin-bottom: 16px;
+}
+
+.github-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.github-icon {
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.github-text {
+  font-size: 13px;
+  color: #4a5568;
+  flex: 1;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #48bb78;
+}
+
+.settings-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 16px;
+}
+
+/* 접힌 상태에서 텍스트 숨김 */
+.left-panel.collapsed .nav-text,
+.left-panel.collapsed .logo-text,
+.left-panel.collapsed .github-text {
+  display: none;
+}
+
+.left-panel.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+.left-panel.collapsed .github-item {
+  justify-content: center;
+  padding: 8px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .left-panel {
+    width: 60px;
+  }
+
+  .left-panel .nav-text,
+  .left-panel .logo-text,
+  .left-panel .github-text {
+    display: none;
+  }
+
+  .left-panel .nav-item {
+    justify-content: center;
+    padding: 12px 8px;
+  }
+
+  .left-panel .github-item {
+    justify-content: center;
+    padding: 8px;
+  }
+}
+
+/* 부드러운 전환 효과 추가 */
+.left-panel * {
+  transition: all 0.3s ease;
+}
+
+.nav-text,
+.logo-text,
+.github-text {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.1s;
+}
+
+.left-panel.collapsed .nav-text,
+.left-panel.collapsed .logo-text,
+.left-panel.collapsed .github-text {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+/*로고 이미지*/
+.logo-img {
+  width: 100px; /* 원하는 크기로 조절 */
+  height: auto;
+  padding-left: 75px;
+  object-fit: contain;
+}

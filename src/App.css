@@ -4,13 +4,13 @@
   padding: 2rem;
   border-radius: 10px;
   margin: auto;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center; /* input 중앙 정렬 */
   width: 100%; /* 너비 100%로 설정 */
   min-width: 400px;
-} 
+}
 .login-title {
   font-size: 1.4rem;
   font-weight: bold;
@@ -19,7 +19,7 @@
 }
 .login-subtitle {
   text-align: center;
-  color: #CFD5DD;
+  color: #cfd5dd;
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
@@ -37,7 +37,7 @@
 .input-group input {
   padding: 0.75rem;
   border-radius: 6px;
-  border: 1px solid #CFD5DD;
+  border: 1px solid #cfd5dd;
   background-color: #313845;
   font-size: 1rem;
   color: white;
@@ -47,7 +47,7 @@
 .error-text {
   color: #e05757;
   font-size: 0.9rem;
-  margin-top: 0.40rem;
+  margin-top: 0.4rem;
   margin-bottom: 0.5rem;
 }
 .input-error {
@@ -69,13 +69,12 @@
   text-align: center;
 }
 
-
 .login-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
-  
+
   width: 30%; /*로그인폼의 퍼센트 비율만큼 로그인 옵션이 차지함*/
   min-width: 400px;
   margin-left: auto;
@@ -141,7 +140,6 @@
   }
 }
 
-
 .logout-button {
   background-color: #dc3545;
   color: white;
@@ -199,12 +197,12 @@
   background-color: #218838;
 } */
 
-
 /* 구글 로그인 버튼 로고는 아래 주소
 https://developers.google.com/identity/branding-guidelines#download-brand-icons
 참고함 */
 
-.google-login-button, .google-login-button * {
+.google-login-button,
+.google-login-button * {
   cursor: pointer;
 }
 .google-login-button {
@@ -212,12 +210,12 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
   align-items: center;
   justify-content: center;
   gap: 10px; /* 아이콘과 텍스트 간격 */
-  
+
   width: 100%;
   max-width: 350px;
   height: 45px;
   padding: 16px 24px;
-  
+
   background-color: white;
   color: #333;
   font-weight: 500;
@@ -225,15 +223,14 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   cursor: pointer;
   transition: box-shadow 0.2s ease;
 }
 .google-login-button:hover {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
-
 
 /* App.css */
 .main-page {
