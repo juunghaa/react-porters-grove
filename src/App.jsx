@@ -4,7 +4,7 @@
            import LogoutButton from './components/Auth/LogoutButton';
            import './App.css';
            
-function App() {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [view, setView] = useState('login'); 
   
@@ -13,13 +13,6 @@ function App() {
     const access = localStorage.getItem('access');
     setIsLoggedIn(!!access); }, []);
 
-  // const handleLoginSuccess=()=>{
-  //   setIsLoggedIn(true);
-  //   };
-  // const handleLogout=()=>{
-  //   setIsLoggedIn(false);
-  //   console.log("로그아웃 되었습니다.");
-  //   };
   // 로그인/회원가입 공통 성공 처리
   const handleAuthSuccess = (data) => {
     if (data?.access) localStorage.setItem('access', data.access);
@@ -42,6 +35,8 @@ function App() {
         <div className="App">
             빈 화면
             <h1>포트폴리오 사이트</h1>
+        
+        
         {isLoggedIn ? (
           <>
           <h2>환영합니다앙</h2>
@@ -59,11 +54,7 @@ function App() {
           ) : (
             <SignupPage onLoginSuccess={handleAuthSuccess} />
           )}
-
-            {/* <h2>아직 로그인 안됨</h2>
-            
-            <LoginPage onLoginSuccess={handleLoginSuccess}/>
-            <SignupPage onLoginSuccess={handleLoginSuccess} /> */}
+          {/* 나중에 각각 로그인 회원가입 버튼 여기 위에 형식 맞게 적용해서 넣으면 됩니당!!!!! */}
             
             </>
             )
@@ -157,4 +148,3 @@ function App() {
 //   );
 }
 
-export default App;

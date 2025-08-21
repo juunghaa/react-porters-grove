@@ -45,7 +45,7 @@ export default function GoogleLoginButton() {
   };
 
   return (
-    <button onClick={handleGoogle} className="google-login-button">
+    <button type="button" onClick={handleGoogle} className="google-login-button">
       <img src="/google-icon.svg" alt="Google" width="20" height="20" />
       Google로 로그인
     </button>

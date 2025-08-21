@@ -11,7 +11,7 @@ export default function GitHubLoginButton() {
   };
 
   return (
-    <button onClick={handleGitHubLogin} className="github-login-button" aria-label="Sign in with GitHub">
+    <button type="button" onClick={handleGitHubLogin} className="github-login-button" aria-label="Sign in with GitHub">
       <img src="/github-icon.svg" alt="" width="20" height="20" />
       GitHub로 로그인
     </button>
