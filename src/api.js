@@ -8,7 +8,7 @@ export const login = async (email, password) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, username: email, password }),
+    body: JSON.stringify({ username: email, password }),
   });
 
   const data = await res.json();
@@ -88,6 +88,6 @@ export const googleLogin = async (code) => {
       throw new Error(error.message || 'Google 로그인 실패');
     }
   
-    return await res.json();  // ✅ access, refresh 토큰이 포함된 응답 객체
+    return await res.json();  // access, refresh 토큰이 포함된 응답 객체
   };
   

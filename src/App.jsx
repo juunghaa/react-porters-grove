@@ -1,21 +1,42 @@
-           import React, {useState} from 'react';
-           import LoginForm from './components/Auth/LoginForm';
-           import LogoutButton from './components/Auth/LogoutButton';
-           import SignupForm from './components/Auth/SignupForm';
-           import './App.css';
+           import React, {useEffect, useState} from 'react';
            import LoginPage from './pages/LoginPage';
            import SignupPage from './pages/SignupPage';
+           import LogoutButton from './components/Auth/LogoutButton';
+           import './App.css';
            
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [view, setView] = useState('login'); 
   
-  const handleLoginSuccess=()=>{
+  // 새로고침해도 유지
+  useEffect(() => {
+    const access = localStorage.getItem('access');
+    setIsLoggedIn(!!access); }, []);
+
+  // const handleLoginSuccess=()=>{
+  //   setIsLoggedIn(true);
+  //   };
+  // const handleLogout=()=>{
+  //   setIsLoggedIn(false);
+  //   console.log("로그아웃 되었습니다.");
+  //   };
+  // 로그인/회원가입 공통 성공 처리
+  const handleAuthSuccess = (data) => {
+    if (data?.access) localStorage.setItem('access', data.access);
+    if (data?.refresh) localStorage.setItem('refresh', data.refresh);
+    // 필요하면 user도 저장: localStorage.setItem('user', JSON.stringify(data.user));
     setIsLoggedIn(true);
-    };
-    const handleLogout=()=>{
-      setIsLoggedIn(false);
-      console.log("로그아웃 되었습니다.");
-      };
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
+    // localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    setView('login');
+    console.log('로그아웃 되었습니다.');
+  };
+
 
     return (
         <div className="App">
@@ -28,11 +49,22 @@ function App() {
           
           </>) : (
             <>
-            
-            <h2>아직 로그인 안됨</h2>
+            <div style={{ marginBottom: 12 }}>
+            <button onClick={() => setView('login')} disabled={view==='login'}>로그인</button>
+            <button onClick={() => setView('signup')} disabled={view==='signup'}>회원가입</button>
+            </div>
+
+          {view === 'login' ? (
+            <LoginPage onLoginSuccess={handleAuthSuccess} />
+          ) : (
+            <SignupPage onLoginSuccess={handleAuthSuccess} />
+          )}
+
+            {/* <h2>아직 로그인 안됨</h2>
             
             <LoginPage onLoginSuccess={handleLoginSuccess}/>
-            <SignupPage onLoginSuccess={handleLoginSuccess} />
+            <SignupPage onLoginSuccess={handleLoginSuccess} /> */}
+            
             </>
             )
             }
