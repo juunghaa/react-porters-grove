@@ -1,6 +1,7 @@
 // 로그인 UI
 import React, { useState } from 'react';
 import GoogleLoginButton from './GoogleLoginButton';
+import GitHubLoginButton from './GitHubLoginButton';
 import { login } from '../../api'; // ← 실제 경로에 맞게 수정
 
 export default function LoginForm({ onLoginSuccess }) {
@@ -91,6 +92,7 @@ export default function LoginForm({ onLoginSuccess }) {
 
       <div className="divider">또는</div>
       <GoogleLoginButton onLoginSuccess={onLoginSuccess} />
+      <GitHubLoginButton />
     </form>
   );
 }

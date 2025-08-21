@@ -205,7 +205,8 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 .google-login-button * {
   cursor: pointer;
 }
-.google-login-button {
+.google-login-button,
+.github-login-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,6 +216,7 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
   max-width: 350px;
   height: 45px;
   padding: 16px 24px;
+
 
   background-color: white;
   color: #333;
@@ -231,6 +233,7 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 .google-login-button:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
+.google-login-button + .github-login-button { margin-top: 15px; }
 
 /* App.css */
 .main-page {

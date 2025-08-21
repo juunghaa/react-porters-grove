@@ -56,24 +56,8 @@ export const register = async (email, password1, password2) => {
   return data; // { access, refresh, user }
 };
 
-// 구글 로그인 - 소셜 로그인 
-// export const googleLogin = async (access_token) => {
-//   const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google/implicit/`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ access_token }),
-//   });
-
-//   if (!res.ok) {
-//     const error = await res.json();
-//     throw new Error(error.message || 'Google 로그인 실패');
-//   }
-//   return await res.data; // access, refresh, user
-// };
-
-// api/index.js 등
+// 구글 로그인 - 소셜 로그인 ****만약 백엔드 올인 -> api 구글 로그인은 필요 없음!!
+// 백엔드 올인 아닐 경우 api.js 필요하니까 수정해야 함.... 
 export const googleLogin = async (code) => {
     const res = await fetch(`/api/auth/google/`, {
       method: 'POST',
