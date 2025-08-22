@@ -10,7 +10,7 @@ import settingsIcon from "../../assets/icons/Settings.png";
 import logoutIcon from "../../assets/icons/Logout.png";
 import logoIcon from "../../assets/icons/logo.png";
 
-const LeftPanel = ({ isCollapsed, onToggle }) => {
+const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick }) => {
   return (
     <div className={`left-panel ${isCollapsed ? "collapsed" : ""}`}>
       <div className="panel-header">
@@ -30,7 +30,7 @@ const LeftPanel = ({ isCollapsed, onToggle }) => {
 
       <div className="panel-content">
         <nav className="navigation">
-          <div className="nav-item">
+          <div className="nav-item" onClick={onHomeClick}>
             <div className="nav-icon">
               <img src={homeIcon} alt="홈" className="icon-img" />
             </div>
@@ -38,11 +38,12 @@ const LeftPanel = ({ isCollapsed, onToggle }) => {
             {!isCollapsed && <span className="nav-text">홈</span>}
           </div>
 
-          <div className="nav-item">
+          <div className="nav-item" onClick={onCreateNew}>
+            {" "}
+            {/*새 페이지 만들기 이동 */}
             <div className="nav-icon">
               <img src={plusIcon} alt="추가하기" className="icon-img" />
             </div>
-
             {!isCollapsed && <span className="nav-text">새로 만들기</span>}
           </div>
 
