@@ -1,52 +1,25 @@
-// // GoogleLoginButton.jsx
-// import React from 'react';
-// import { signInWithPopup } from 'firebase/auth';
-// import { auth, provider } from '../../firebase';
-// import { googleLogin } from '../../api';
+import React from 'react';
 
-// export default function GoogleLoginButton({ onLoginSuccess }) {
-//   const handleGoogleLogin = async () => {
-//     try {
-//       const result = await signInWithPopup(auth, provider);
-//       const token = await result.user.getIdToken();
-
-//       const credential = provider.credentialFromResult(result);
-//       const accessToken = credential?.accessToken;
-//       if(!accessToken) {
-//         throw new Error('Google access token이 없습니다.');
-//       }
-
-//       const res = await googleLogin(accessToken);
-//       localStorage.setItem('access', res.access);
-//       localStorage.setItem('refresh', res.refresh);
-//       console.log('구글 로그인 성공:', result.user);
-//       onLoginSuccess();  // 로그인 성공시 상태 업데이트
-//     } catch (error) {
-//       console.error('구글 로그인 실패:', error);
-//     }
-//   };
-
-//   return (
-//     <button onClick={handleGoogleLogin} className="google-login-button">
-//       <img src="/google-icon.svg" alt="Google logo image" width="20" height="20" />
-//       Google로 로그인
-//     </button>
-//   );
-// }
-
-
-// GoogleLoginButton.jsx
 export default function GoogleLoginButton() {
   const handleGoogle = () => {
-    // 로그인 완료 후 돌아올 프론트 경로
-    const next = encodeURIComponent(window.location.origin + '/oauth/done');
-    // 백엔드가 만든 "구글 로그인 시작" 엔드포인트로 이동
-    window.location.href = `/api/auth/google/login?next=${next}`;
+    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+    const redirectUri = `${window.location.origin}/?provider=google`; // ✅ 라우터 없이 루트 사용
+    const scope = encodeURIComponent('openid email profile');
+    const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+    sessionStorage.setItem('oauth_state_google', state);
+  
+    const url =
+      'https://accounts.google.com/o/oauth2/v2/auth' +
+      `?response_type=code&client_id=${encodeURIComponent(clientId)}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&scope=${scope}&state=${state}&access_type=offline&prompt=consent`;
+  
+    window.location.href = url;
   };
-
+  
   return (
     <button type="button" onClick={handleGoogle} className="google-login-button">
-      <img src="/google-icon.svg" alt="Google" width="20" height="20" />
+      <img src="/google-icon.svg" alt="" width="20" height="20" />
       Google로 로그인
     </button>
   );

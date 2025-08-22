@@ -1,28 +1,42 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { googleLogin } from '../api'; // 백엔드 POST 요청 보내는 함수
-
+import { exchangeGoogleCode, exchangeGithubCode } from '../api';
 
 export default function OAuthCallback() {
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-    const code = new URLSearchParams(window.location.search).get('code');
-    const fetchToken = async () => {
-      try {
-        const res = await googleLogin(code);  // 백엔드에 code 전달
-        localStorage.setItem('access', res.access);
-        localStorage.setItem('refresh', res.refresh);
-        navigate('/');  // 로그인 후 홈으로 이동
-      } catch (error) {
-        console.error('OAuth 처리 실패:', error);
-      }
-    };
+  const nav = useNavigate();
+  const provider = window.location.pathname.includes('/oauth/github') ? 'github' : 'google';
 
-    if (code) {
-      fetchToken();
-    }
-  }, [navigate]);
+  useEffect(() => {
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const state = params.get('state');
 
-  return <p>로그인 처리 중입니다...</p>;
+      // state 검증(권장)
+      const key = provider === 'github' ? 'oauth_state_github' : 'oauth_state_google';
+      const expect = sessionStorage.getItem(key);
+      sessionStorage.removeItem(key);
+      if (expect && state && expect !== state) throw new Error('잘못된 요청입니다');
+
+      if (!code) throw new Error('code가 없습니다');
+
+      const redirectUri = `${window.location.origin}/oauth/${provider}`;
+      const exch = provider === 'github' ? exchangeGithubCode : exchangeGoogleCode;
+      const data = await exch(code, redirectUri); // { access, refresh, user }
+
+      localStorage.setItem('access', data.access);
+      localStorage.setItem('refresh', data.refresh);
+      // localStorage.setItem('user', JSON.stringify(data.user)); // 원하면
+
+      window.location.replace('/');
+    })().catch(err => {
+      console.error(err);
+      alert(`소셜 로그인 실패: ${err.message}`);
+      nav('/login');
+    });
+  }, [nav, provider]);
+
+  return <div>소셜 로그인 처리 중…</div>;
 }
+
+

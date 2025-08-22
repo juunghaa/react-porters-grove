@@ -1,18 +1,25 @@
 import React from 'react';
 
 export default function GitHubLoginButton() {
-  const handleGitHubLogin = () => {
-    // 로그인 끝나고 돌아올 프론트 경로(원하면 현재 경로 유지도 가능)
-    const next = encodeURIComponent(window.location.origin + '/oauth/done');
-    // 백엔드에서 준비한 GitHub OAuth 시작 엔드포인트로 이동
-    // (백엔드가 /api/auth/github/login 에서 state 만들고 GitHub로 리다이렉트)
-    window.location.href = `/api/auth/github/login?next=${next}`;
-    // 백엔드가 다른 파라미터명을 쓰면 redirect, redirect_uri 등으로 맞춰 주세요.
-  };
+    const handleGitHub = () => {
+        const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+        const redirectUri = `${window.location.origin}/?provider=github`; // ✅
+        const scope = encodeURIComponent('read:user user:email');
+        const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+        sessionStorage.setItem('oauth_state_github', state);
+      
+        const url =
+          'https://github.com/login/oauth/authorize' +
+          `?client_id=${encodeURIComponent(clientId)}` +
+          `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+          `&scope=${scope}&state=${state}`;
+      
+        window.location.href = url;
+      };      
 
   return (
-    <button type="button" onClick={handleGitHubLogin} className="github-login-button" aria-label="Sign in with GitHub">
-      <img src="/github-icon.svg" alt="" width="20" height="20" />
+    <button type="button" onClick={handleGitHub} className="github-login-button">
+      <img src="/github-mark.svg" alt="" width="20" height="20" />
       GitHub로 로그인
     </button>
   );
