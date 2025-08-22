@@ -27,6 +27,7 @@
 
 import React, { useState } from 'react';
 import { apiLogout, refreshAccess } from '../../api';
+import logoutIcon from "../../assets/icons/Logout.png";
 
 export default function LogoutButton({ onLogout }) {
   const [loading, setLoading] = useState(false);
@@ -61,8 +62,16 @@ export default function LogoutButton({ onLogout }) {
   };
 
   return (
-    <button onClick={handleClick} className="logout-button" disabled={loading}>
-      {loading ? '로그아웃 중…' : '로그아웃'}
-    </button>
+    <div className="nav-item">
+                <div className="nav-icon">
+                  <img src={logoutIcon} alt="로그아웃" className="icon-img" />
+                </div>
+                <span className="nav-text">로그아웃</span>
+                <LogoutButton onLogout={onLogout} />
+              </div>
+
+    // <button onClick={handleClick} className="logout-button" disabled={loading}>
+    //   {loading ? '로그아웃 중…' : '로그아웃'}
+    // </button>
   );
 }

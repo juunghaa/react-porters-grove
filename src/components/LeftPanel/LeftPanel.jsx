@@ -9,8 +9,9 @@ import githubIcon from "../../assets/icons/Github.png";
 import settingsIcon from "../../assets/icons/Settings.png";
 import logoutIcon from "../../assets/icons/Logout.png";
 import logoIcon from "../../assets/icons/logo.png";
+import LogoutButton from "../Auth/LogoutButton";
 
-const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick }) => {
+const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick, onLogout}) => {
   return (
     <div className={`left-panel ${isCollapsed ? "collapsed" : ""}`}>
       <div className="panel-header">
@@ -87,6 +88,7 @@ const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick }) => {
                   <img src={logoutIcon} alt="로그아웃" className="icon-img" />
                 </div>
                 <span className="nav-text">로그아웃</span>
+                <LogoutButton onLogout={onLogout} />
               </div>
             </div>
           </div>
