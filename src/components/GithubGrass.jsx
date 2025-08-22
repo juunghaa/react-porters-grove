@@ -27,8 +27,8 @@ export default function GithubGrass({ username, year = 'last' }) {
   const days = data.days ?? data.contributions ?? [];
 
   return (
-    <div style={{display:'grid', gridTemplateColumns:'repeat(14,12px)', gap:4}}>
-      {days.slice(-14).map(d => (
+    <div style={{display:'grid', gridTemplateColumns:'repeat(7,12px)', gap:4}}>
+      {days.slice(-31).map(d => (
         <div key={d.date}
           title={`${d.date}: ${d.contributionCount ?? d.count}`}
           style={{

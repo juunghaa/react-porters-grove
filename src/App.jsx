@@ -35,7 +35,7 @@ export default function App() {
     return (
         <div className="App">
             빈 화면
-            <GithubGrass username year="last" />
+            <GithubGrass username="octocat" year="last" />
             <h1>포트폴리오 사이트</h1>
         
         
