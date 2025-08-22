@@ -1,0 +1,61 @@
+.choose-option {
+  padding: 24px;
+  background-color: #f9fafb;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.option-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.option-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.option-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.option-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.option-description {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+#retrospective {
+  border-left: 5px solid #3e8e41; /* 초록색 */
+}
+
+#activity-log {
+  border-left: 5px solid #8e3e3e; /* 빨간색 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .choose-option {
+    padding: 16px;
+  }
+}
