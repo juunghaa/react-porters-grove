@@ -19,7 +19,7 @@ export default function GitHubLoginButton() {
 
   return (
     <button type="button" onClick={handleGitHub} className="github-login-button">
-      <img src="/github-mark.svg" alt="" width="20" height="20" />
+      <img src="/github-icon.svg" alt="" width="20" height="20" />
       GitHub로 로그인
     </button>
   );
