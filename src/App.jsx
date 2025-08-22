@@ -1,8 +1,9 @@
-           import React, {useEffect, useState} from 'react';
-           import LoginPage from './pages/LoginPage';
-           import SignupPage from './pages/SignupPage';
-           import LogoutButton from './components/Auth/LogoutButton';
-           import './App.css';
+import React, {useEffect, useState} from 'react';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import LogoutButton from './components/Auth/LogoutButton';
+import './App.css';
+import GithubGrass from './components/GithubGrass';
            
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ export default function App() {
     return (
         <div className="App">
             빈 화면
+            <GithubGrass username year="last" />
             <h1>포트폴리오 사이트</h1>
         
         
@@ -61,6 +63,7 @@ export default function App() {
             }
         </div>
     );
+  }
 //             {/!* 사이드바, 메인 영역  배치 *!/}
 //             <div style={{display: 'flex', minHeight: '100vh'}}>
 //                 {/!* 왼쪽 사이드바 *!/}
@@ -146,5 +149,5 @@ export default function App() {
 //       </div>
 //     </div>
 //   );
-}
+// }
 
