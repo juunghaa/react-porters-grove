@@ -1,30 +1,3 @@
-// 파이어베이스 시절 jsx 코드긴 한데 혹시 몰라서 안지움!!!!!!
-
-// import React from 'react';
-// import { signOut } from "firebase/auth";
-// import { auth } from "../../firebase";
-
-// export default function LogoutButton({onLogout}) {
-//     const handleClick =()=> {
-//         signOut(auth).then(()=>{
-//             console.log("로그아웃 성공");
-//             onLogout();
-//         }).catch((error)=>{
-//             alert("로그아웃 실패: "+error.message);
-//         })
-//         if (typeof onLogout === 'function') {
-//             onLogout();
-//         }
-//     };
-
-//     return (
-//         <button onClick={handleClick} className="logout-button">
-//             로그아웃
-//         </button>
-//     );
-// }
-
-
 import React, { useState } from 'react';
 import { apiLogout, refreshAccess } from '../../api';
 import logoutIcon from "../../assets/icons/Logout.png";
@@ -62,12 +35,11 @@ export default function LogoutButton({ onLogout }) {
   };
 
   return (
-    <div className="nav-item">
+    <div className="nav-item" onClick={handleClick}>
                 <div className="nav-icon">
                   <img src={logoutIcon} alt="로그아웃" className="icon-img" />
                 </div>
                 <span className="nav-text">로그아웃</span>
-                <LogoutButton onLogout={onLogout} />
               </div>
 
     // <button onClick={handleClick} className="logout-button" disabled={loading}>

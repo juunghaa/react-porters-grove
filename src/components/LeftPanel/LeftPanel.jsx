@@ -83,13 +83,13 @@ const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick, onLogout})
                 <span className="nav-text">설정</span>
               </div>
 
-              <div className="nav-item">
+              {/* <div className="nav-item">
                 <div className="nav-icon">
                   <img src={logoutIcon} alt="로그아웃" className="icon-img" />
                 </div>
                 <span className="nav-text">로그아웃</span>
+              </div> */}
                 <LogoutButton onLogout={onLogout} />
-              </div>
             </div>
           </div>
         )}
