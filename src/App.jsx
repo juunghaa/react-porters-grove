@@ -6,10 +6,12 @@ import './App.css';
 import GithubGrass from './components/GithubGrass';
 import OAuthCallback from './pages/OAuthCallback';
 import MainPage from './pages/MainPage';
+import LeftPanel from './components/LeftPanel/LeftPanel';
            
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [view, setView] = useState('login'); 
+  const [loggingOut, setLoggingOut] = useState(false);
   
   // 새로고침해도 유지
   useEffect(() => {
@@ -24,10 +26,14 @@ export default function App() {
     setIsLoggedIn(true);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (loggingOut) return; // 중복 클릭 방지
+    setLoggingOut(true);
+    // await logoutFlow();
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
     // localStorage.removeItem('user');
+    setLoggingOut(false);
     setIsLoggedIn(false);
     setView('login');
     console.log('로그아웃 되었습니다.');
@@ -38,8 +44,7 @@ export default function App() {
         <div className="App">
             빈 화면
             <GithubGrass username="octocat" year="last" />
-            <h1>포트폴리오 사이트</h1>
-        
+            <h1>포트폴리오 사이트</h1>        
         
         {isLoggedIn ? (
           <>
