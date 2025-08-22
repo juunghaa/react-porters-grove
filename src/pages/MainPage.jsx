@@ -4,7 +4,7 @@ import MainHome from "./../components/MainHome/MainHome";
 import ChooseOption from "./../components/ChooseOption/ChooseOption";
 import './../App.css'; // 스타일 적용
 
-export default function App() {
+export default function MainPage({ onLogout }) {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
 
@@ -37,6 +37,7 @@ export default function App() {
         onToggle={handlePanelToggle}
         onCreateNew={handleCreateNew}
         onHomeClick={handleHomeClick}
+        onLogout={onLogout}
       />
       <div
         className="main-content"

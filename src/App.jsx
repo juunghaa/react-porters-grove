@@ -48,7 +48,7 @@ export default function App() {
         
         {isLoggedIn ? (
           <>
-          <MainPage />
+          <MainPage onLogout={handleLogout}/>
           <LogoutButton onLogout={handleLogout}/>
           
           </>) : (
