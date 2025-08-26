@@ -10,15 +10,28 @@ import settingsIcon from "../../assets/icons/Settings.png";
 import logoutIcon from "../../assets/icons/Logout.png";
 import logoIcon from "../../assets/icons/logo.png";
 import LogoutButton from "../Auth/LogoutButton";
+import cutlogo from "../../assets/icons/cutlogo.png";
 
-const LeftPanel = ({ isCollapsed, onToggle, onCreateNew, onHomeClick, onLogout}) => {
+const LeftPanel = ({
+  isCollapsed,
+  onToggle,
+  onCreateNew,
+  onHomeClick,
+  onLogout,
+}) => {
   return (
     <div className={`left-panel ${isCollapsed ? "collapsed" : ""}`}>
       <div className="panel-header">
         <div className="logo-section">
           <div className="logo">
             <div className="logo-icon">
-              <img src={logoIcon} alt="아카이브" className="logo-img" />
+              <img
+                src={isCollapsed ? cutlogo : logoIcon}
+                alt="아카이브"
+                className={
+                  isCollapsed ? "logo-img-collapsed" : "logo-img"
+                } /**iscollapsed상태면 logo-img-collasped로, 아니면 logo-img로 */
+              />
             </div>
           </div>
           <button className="toggle-btn" onClick={onToggle}>

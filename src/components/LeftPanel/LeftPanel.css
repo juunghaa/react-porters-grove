@@ -201,11 +201,6 @@
   }
 }
 
-/* 부드러운 전환 효과 추가 */
-.left-panel * {
-  transition: all 0.3s ease;
-}
-
 .nav-text,
 .logo-text,
 .github-text {
@@ -222,8 +217,15 @@
 
 /*로고 이미지*/
 .logo-img {
-  width: 100px; /* 원하는 크기로 조절 */
+  width: 100px;
   height: auto;
   padding-left: 75px;
+  object-fit: contain;
+}
+
+.logo-img-collapsed {
+  width: 25px;
+  height: auto;
+  padding-left: 15px;
   object-fit: contain;
 }
