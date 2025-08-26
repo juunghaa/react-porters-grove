@@ -1,0 +1,247 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-container {
+  /*실제 사이즈 결정*/
+  display: flex;
+  width: 90%;
+  max-width: 850px;
+  height: 90%;
+  max-height: 600px;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.popup-left-panel {
+  flex: 0 0 35%;
+  background-color: #f9fafb;
+  padding: 30px 20px;
+  border-right: 1px solid #e5e7eb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.panel-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.template-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.template-card {
+  padding: 15px 20px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.title-and-time-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.detail-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.detail-time {
+  font-size: 14px;
+  color: #6b7280;
+  padding: 4px 8px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/*이 템플릿으로 시작 버튼*/
+.startbutton-content {
+  margin-top: auto;
+  align-self: flex-end;
+  width: fit-content;
+}
+
+.start-btn {
+  background-color: #3e8e41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: auto;
+}
+
+.start-btn:hover {
+  background-color: #152416;
+}
+
+/* 선택된 템플릿 스타일 */
+.template-card.selected {
+  border-color: #3e8e41;
+  border-left: 4px solid #3e8e41;
+  background-color: #f0fdf4;
+}
+
+.template-card:hover:not(.selected) {
+  border-color: #c3e9a0;
+}
+
+.card-type {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.card-time {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.cancel-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.popup-right-panel {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
+.details-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.details-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-time {
+  font-size: 14px;
+  color: #6b7280;
+  padding: 4px 8px;
+  background-color: #e5e7eb;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.detail-description {
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.section-text {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.start-btn {
+  background-color: #3e8e41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  align-self: flex-end;
+}
+
+.start-btn:hover {
+  background-color: #357a38;
+}
+
+@media (max-width: 768px) {
+  .popup-container {
+    flex-direction: column;
+    height: 100%;
+    max-height: none;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .popup-left-panel,
+  .popup-right-panel {
+    border-right: none;
+  }
+}
