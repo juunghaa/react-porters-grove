@@ -1,0 +1,131 @@
+.profile-card {
+    background: white;
+    position: sticky;
+    top: 24px;
+    width: 330px;
+    /* width: clamp(100px, 32vw, 330px); */
+    /* max-width: 100%; */
+    /* box-sizing: border-box; */
+    padding: 24px;
+    /* margin-left: auto;  */
+  }
+  
+  .profile-banner {
+    height: 150px;
+    background: linear-gradient(180deg, #b9d7ff 0%, #9bd3c7 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-radius: 32px;
+    /* overflow: hidden; */
+  }
+
+  /* .open-btn {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+    cursor: pointer;
+    font-size: 18px;
+  } */
+  
+  .avatar {
+    width: 80px; 
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -40px; 
+    left: 20%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  
+  .profile-main {
+    display: flex;
+    gap: 12px;
+    padding: 0 16px;
+    margin-top: 50px; 
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .identity .name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+  }
+  .identity .title {
+    font-size: 14px;
+    color: #4a5568;
+    margin-top: 2px;
+  }
+  .identity .tagline {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+  
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 12px 16px 4px;
+    gap: 8px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .stat .num {
+    font-weight: 700;
+    font-size: 16px;
+    color: #111;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  .socials {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 16px 12px;
+  }
+  .social img {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .social.add {
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px dashed rgba(0,0,0,0.25);
+    background: #fff;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .pill {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  .edit-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 6px 16px 0;
+    height: 42px;
+    border-radius: 22px;
+    border: none;
+    background: #111;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .edit-btn:hover { opacity: 0.95; }
+  

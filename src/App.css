@@ -140,7 +140,6 @@
   }
 }
 
-
 .nav-item {
   display: flex;
   align-items: center;
@@ -275,3 +274,7 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 .feature-buttons button {
   margin: 0.5rem;
 }
+/* .App {
+  display: flex;
+  position: relative;
+} */
