@@ -40,34 +40,42 @@ export default function App() {
     console.log("로그아웃 되었습니다.");
   };
 
-    return (
-        <div className="App">
-            {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
+  return (
+    <div className="App">
+      {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
             <GithubGrass username="octocat" year="last" />
             <h1>포트폴리오 사이트</h1> */}
-            {/* <MainPage onLogout={handleLogout}/>  */}
-        
-        {isLoggedIn ? (
-          <>
-          <MainPage onLogout={handleLogout}/>
-          
-          </>) : (
-            <>
-            <div style={{ marginBottom: 12 }}>
-            <button onClick={() => setView('login')} disabled={view==='login'}>로그인</button>
-            <button onClick={() => setView('signup')} disabled={view==='signup'}>회원가입</button>
-            </div>
+      {/* <MainPage onLogout={handleLogout}/>  */}
 
-          {view === 'login' ? (
+      {isLoggedIn ? (
+        <>
+          <MainPage onLogout={handleLogout} />
+        </>
+      ) : (
+        <>
+          <div style={{ marginBottom: 12 }}>
+            <button
+              onClick={() => setView("login")}
+              disabled={view === "login"}
+            >
+              로그인
+            </button>
+            <button
+              onClick={() => setView("signup")}
+              disabled={view === "signup"}
+            >
+              회원가입
+            </button>
+          </div>
+
+          {view === "login" ? (
             <LoginPage onLoginSuccess={handleAuthSuccess} />
           ) : (
             <SignupPage onLoginSuccess={handleAuthSuccess} />
           )}
           {/* 나중에 각각 로그인 회원가입 버튼 여기 위에 형식 맞게 적용해서 넣으면 됩니당!!!!! */}
-            
-            </>
-            )
-            }
-        </div>
-    );
+        </>
+      )}
+    </div>
+  );
 }
