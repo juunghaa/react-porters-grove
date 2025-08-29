@@ -60,33 +60,27 @@ export default function MainPage({ onLogout }) {
           {renderMainContent()}
         </div>
 
-        <div
-          style={{
-            width: "340px",
-            flex: "0 0 340px",
-            position: "sticky",
-            top: "24px",
-            // transition: "margin-right 0.3s ease",
-          }}
-        >
-          <ProfileCard
-            bannerUrl={banner}
-            avatarUrl={avatar}
-            name="김포터"
-            title="Motion designer"
-            tagline="광주에 사는 냥집사 모션 디자이너"
-            stats={{ activities: 18, followers: 22, scraps: 12 }}
-            socials={
-              [
-                //   { name: "LinkedIn", href: "#", icon: "/assets/icons/linkedin.png" },
-                //   { name: "GitHub", href: "https://github.com/...", icon: githubIcon },
-                //   { name: "Dribbble", href: "#", icon: "/assets/icons/dribbble.png" }
-              ]
-            }
-            // onOpen={() => console.log("프로필 상세로 이동")}
-            onEdit={(section) => console.log("편집:", section)}
-          />
-        </div>
+        {currentPage === "home" && (
+          <div
+            style={{
+              width: "340px",
+              flex: "0 0 340px",
+              position: "sticky",
+              top: "24px",
+            }}
+          >
+            <ProfileCard
+              bannerUrl={banner}
+              avatarUrl={avatar}
+              name="김포터"
+              title="Motion designer"
+              tagline="광주에 사는 냥집사 모션 디자이너"
+              stats={{ activities: 18, followers: 22, scraps: 12 }}
+              socials={[]}
+              onEdit={(section) => console.log("편집:", section)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
