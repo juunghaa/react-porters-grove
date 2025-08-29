@@ -95,7 +95,7 @@
     padding: 8px 16px 12px;
   }
   .social img {
-    width: 18px;
+    width: 70px;
     height: 18px;
     display: block;
   }
@@ -130,3 +130,13 @@
   }
   .edit-btn:hover { opacity: 0.95; }
   
+.socials { position: relative; }
+.add-wrapper { position: relative; display: inline-block; }
+.add-menu {
+  position: absolute; bottom: 36px; left: 0;
+  background: #fff; border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  padding: 6px; display: flex; flex-direction: column; gap: 4px; z-index: 10;
+}
+.add-item { padding: 6px 10px; border: none; background: transparent; text-align: left; cursor: pointer; border-radius: 6px; font-size: 13px; }
+.add-item:hover { background: #f3f4f6; }

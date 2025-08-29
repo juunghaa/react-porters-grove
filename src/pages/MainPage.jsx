@@ -10,6 +10,15 @@ import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
 
 export default function MainPage({ onLogout }) {
+ const [profile, setProfile] = useState({
+     name: "김포터",
+     title: "Motion designer",
+     tagline: "광주에 사는 냥집사 모션 디자이너",
+     avatarUrl: avatar,
+     bannerUrl: banner,
+     socials: [], // 소셜도 여기서 보관
+   });
+
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
 
@@ -76,7 +85,7 @@ export default function MainPage({ onLogout }) {
               top: "24px",
             }}
           >
-            <ProfileCard
+            {/* <ProfileCard
               bannerUrl={banner}
               avatarUrl={avatar}
               name="김포터"
@@ -85,6 +94,13 @@ export default function MainPage({ onLogout }) {
               stats={{ activities: 18, followers: 22, scraps: 12 }}
               socials={[]}
               onEdit={(section) => console.log("편집:", section)}
+            /> */}
+            <ProfileCard
+            {...profile}
+            socials={profile.socials}
+            onProfileUpdate={(data) =>
+                setProfile((prev) => ({ ...prev, ...data }))
+            }
             />
           </div>
         )}
