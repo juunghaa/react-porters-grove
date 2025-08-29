@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./ChooseOption.css";
 import ReviewPopup from "./ReviewPopup";
 
-const ChooseOption = () => {
+const ChooseOption = ({ onGoToActivity }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const openPopup = () => {
@@ -22,7 +22,7 @@ const ChooseOption = () => {
             지난 활동을 돌아보고 나만의 회고를 작성하세요.
           </p>
         </div>
-        <div className="option-card" id="activity-log">
+        <div className="option-card" id="activity-log" onClick={onGoToActivity}>
           <h2 className="option-title">활동 기록하기</h2>
           <p className="option-description">
             스터디, 사이드 프로젝트 등 활동 내역을 기록하고 관리해보세요.
