@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ChooseOption.css";
 import ReviewPopup from "./ReviewPopup";
+import React, { useState } from "react";
 
 const ChooseOption = ({ onGoToActivity }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -29,9 +30,7 @@ const ChooseOption = ({ onGoToActivity }) => {
           </p>
         </div>
       </div>
-      {isPopupOpen && <ReviewPopup onClose={closePopup} />}{" "}
-      {/* isPopupOpen이 켜져있을때만 팝업창 나타남. 닫을때는 closePopuup사용함 */}
-      {/* isPopupOpen이 켜져있을때만 팝업창 나타남*/}
+      {isPopupOpen && <ReviewPopup onClose={closePopup} />}
     </div>
   );
 };

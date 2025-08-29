@@ -7,6 +7,7 @@ import ProfileCard from "../components/Profile/ProfileCard";
 import githubIcon from "../assets/icons/Github.png";
 import banner from "../assets/icons/banner.png";
 import avatar from "../assets/icons/avatar.png";
+import Activity from "./../components/Activity/Activity";
 
 export default function MainPage({ onLogout }) {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
@@ -25,11 +26,17 @@ export default function MainPage({ onLogout }) {
     setCurrentPage("home");
   };
 
+  const handleGoToActivity = () => {
+    setCurrentPage("Activity");
+  };
+
   const renderMainContent = () => {
     if (currentPage === "home") {
       return <MainHome />;
     } else if (currentPage === "chooseOption") {
-      return <ChooseOption />;
+      return <ChooseOption onGoToActivity={handleGoToActivity} />;
+    } else if (currentPage === "Activity") {
+      return <Activity />;
     }
     return null;
   };
