@@ -106,9 +106,22 @@ export default function ProfileCard({
           });
           // 백엔드 필드로부터 기본 링크 구성(선택)
           const initial = [];
+        //   if (me.website) {
+        //     initial.push({ name: "Website", href: me.website, icon: null });
+        //   }
           if (me.website) {
-            initial.push({ name: "Website", href: me.website, icon: null });
-          }
+            let host = "";
+            try { host = new URL(me.website).host; } catch {}
+                if (host.endsWith("linkedin.com")) {
+                initial.push({ name: "LinkedIn", href: me.website, icon: linkLinkedinIcon });
+            } else if (host.endsWith("dribbble.com")) {
+                initial.push({ name: "Dribbble", href: me.website, icon: linkDribbbleIcon });
+            } else {
+                initial.push({ name: "Website", href: me.website, icon: null });
+            }
+        }
+
+
           if (me.github_linked) {
          // 실제 깃허브 URL을 별도로 저장하진 않으니, 임시로 프로필 루트 제안
             initial.push({ name: "GitHub", href: "https://github.com/", icon: linkGithubIcon });
