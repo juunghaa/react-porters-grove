@@ -4,6 +4,7 @@ import ProfileEditer from "./ProfileEditer";
 import linkGithubIcon from "../../assets/icons/linkGithub.png";
 import linkLinkedinIcon from "../../assets/icons/linkLinkedin.png";
 import linkDribbbleIcon from "../../assets/icons/linkDribbble.png";
+import { fetchMyProfile, updateMyProfileJson } from "../../api.js";
 
 export default function ProfileCard({
   bannerUrl,
@@ -34,7 +35,8 @@ export default function ProfileCard({
     }
     
     // 공통 추가 함수
-    function handleAdd(type) {
+    // function handleAdd(type) {
+    async function handleAdd(type) {
         const meta = SOCIALS[type];
         if (!meta) return;
     
@@ -59,9 +61,27 @@ export default function ProfileCard({
         }
     
         const link = { name: meta.name, href: url, icon: meta.icon };
-        const next = [...links, link];
-        setLinks(next);
+        // const next = [...links, link];
+        // setLinks(next);
+        setLinks(prev => [...prev, link]);
         onEdit?.("socials:add", link); // (선택) 부모 알림
+        
+        // 2-2) GitHub 추가 시 서버 상태도 true로 (선택)
+        // if (type === "github") {
+        //   updateMyProfileJson({ github_linked: true }).catch(e => console.warn("github_linked 업데이트 실패:", e));
+        // }
+
+        if (type === "github") {
+            updateMyProfileJson({ github_linked: true })
+            .catch(e => console.warn("github_linked 업데이트 실패:", e));
+        }
+        if (type === "linkedin" || type === "dribbble") {
+            updateMyProfileJson({ website: url })
+            .catch(e => console.warn("website 업데이트 실패:", e));
+        }        
+
+        
+        setShowPicker(false);
     }
     
     const [links, setLinks] = useState(socials);
@@ -74,7 +94,41 @@ export default function ProfileCard({
         // avatarUrl,
         // bannerUrl,
       });
+    useEffect(() => {
+      (async () => {
+        try {
+          const me = await fetchMyProfile();
+          setProfile({
+            // API ↔ UI 매핑
+            name: me.display_name || me.full_name || name,
+            title: me.job_role_name || me.job_role?.name || title,
+            tagline: me.bio || tagline,
+          });
+          // 백엔드 필드로부터 기본 링크 구성(선택)
+          const initial = [];
+          if (me.website) {
+            initial.push({ name: "Website", href: me.website, icon: null });
+          }
+          if (me.github_linked) {
+         // 실제 깃허브 URL을 별도로 저장하진 않으니, 임시로 프로필 루트 제안
+            initial.push({ name: "GitHub", href: "https://github.com/", icon: linkGithubIcon });
+          }
+          if (initial.length) setLinks(prev => [...initial, ...prev.filter      (p => p.name !== "GitHub" && p.name !== "Website")]);
+          } catch (e) {
+            console.warn(e);
+          }
+          })();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          }, []);
+       
+          // (선택) Website로 저장하고 싶다면 LinkedIn/Dribbble일 때 confirm 후 website 갱신
+          // if ((type === "linkedin" || type === "dribbble") && window.confirm("이 링크를 내 웹사이트로 저장할까요?")) {
+          //   updateMyProfileJson({ website: url }).catch(e => console.warn("website 업데이트 실패:", e));
+          // }
+            
+          
 
+        
     // const handleAddGithub = () => {
     //     const raw = window.prompt("깃허브 주소를 입력하세요 (예: https://github.com/octocat)");
     //     if (!raw) return;
@@ -172,11 +226,31 @@ export default function ProfileCard({
         <ProfileEditer
           initial={profile}
           onClose={() => setEditing(false)}
-          onSave={(data) => {
-            setProfile(data);           
-            setEditing(false);
-            onEdit?.("profile:update", data); 
-          }}
+        //   onSave={(data) => {
+        //     setProfile(data);           
+        //     setEditing(false);
+        //     onEdit?.("profile:update", data); 
+          onSave={async (data) => {
+            try {
+                // 2-3) 저장 시 PATCH (display_name, bio만 보냄)
+                const payload = {
+                    display_name: data.name,
+                    bio: data.tagline,
+                    // job_role는 API가 id만 받으므로 지금은 텍스트(title)는 서버에 반영하지 않음
+                };
+                const updated = await updateMyProfileJson(payload);
+                    setProfile({
+                    name: updated.display_name || data.name,
+                    title: updated.job_role_name || profile.title,
+                    tagline: updated.bio || data.tagline,
+                    });
+                    onEdit?.("profile:update", payload);
+                } catch (e) {
+                  alert(e.message || "프로필 저장 실패");
+                } finally {
+                  setEditing(false);
+                }
+        }}
         />
       )}
     </div>

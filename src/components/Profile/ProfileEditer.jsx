@@ -7,6 +7,15 @@ export default function ProfileEditer({ initial, onSave, onClose }) {
     title: initial?.title || "",
     tagline: initial?.tagline || "",
   });
+
+  useEffect(() => {
+      setForm({
+          name: initial?.name || "",
+          title: initial?.title || "",
+          tagline: initial?.tagline || "",
+      });
+  }, [initial]);
+
   const [saving, setSaving] = useState(false);
 
   const change = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -16,6 +25,9 @@ export default function ProfileEditer({ initial, onSave, onClose }) {
     setSaving(true);
     try {
       onSave?.(form);
+      if(onSave) {
+        await onSave(form); //비동기저장기다림
+      }
     } finally {
       setSaving(false);
     }
@@ -89,7 +101,7 @@ export default function ProfileEditer({ initial, onSave, onClose }) {
           <button type="button" className="btn" disabled title="준비 중">
               아바타 선택 (준비중)
           </button>
-          
+
           {/* 미리보기 살짝 */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
             {form.avatarUrl ? (

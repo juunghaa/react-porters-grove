@@ -119,11 +119,95 @@ export const apiLogout = async () => {
 };
 
 // 내 프로필 조회
-export const getMyProfile = async (token) => {
-  const res = await fetch(`/api/profiles/me/`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
-  return await res.json();
-};
+// export const getMyProfile = async (token) => {
+//   const res = await fetch(`/api/profiles/me/`, {
+//     headers: {
+//       'Authorization': `Bearer ${token}`,
+//     },
+//   });
+//   return await res.json();
+// };
+
+// src/api/profile.js
+const BASE = process.env.REACT_APP_API_BASE || ""; // 예: "https://api.yourhost.com"
+
+function authHeaders() {
+  const access = localStorage.getItem("access");
+  return access ? { Authorization: `Bearer ${access}` } : {};
+}
+
+export async function fetchMyProfile() {
+//   const res = await fetch(`/api/profiles/me/`, {
+//     method: "GET",
+//     headers: { ...authHeaders() },
+//   });
+    const res = await tryFetch(() =>
+      fetch(`/api/profiles/me/`, {
+        method: "GET",
+        headers: { ...authHeaders() },
+      })
+    );
+    
+  if (!res.ok) throw new Error(`프로필 조회 실패 (${res.status})`);
+  return res.json();
+}
+
+export async function updateMyProfileJson(payload) {
+//   const res = await fetch(`/api/profiles/me/`, {
+//     method: "PATCH",
+//     headers: { ...authHeaders(), "Content-Type": "application/json" },
+//     body: JSON.stringify(payload),
+//   });
+     const res = await tryFetch(() =>
+       fetch(`/api/profiles/me/`, {
+         method: "PATCH",
+         headers: { ...authHeaders(), "Content-Type": "application/json" },
+         body: JSON.stringify(payload),
+       })
+     );
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `프로필 수정 실패 (${res.status})`);
+  }
+  return res.json();
+}
+
+// (선택) 아바타 업로드: multipart/form-data
+// export async function updateMyProfileAvatar(file, extra = {}) {
+//   const fd = new FormData();
+//   fd.append("avatar", file);
+//   Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
+//   const res = await fetch(`${BASE}/api/profiles/me/`, {
+//     method: "PATCH",
+//     headers: { ...authHeaders() }, // form-data는 Content-Type 설정 X (브라우저가 boundary 설정)
+//     body: fd,
+//   });
+//   if (!res.ok) throw new Error(`아바타 업로드 실패 (${res.status})`);
+//   return res.json();
+// }
+
+export async function fetchLevels() {
+  const res = await fetch(`/api/profiles/options/levels/`);
+  if (!res.ok) throw new Error("레벨 목록 조회 실패");
+  return res.json();
+}
+
+export async function fetchJobRoles(group) {
+  const url = group
+    ? `/api/profiles/options/job-roles/?group=${encodeURIComponent(group)}`
+    : `/api/profiles/options/job-roles/`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("직무 목록 조회 실패");
+  return res.json();
+}
+
+// 401나면 한 번만 토큰 갱신 후 재요청
+async function tryFetch(factory) {
+  let res = await factory();
+  if (res.status === 401) {
+    try { await refreshAccess(); } catch (_) { return res; }
+    res = await factory();
+  }
+  return res;
+}
