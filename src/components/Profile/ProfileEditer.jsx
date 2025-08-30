@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // 모달은 바깥 클릭/ESC로 안 닫히게: 닫기는 버튼으로만!
 export default function ProfileEditer({ initial, onSave, onClose }) {
