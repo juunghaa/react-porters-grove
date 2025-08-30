@@ -4,7 +4,7 @@ import ProfileEditer from "./ProfileEditer";
 import linkGithubIcon from "../../assets/icons/linkGithub.png";
 import linkLinkedinIcon from "../../assets/icons/linkLinkedin.png";
 import linkDribbbleIcon from "../../assets/icons/linkDribbble.png";
-import { fetchMyProfile, updateMyProfileJson } from "../../api.js";
+import { fetchMyProfile, updateMyProfileJson, fetchJobRoles } from "../../api.js";
 
 export default function ProfileCard({
   bannerUrl,
@@ -94,6 +94,35 @@ export default function ProfileCard({
         // avatarUrl,
         // bannerUrl,
       });
+
+    // 직무 전체 목록 (이름→id 매핑에 사용)
+    const [roles, setRoles] = useState([]);
+
+    // 입력한 title 문자열을 직무 목록에서 찾아 id 반환
+    function roleIdFromTitle(t) {
+        if (!t) return null;
+        const q = t.trim().toLowerCase();
+    
+        // 1) 완전 일치(대소문자 무시)
+        const exact = roles.find(r => r.name.toLowerCase() === q);
+        if (exact) return exact.id;
+    
+        // 2) 부분 포함으로 후보가 1개뿐이면 그것도 허용
+        const contains = roles.filter(r => r.name.toLowerCase().includes(q));
+        if (contains.length === 1) return contains[0].id;
+    
+        // 매칭 실패
+        return null;
+    }
+    
+
+    useEffect(() => {
+      fetchJobRoles()
+        .then(setRoles)
+        .catch((e) => console.warn("직무 목록 조회 실패:", e));
+    }, []);
+
+
     useEffect(() => {
       (async () => {
         try {
@@ -239,22 +268,32 @@ export default function ProfileCard({
         <ProfileEditer
           initial={profile}
           onClose={() => setEditing(false)}
-        //   onSave={(data) => {
-        //     setProfile(data);           
-        //     setEditing(false);
-        //     onEdit?.("profile:update", data); 
           onSave={async (data) => {
             try {
-                // 2-3) 저장 시 PATCH (display_name, bio만 보냄)
+                // // 2-3) 저장 시 PATCH (display_name, bio만 보냄)
+                // const payload = {
+                //     display_name: data.name,
+                //     bio: data.tagline,
+                //     // job_role는 API가 id만 받으므로 지금은 텍스트(title)는 서버에 반영하지 않음
+                // };
                 const payload = {
                     display_name: data.name,
                     bio: data.tagline,
-                    // job_role는 API가 id만 받으므로 지금은 텍스트(title)는 서버에 반영하지 않음
                 };
+                // title -> job_role_id 매핑 시도
+                    const matchedRoleId = roleIdFromTitle(data.title);
+                        if (matchedRoleId) {
+                            payload.job_role_id = matchedRoleId;
+                        } else if (data.title && data.title !== profile.title) {
+                // 매칭 실패 안내 (원하면 이 경고 제거해도 됨)
+                        alert("알 수 없는 직무명이에요. 직무 목록 중 하나를 입력하면 서버에 반영돼요.");
+                        }   
+
                 const updated = await updateMyProfileJson(payload);
                     setProfile({
                     name: updated.display_name || data.name,
-                    title: updated.job_role_name || profile.title,
+                    // title: updated.job_role_name || profile.title,
+                    title: updated.job_role_name || data.title || profile.title,
                     tagline: updated.bio || data.tagline,
                     });
                     onEdit?.("profile:update", payload);
