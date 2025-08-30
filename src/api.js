@@ -129,7 +129,7 @@ export const apiLogout = async () => {
 // };
 
 // src/api/profile.js
-const BASE = process.env.REACT_APP_API_BASE || ""; // 예: "https://api.yourhost.com"
+// const BASE = process.env.REACT_APP_API_BASE || ""; // 예: "https://api.yourhost.com"
 
 function authHeaders() {
   const access = localStorage.getItem("access");
@@ -160,7 +160,8 @@ export async function updateMyProfileJson(payload) {
 //   });
      const res = await tryFetch(() =>
        fetch(`/api/profiles/me/`, {
-         method: "PATCH",
+        //  method: "PATCH",
+         method: "PUT",
          headers: { ...authHeaders(), "Content-Type": "application/json" },
          body: JSON.stringify(payload),
        })
