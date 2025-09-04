@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import {exchangeGoogleCode} from "./api/auth";
+import {exchangeGoogleCode} from "./api.js";
 import LogoutButton from "./components/Auth/LogoutButton";
 import "./App.css";
 import GithubGrass from "./components/GithubGrass";
