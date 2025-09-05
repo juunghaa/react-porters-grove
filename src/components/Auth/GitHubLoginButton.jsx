@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default function GitHubLoginButton() {
+export default function GitHubLoginButton({disabled}) {
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     const redirectUri =
       process.env.REACT_APP_GITHUB_REDIRECT ||
       `${window.location.origin}/oauth-callback?provider=github`;
   
-    const handleGithub = () => {
+    const handleGitHub = () => {
       if (!clientId) {
         alert('GitHub Client ID가 설정되지 않았습니다. .env.local을 확인하세요.');
         return;
@@ -23,15 +23,6 @@ export default function GitHubLoginButton() {
       window.location.href = url;
     };
   
-    return (
-      <button type="button" onClick={handleGithub} className="github-login-button">
-        GitHub로 로그인
-      </button>
-    );
-  }
-  
-
-
 
 // export default function GitHubLoginButton({redirectUri, disabled}) {
 //     const handleGitHub = () => {
@@ -53,10 +44,10 @@ export default function GitHubLoginButton() {
 //         window.location.href = url;
 //       };      
 
-//   return (
-//     <button type="button" onClick={handleGitHub} disabled={disabled} className="github-login-button">
-//       <img src="/github-icon.svg" alt="" width="20" height="20" />
-//       GitHub로 로그인
-//     </button>
-//   );
-// }
+  return (
+    <button type="button" onClick={handleGitHub} disabled={disabled} className="github-login-button">
+      <img src="/github-icon.svg" alt="" width="20" height="20" />
+      GitHub로 로그인
+    </button>
+  );
+}

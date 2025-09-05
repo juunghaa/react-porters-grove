@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({disabled}) {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const redirectUri =
     process.env.REACT_APP_GOOGLE_REDIRECT ||
@@ -23,13 +23,6 @@ export default function GoogleLoginButton() {
 
     window.location.href = url;
   };
-
-  return (
-    <button type="button" onClick={handleGoogle} className="google-login-button">
-      Google로 로그인
-    </button>
-  );
-}
 
 
 // export default function GoogleLoginButton({redirectUri, disabled}) {
@@ -68,10 +61,10 @@ export default function GoogleLoginButton() {
 //     window.location.href = url;
 //   };
   
-//   return (
-//     <button type="button" onClick={handleGoogle} disabled={disabled} className="google-login-button">
-//       <img src="/google-icon.svg" alt="" width="20" height="20" />
-//       Google로 로그인
-//     </button>
-//   );
-// }
+  return (
+    <button type="button" onClick={handleGoogle} disabled={disabled} className="google-login-button">
+      <img src="/google-icon.svg" alt="" width="20" height="20" />
+      Google로 로그인
+    </button>
+  );
+}
