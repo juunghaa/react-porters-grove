@@ -1,9 +1,12 @@
 import React from 'react';
 
-export default function GitHubLoginButton() {
+export default function GitHubLoginButton({redirectUri, disabled}) {
     const handleGitHub = () => {
-        const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
-        const redirectUri = `${window.location.origin}/?provider=github`; // ✅
+        if (disabled) return;
+        // const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+        const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || process.env.REACT_APP_GITHUB_CLIENT_ID;
+
+        const redirectUri = `${window.location.origin}/oauth-callback?provider=github`;
         const scope = encodeURIComponent('read:user user:email');
         const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
         sessionStorage.setItem('oauth_state_github', state);
@@ -18,7 +21,7 @@ export default function GitHubLoginButton() {
       };      
 
   return (
-    <button type="button" onClick={handleGitHub} className="github-login-button">
+    <button type="button" onClick={handleGitHub} disabled={disabled} className="github-login-button">
       <img src="/github-icon.svg" alt="" width="20" height="20" />
       GitHub로 로그인
     </button>

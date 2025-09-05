@@ -61,8 +61,10 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
         </button>
       </div>
       <div className="divider">또는</div>
-      <GoogleLoginButton onLoginSuccess={onLoginSuccess} />
-      <GitHubLoginButton />
+      {/* <GoogleLoginButton onLoginSuccess={onLoginSuccess} /> */}
+      {/* <GitHubLoginButton /> */}
+      <GoogleLoginButton disabled={submitting} />
+      <GitHubLoginButton disabled={submitting} />
     </form>
   );
 }

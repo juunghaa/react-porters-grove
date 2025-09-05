@@ -1,10 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginForm from '../components/Auth/LoginForm';
-import { login } from '../api';
+import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
+import GoogleLoginButton from '../components/Auth/GoogleLoginButton';
+import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
 
 export default function LoginPage({ onLoginSuccess }) {
   const [loginError, setLoginError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const GOOGLE_REDIRECT = `${window.location.origin}/?provider=google`;
+  const GITHUB_REDIRECT = `${window.location.origin}/?provider=github`;
+ 
+  useEffect(() => {
+    const qs = new URLSearchParams(window.location.search);
+    const provider = qs.get('provider'); // 'google' | 'github'
+    const code = qs.get('code');
+    if (!provider || !code) return;
+
+    const redirectUri = provider === 'google' ? GOOGLE_REDIRECT : GITHUB_REDIRECT;
+    // exchangeGoogleCode(code, redirectUri) or exchangeGithubCode(code, redirectUri)
+  }, []);
+
+  //소셜 콜백 처리
+  useEffect(() => {
+    const qs = new URLSearchParams(window.location.search);
+    const provider = qs.get('provider'); // 'google' | 'github'
+    const code = qs.get('code');
+    const state = qs.get('state');
+    if (!provider || !code) return;
+
+    (async () => {
+      setSubmitting(true);
+      setLoginError('');
+      try {
+        const saved = sessionStorage.getItem(`oauth_state_${provider}`);
+        if (!state || saved !== state) throw new Error('유효하지 않은 로그인 요청입니다.');
+
+        const redirectUri = `${window.location.origin}/auth/callback?provider=${provider}`;
+        const data = provider === 'google'
+          ? await exchangeGoogleCode(code, redirectUri)
+          : await exchangeGithubCode(code, redirectUri);
+
+        localStorage.setItem('access', data.access);
+        localStorage.setItem('refresh', data.refresh);
+        sessionStorage.removeItem(`oauth_state_${provider}`);
+        window.history.replaceState({}, '', window.location.pathname);
+        onLoginSuccess?.(data);
+      } catch (e) {
+        setLoginError(e.message || '소셜 로그인 실패');
+      } finally {
+        setSubmitting(false);
+      }
+    })();
+  }, [onLoginSuccess]);
 
   const handleLogin = async (email, password) => {
     setSubmitting(true);
@@ -30,10 +77,14 @@ export default function LoginPage({ onLoginSuccess }) {
     };
 
   return (
+    <>
     <LoginForm onSubmit={handleLogin} loginError={loginError} submitting={submitting} />
+    <GoogleLoginButton redirectUri={GOOGLE_REDIRECT} />
+    <GitHubLoginButton redirectUri={GITHUB_REDIRECT} />
+    </>
   );
 }
 
 
-
+// 콜백 처리는 로그인 페이지가, 버튼은 리다이렉트만, 폼은 이메일비번 제출만 담당
 

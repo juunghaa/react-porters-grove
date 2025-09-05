@@ -1,9 +1,21 @@
 import React from 'react';
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({redirectUri, disabled}) {
   const handleGoogle = () => {
-    const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const redirectUri = `${window.location.origin}/?provider=google`; 
+    if (disabled) return;
+    // const clientId =
+    //   (typeof import.meta !== "undefined" &&
+    //     import.meta.env &&
+    //     import.meta.env.VITE_GOOGLE_CLIENT_ID) ||
+    //   process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+    // if (!clientId) {
+    //   alert("Google Client ID가 설정되지 않았습니다. .env를 확인하세요.");
+    //   throw new Error("Missing Google Client ID");
+    // }
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+    const redirectUri = `${window.location.origin}/oauth-callback?provider=google`; 
     //로그인 후 구글이 사용자를 위 url로 돌려보내줘야 함 
     const scope = encodeURIComponent('openid email profile');
     //scope는 구글이 어떤 정보를 사용자에게 줄지 결정해주는 것임 
@@ -25,7 +37,7 @@ export default function GoogleLoginButton() {
   };
   
   return (
-    <button type="button" onClick={handleGoogle} className="google-login-button">
+    <button type="button" onClick={handleGoogle} disabled={disabled} className="google-login-button">
       <img src="/google-icon.svg" alt="" width="20" height="20" />
       Google로 로그인
     </button>
