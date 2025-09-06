@@ -7,8 +7,8 @@ import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
 export default function LoginPage({ onLoginSuccess }) {
   const [loginError, setLoginError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const GOOGLE_REDIRECT = `${window.location.origin}/?provider=google`;
-  const GITHUB_REDIRECT = `${window.location.origin}/?provider=github`;
+  const GOOGLE_REDIRECT = process.env.REACT_APP_GOOGLE_REDIRECT;
+  const GITHUB_REDIRECT = process.env.REACT_APP_GITHUB_REDIRECT;
  
   useEffect(() => {
     const qs = new URLSearchParams(window.location.search);
