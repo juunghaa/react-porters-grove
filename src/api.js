@@ -49,7 +49,7 @@ export const register = async (email, password1, password2) => {
 
 
 export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/google/code', {
+    const res = await fetch('/api/auth/google/code/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -60,7 +60,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   };
   
   export const exchangeGithubCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/github/code', {
+    const res = await fetch('/api/auth/github/code/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),

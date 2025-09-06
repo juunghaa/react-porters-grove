@@ -22,7 +22,9 @@ export default function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const isGoogle = params.get("provider") === "google";
+    const isGoogle = 
+      (window.location.pathname === "/oauth-callback" || window.location.pathname === "/auth/callback/") &&
+      params.get("provider") === "google";
     const code = params.get("code");
     const returnedState = params.get("state");
 
