@@ -39,7 +39,8 @@ export default function App() {
         }
 
         // 2) 서버에 code 교환 요청 (로그인 시작 때 쓴 redirectUri와 동일해야 함)
-        const redirectUri = `${window.location.origin}/oauth-callback?provider=google`;
+        // const redirectUri = `${window.location.origin}/oauth-callback?provider=google`;
+        const redirectUri = `${window.location.origin}/auth/callback?provider=google`;
         const data = await exchangeGoogleCode(code, redirectUri);
 
         // 3) 토큰 꺼내서 저장 (백엔드 응답 형태 두 가지 모두 대응)

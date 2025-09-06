@@ -4,7 +4,7 @@ export default function GoogleLoginButton({disabled}) {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const redirectUri =
     process.env.REACT_APP_GOOGLE_REDIRECT ||
-    `${window.location.origin}/oauth-callback?provider=google`;
+    `${window.location.origin}/auth/callback?provider=google`;
 
   const handleGoogle = () => {
     if (!clientId) {
