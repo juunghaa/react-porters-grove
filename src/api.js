@@ -61,7 +61,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   
   export const exchangeGithubCode = async (code, redirectUri) => {
     const res = await fetch('/api/auth/github/login/', {
-      method: 'POST',
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),
     });
