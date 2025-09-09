@@ -35,7 +35,7 @@ export default function LoginPage({ onLoginSuccess }) {
         const saved = sessionStorage.getItem(`oauth_state_${provider}`);
         if (!state || saved !== state) throw new Error('유효하지 않은 로그인 요청입니다.');
 
-        const redirectUri = `${window.location.origin}/auth/callback?provider=${provider}`;
+        const redirectUri = `${window.location.origin}/auth/${provider}/login/`;
         const data = provider === 'google'
           ? await exchangeGoogleCode(code, redirectUri)
           : await exchangeGithubCode(code, redirectUri);
