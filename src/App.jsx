@@ -20,53 +20,53 @@ export default function App() {
     setIsLoggedIn(!!access);
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const isGoogle = 
-      (window.location.pathname === "/oauth-callback" || window.location.pathname === "/auth/callback") &&
-      params.get("provider") === "google";
-    const code = params.get("code");
-    const returnedState = params.get("state");
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   const isGoogle = 
+  //     (window.location.pathname === "/oauth-callback" || window.location.pathname === "/auth/callback") &&
+  //     params.get("provider") === "google";
+  //   const code = params.get("code");
+  //   const returnedState = params.get("state");
 
-    if (!isGoogle || !code) return; // 일반 진입이면 아무 것도 안 함
+  //   if (!isGoogle || !code) return; // 일반 진입이면 아무 것도 안 함
 
-    (async () => {
-      try {
-        // 1) state 검증 (CSRF 방지)
-        const savedState = sessionStorage.getItem("oauth_state_google");
-        if (!returnedState || !savedState || returnedState !== savedState) {
-          throw new Error("보안 검증 실패: state 불일치");
-        }
+  //   (async () => {
+  //     try {
+  //       // 1) state 검증 (CSRF 방지)
+  //       const savedState = sessionStorage.getItem("oauth_state_google");
+  //       if (!returnedState || !savedState || returnedState !== savedState) {
+  //         throw new Error("보안 검증 실패: state 불일치");
+  //       }
 
-        // 2) 서버에 code 교환 요청 (로그인 시작 때 쓴 redirectUri와 동일해야 함)
-        // const redirectUri = `${window.location.origin}/oauth-callback?provider=google`;
-        const redirectUri = `${window.location.origin}/auth/callback?provider=google`;
-        const data = await exchangeGoogleCode(code, redirectUri);
+  //       // 2) 서버에 code 교환 요청 (로그인 시작 때 쓴 redirectUri와 동일해야 함)
+  //       // const redirectUri = `${window.location.origin}/oauth-callback?provider=google`;
+  //       const redirectUri = `${window.location.origin}/auth/callback?provider=google`;
+  //       const data = await exchangeGoogleCode(code, redirectUri);
 
-        // 3) 토큰 꺼내서 저장 (백엔드 응답 형태 두 가지 모두 대응)
-        const access =
-          data?.tokens?.access ?? data?.access ?? null;
-        const refresh =
-          data?.tokens?.refresh ?? data?.refresh ?? null;
+  //       // 3) 토큰 꺼내서 저장 (백엔드 응답 형태 두 가지 모두 대응)
+  //       const access =
+  //         data?.tokens?.access ?? data?.access ?? null;
+  //       const refresh =
+  //         data?.tokens?.refresh ?? data?.refresh ?? null;
 
-        if (access) localStorage.setItem("access", access);
-        if (refresh) localStorage.setItem("refresh", refresh);
-        if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+  //       if (access) localStorage.setItem("access", access);
+  //       if (refresh) localStorage.setItem("refresh", refresh);
+  //       if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-        // 4) 로그인 상태 반영
-        setIsLoggedIn(true);
+  //       // 4) 로그인 상태 반영
+  //       setIsLoggedIn(true);
 
-        // 5) URL 정리 (code/state 제거)
-        window.history.replaceState({}, "", `${window.location.origin}/`);
-      } catch (err) {
-        console.error(err);
-        alert(err.message || "구글 로그인 실패");
-      } finally {
-        // 사용 끝난 state는 제거
-        sessionStorage.removeItem("oauth_state_google");
-      }
-    })();
-  }, []);
+  //       // 5) URL 정리 (code/state 제거)
+  //       window.history.replaceState({}, "", `${window.location.origin}/`);
+  //     } catch (err) {
+  //       console.error(err);
+  //       alert(err.message || "구글 로그인 실패");
+  //     } finally {
+  //       // 사용 끝난 state는 제거
+  //       sessionStorage.removeItem("oauth_state_google");
+  //     }
+  //   })();
+  // }, []);
 
 
   // 로그인/회원가입 공통 성공 처리

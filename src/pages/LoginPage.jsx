@@ -9,16 +9,6 @@ export default function LoginPage({ onLoginSuccess }) {
   const [submitting, setSubmitting] = useState(false);
   const GOOGLE_REDIRECT = process.env.REACT_APP_GOOGLE_REDIRECT;
   const GITHUB_REDIRECT = process.env.REACT_APP_GITHUB_REDIRECT;
- 
-  useEffect(() => {
-    const qs = new URLSearchParams(window.location.search);
-    const provider = qs.get('provider'); // 'google' | 'github'
-    const code = qs.get('code');
-    if (!provider || !code) return;
-
-    const redirectUri = provider === 'google' ? GOOGLE_REDIRECT : GITHUB_REDIRECT;
-    // exchangeGoogleCode(code, redirectUri) or exchangeGithubCode(code, redirectUri)
-  }, []);
 
   //소셜 콜백 처리
   useEffect(() => {
@@ -34,15 +24,18 @@ export default function LoginPage({ onLoginSuccess }) {
       try {
         const saved = sessionStorage.getItem(`oauth_state_${provider}`);
         if (!state || saved !== state) throw new Error('유효하지 않은 로그인 요청입니다.');
-
-        const redirectUri = `${window.location.origin}/auth/${provider}/login/`;
+        
+        const redirectUri = provider === 'google' ? GOOGLE_REDIRECT : GITHUB_REDIRECT;
         const data = provider === 'google'
           ? await exchangeGoogleCode(code, redirectUri)
           : await exchangeGithubCode(code, redirectUri);
-
+        
+        //토큰 저장
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
+        //state 정리
         sessionStorage.removeItem(`oauth_state_${provider}`);
+        //url 정리
         window.history.replaceState({}, '', window.location.pathname);
         onLoginSuccess?.(data);
       } catch (e) {
