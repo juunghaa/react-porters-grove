@@ -63,7 +63,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
     const res = await fetch('/api/auth/github/login/', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, redirect_uri: redirectUri }),
+    //   body: JSON.stringify({ code, redirect_uri: redirectUri }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'GitHub 코드 교환 실패');
