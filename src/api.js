@@ -49,7 +49,7 @@ export const register = async (email, password1, password2) => {
 
 
 export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/auth/callback?provider=google', {
+    const res = await fetch('/api/auth/callback?provider=google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -60,7 +60,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   };
   
   export const exchangeGithubCode = async (code, redirectUri) => {
-    const res = await fetch('/auth/callback?provider=github', {
+    const res = await fetch('/api/auth/callback?provider=github', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -212,3 +212,17 @@ async function tryFetch(factory) {
   }
   return res;
 }
+
+export async function requestPasswordReset(email) {
+    const res = await fetch("/api/auth/password/reset/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+  
+    if (!res.ok) {
+      throw new Error("비밀번호 재설정 요청 실패");
+    }
+    return res.json();
+  }
+  

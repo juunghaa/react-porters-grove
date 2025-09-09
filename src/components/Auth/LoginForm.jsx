@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GoogleLoginButton from './GoogleLoginButton';
 import GitHubLoginButton from './GitHubLoginButton';
+import ResetPWModal from './ResetPWModal';
 //import { login } from '../../api'; // ← 실제 경로에 맞게 수정
 
 export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submitting=false, onChangeView }) {
@@ -8,6 +9,7 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [showReset, setShowReset] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +59,7 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
       <div className="login-options">
         <a href="#" onClick={() => onChangeView?.("signup")}>회원가입</a>
         <span className="divider-vertical">|</span>
-        <a href="#" onClick={() => onChangeView?.("signup")}>비밀번호 찾기</a>
+        <a href="#" onClick={() => setShowReset(true)}>비밀번호 찾기</a>
 
         <button type="submit" className="submit-button" disabled={submitting}>
           {submitting ? '로그인 중…' : '로그인'}
@@ -68,6 +70,8 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
       {/* <GitHubLoginButton /> */}
       <GoogleLoginButton disabled={submitting} />
       <GitHubLoginButton disabled={submitting} />
+      {showReset && <ResetPWModal onClose={() => setShowReset(false)} />}
+
     </form>
   );
 }
