@@ -4,7 +4,7 @@ import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
 import GoogleLoginButton from '../components/Auth/GoogleLoginButton';
 import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
 
-export default function LoginPage({ onLoginSuccess }) {
+export default function LoginPage({ onLoginSuccess, onChangeView }) {
   const [loginError, setLoginError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const GOOGLE_REDIRECT = process.env.REACT_APP_GOOGLE_REDIRECT;
@@ -71,7 +71,11 @@ export default function LoginPage({ onLoginSuccess }) {
 
   return (
     <>
-    <LoginForm onSubmit={handleLogin} loginError={loginError} submitting={submitting} />
+    <LoginForm 
+      onSubmit={handleLogin} 
+      loginError={loginError} 
+      submitting={submitting} 
+      onChangeView={onChangeView}/>
     <GoogleLoginButton redirectUri={GOOGLE_REDIRECT} />
     <GitHubLoginButton redirectUri={GITHUB_REDIRECT} />
     </>

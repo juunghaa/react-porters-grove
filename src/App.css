@@ -80,11 +80,20 @@
   margin-left: auto;
   margin-right: auto;
 }
+.login-options {
+  display:flex;
+  align-items: center;
+  gap: 2px;
+}
+.divider-vertical {
+  margin: 0 -180px;
+}
 .login-options a {
   font-size: 0.8rem;
   color: #aaa;
   text-decoration: none;
   justify-content: flex-start;
+  gap: 4px;
 }
 .submit-button {
   background-color: #607087;

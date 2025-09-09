@@ -3,7 +3,7 @@ import GoogleLoginButton from './GoogleLoginButton';
 import GitHubLoginButton from './GitHubLoginButton';
 //import { login } from '../../api'; // ← 실제 경로에 맞게 수정
 
-export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submitting=false }) {
+export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submitting=false, onChangeView }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -55,7 +55,10 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
       </div>
 
       <div className="login-options">
-        <a href="#">회원가입 | 비밀번호 찾기</a>
+        <a href="#" onClick={() => onChangeView?.("signup")}>회원가입</a>
+        <span className="divider-vertical">|</span>
+        <a href="#" onClick={() => onChangeView?.("signup")}>비밀번호 찾기</a>
+
         <button type="submit" className="submit-button" disabled={submitting}>
           {submitting ? '로그인 중…' : '로그인'}
         </button>

@@ -123,7 +123,7 @@ export default function App() {
           </div>
 
           {view === "login" ? (
-            <LoginPage onLoginSuccess={handleAuthSuccess} />
+            <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
           ) : (
             <SignupPage onLoginSuccess={handleAuthSuccess} />
           )}
