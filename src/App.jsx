@@ -107,26 +107,17 @@ export default function App() {
         </>
       ) : (
         <>
-          <div style={{ marginBottom: 12 }}>
-            <button
-              onClick={() => setView("login")}
-              disabled={view === "login"}
-            >
-              로그인
-            </button>
-            <button
-              onClick={() => setView("signup")}
-              disabled={view === "signup"}
-            >
-              회원가입
-            </button>
-          </div>
-
+        
+          {view === "login" && <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
+          {view === "signup" && <SignupPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
+          {/* {view === "reset" && <ResetPasswordPage onChangeView={setView} />} */}
+          
+          {/* 
           {view === "login" ? (
             <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
           ) : (
             <SignupPage onLoginSuccess={handleAuthSuccess} />
-          )}
+          )} */}
           {/* 나중에 각각 로그인 회원가입 버튼 여기 위에 형식 맞게 적용해서 넣으면 됩니당!!!!! */}
         </>
       )}

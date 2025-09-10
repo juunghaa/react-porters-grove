@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../firebase';
 import { register } from '../api';
 
-export default function SignupPage({ onRegisterSuccess }) {
+export default function SignupPage({ onRegisterSuccess, onChangeView }) {
   const [signupError, setSignupError] = useState('');
   const [email, setEmail] = useState('');
   const [password1, setPassword1] = useState('');
@@ -30,7 +30,8 @@ export default function SignupPage({ onRegisterSuccess }) {
 };
   
     return (
-      <SignupForm onSubmit={handleRegister} signupError={signupError} />
+      <SignupForm onSubmit={handleRegister} signupError={signupError} 
+      onChangeView={onChangeView}/>
     //<SignupForm onSuccess={() => navigate('/welcome')} /> 나중에 페이지 이동
     );
   }

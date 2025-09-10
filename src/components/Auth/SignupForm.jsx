@@ -100,7 +100,7 @@ const TERMS_TITLE = {
 2. 회원은 언제든 수신 동의를 철회할 수 있습니다.`,
   };
 
-export default function SignupForm({ onSignupSuccess }) {
+export default function SignupForm({ onSignupSuccess, onChangeView }) {
   const [email, setEmail] = useState('');
   const [pw1, setPw1] = useState('');
   const [pw2, setPw2] = useState('');
@@ -246,6 +246,12 @@ export default function SignupForm({ onSignupSuccess }) {
       <button type="submit" className="submit-button-big" disabled={submitState === 'loading'}>
         {submitState === 'loading' ? '가입 중…' : '가입하기'}
       </button>
+
+      <div className="login-options">
+      <span className="divider-vertical"></span>
+        <a href="#" onClick={() => onChangeView?.("login")}>로그인 하러가기</a>
+      <span className="divider-vertical"></span>
+      </div>
     </form>
 
     {termsOpen && (
