@@ -7,12 +7,42 @@
     z-index: 1000;
   }
   
-  .modal {
+  .resetPWmodal {
     background: #313845;
     padding: 20px;
     border-radius: 8px;
     width: 350px;
     max-width: 90%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    gap: 2px;
+    display: flex;
+    flex-direction: column;
   }
   
+  .resetPWmodal h2 {
+    margin-top: 0;
+    color: white;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+
+  .resetPWmodal input {
+    padding: 0.45rem;
+    border-radius: 6px;
+    border: 1px solid #cfd5dd;
+    background-color: #313845;
+    font-size: 1rem;
+    color: white;
+    box-sizing: border-box; /* 패딩과 테두리를 포함한 너비 계산 */
+  }
+
+  .resetPWmodal button {
+    background-color: #607087;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 12px;
+  }

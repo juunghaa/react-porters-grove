@@ -24,7 +24,7 @@ export default function ResetPWModal({ onClose }) {
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="resetPWmodal">
         <h2>비밀번호 재설정</h2>
         <form onSubmit={handleSubmit}>
           <input
