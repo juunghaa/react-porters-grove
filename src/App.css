@@ -2,14 +2,16 @@
   background-color: #313845;
   color: white;
   padding: 2rem;
-  border-radius: 10px;
   margin: auto;
   font-family: "Pretendard", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center; /* input 중앙 정렬 */
+  justify-content: center;
   width: 100%; /* 너비 100%로 설정 */
   min-width: 400px;
+  min-height: 90svh;
+  /* min-height: 90svh; 모바일 반응형 할거면 100svh로 해야됨 100이 최소라서*/
 }
 .login-title {
   font-size: 1.4rem;

@@ -76,8 +76,8 @@ export default function LoginPage({ onLoginSuccess, onChangeView }) {
       loginError={loginError} 
       submitting={submitting} 
       onChangeView={onChangeView}/>
-    <GoogleLoginButton redirectUri={GOOGLE_REDIRECT} />
-    <GitHubLoginButton redirectUri={GITHUB_REDIRECT} />
+    {/* <GoogleLoginButton redirectUri={GOOGLE_REDIRECT} />
+    <GitHubLoginButton redirectUri={GITHUB_REDIRECT} /> */}
     </>
   );
 }
