@@ -138,7 +138,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function AuthCallback() {
+export default function OAuthCallback() {
   const location = useLocation();
   const navigate = useNavigate();
 
