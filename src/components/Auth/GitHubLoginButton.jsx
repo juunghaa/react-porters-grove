@@ -4,7 +4,7 @@ export default function GitHubLoginButton({disabled}) {
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     const redirectUri =
       process.env.REACT_APP_GITHUB_REDIRECT ||
-      `${window.location.origin}/auth/callback?provider=github`;
+      `${window.location.origin}/api/auth/github/login/`;
   
     const handleGitHub = () => {
       if (!clientId) {
