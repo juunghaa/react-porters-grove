@@ -134,7 +134,51 @@
 // }
 
 
-// AuthCallback.jsx
+// // AuthCallback.jsx
+// import { useEffect } from "react";
+// import { useLocation, useNavigate } from "react-router-dom";
+
+// export default function OAuthCallback() {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const params = new URLSearchParams(location.search);
+//     const code = params.get("code");
+//     const state = params.get("state");
+
+//     if (!code) {
+//       alert("구글 로그인 실패: code 없음");
+//       return;
+//     }
+
+//     // ✅ 백엔드에 code + state 전달
+//     fetch("/api/auth/google/callback/", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ code, state }),
+//     })
+//       .then((res) => res.json())
+//       .then((data) => {
+//         if (data.tokens?.access) {
+//           localStorage.setItem("access", data.tokens.access);
+//           localStorage.setItem("refresh", data.tokens.refresh);
+//           alert("로그인 성공!");
+//           navigate("/"); // 홈으로 이동
+//         } else {
+//           alert("로그인 실패: " + JSON.stringify(data));
+//         }
+//       })
+//       .catch((err) => {
+//         console.error("로그인 오류:", err);
+//         alert("로그인 오류");
+//       });
+//   }, [location, navigate]);
+
+//   return <p>구글 로그인 처리 중...</p>;
+// }
+
+
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -152,7 +196,7 @@ export default function OAuthCallback() {
       return;
     }
 
-    // ✅ 백엔드에 code + state 전달
+    // ✅ 백엔드에 code + state 전달 (POST)
     fetch("/api/auth/google/callback/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -163,6 +207,11 @@ export default function OAuthCallback() {
         if (data.tokens?.access) {
           localStorage.setItem("access", data.tokens.access);
           localStorage.setItem("refresh", data.tokens.refresh);
+
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+          }
+
           alert("로그인 성공!");
           navigate("/"); // 홈으로 이동
         } else {
@@ -172,8 +221,9 @@ export default function OAuthCallback() {
       .catch((err) => {
         console.error("로그인 오류:", err);
         alert("로그인 오류");
+        navigate("/login");
       });
   }, [location, navigate]);
 
-  return <p>구글 로그인 처리 중...</p>;
+  return <p>구글 로그인 처리 중…</p>;
 }
