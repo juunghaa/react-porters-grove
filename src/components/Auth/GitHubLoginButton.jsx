@@ -9,7 +9,7 @@ export default function GitHubLoginButton({disabled}) {
     const handleGitHub = () => {
       if (!clientId) {
         alert('GitHub Client ID가 설정되지 않았습니다. .env.local을 확인하세요.');
-        retur
+        return;
       }
       const state = crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
       sessionStorage.setItem('oauth_state_github', state);
