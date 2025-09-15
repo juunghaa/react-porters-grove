@@ -49,7 +49,7 @@ export const register = async (email, password1, password2) => {
 
 
 export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/callback?provider=google', {
+    const res = await fetch('/auth/callback?provider=google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -60,7 +60,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   };
   
   export const exchangeGithubCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/callback?provider=github', {
+    const res = await fetch('/auth/callback?provider=github', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -71,32 +71,11 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   };
   
 
-
-// 구글 로그인 - 소셜 로그인 ****만약 백엔드 올인 -> api 구글 로그인은 필요 없음!!
-// 백엔드 올인 아닐 경우 api.js 필요하니까 수정해야 함.... 
-// export const googleLogin = async (code) => {
-//     const res = await fetch(`/api/auth/google/`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ code }),
-//     });
-    
-//     if (!res.ok) {
-//         const error = await res.json();
-//         throw new Error(error.message || 'Google 로그인 실패');
-//     }
-    
-//     return await res.json();  // access, refresh 토큰이 포함된 응답 객체
-// };
-
-
 // 토큰 갱신 (옵션: 401일 때 한 번만 시도)
 export const refreshAccess = async () => {
     const refresh = localStorage.getItem('refresh');
     if (!refresh) throw new Error('no refresh token');
-    const res = await fetch('/api/auth/token/refresh/', {
+    const res = await fetch('api/auth/token/refresh/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh }),
