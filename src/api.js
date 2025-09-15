@@ -73,24 +73,25 @@ export const register = async (email, password1, password2) => {
 
 // Google
 export const exchangeGoogleCode = async (code, state) => {
-    const res = await fetch(`/api/auth/google/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const res = await fetch(
+      `/api/auth/google/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+    );
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
     return data;
   };
 // GitHub
 export const exchangeGithubCode = async (code, state) => {
-    const res = await fetch(`/api/auth/github/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const res = await fetch(
+      `/api/auth/github/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+    );
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'GitHub 코드 교환 실패');
     return data;
   };
+  
   
 
 // 토큰 갱신 (옵션: 401일 때 한 번만 시도)
