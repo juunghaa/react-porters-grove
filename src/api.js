@@ -70,21 +70,21 @@ export const register = async (email, password1, password2) => {
 //     return data;
 //   };
 
+
 // Google
-export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/google/callback/', {   // ✅ 수정
-      method: 'GET',                                          // ✅ GoogleAuthCallback은 GET
+export const exchangeGoogleCode = async (code, state) => {
+    const res = await fetch(`/api/auth/google/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`, {
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      // GET이라 body 필요 없음 → code, state는 querystring에 있음
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
     return data;
   };
-  // GitHub
-export const exchangeGithubCode = async (code, redirectUri) => {
-    const res = await fetch('/api/auth/github/callback/', {   // ✅ 수정
-      method: 'GET',                                          // ✅ GitHubAuthCallback도 GET
+// GitHub
+export const exchangeGithubCode = async (code, state) => {
+    const res = await fetch(`/api/auth/github/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`, {
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
     const data = await res.json().catch(() => ({}));
