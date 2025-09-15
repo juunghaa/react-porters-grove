@@ -48,22 +48,44 @@ export const register = async (email, password1, password2) => {
 };
 
 
+// export const exchangeGoogleCode = async (code, redirectUri) => {
+//     const res = await fetch('/auth/callback?provider=google', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ code, redirect_uri: redirectUri }),
+//     });
+//     const data = await res.json().catch(() => ({}));
+//     if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
+//     return data;
+//   };
+  
+//   export const exchangeGithubCode = async (code, redirectUri) => {
+//     const res = await fetch('/auth/callback?provider=github', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ code, redirect_uri: redirectUri }),
+//     });
+//     const data = await res.json().catch(() => ({}));
+//     if (!res.ok) throw new Error(data.detail || data.message || 'GitHub 코드 교환 실패');
+//     return data;
+//   };
+
+// Google
 export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/auth/callback?provider=google', {
-      method: 'POST',
+    const res = await fetch('/api/auth/google/callback/', {   // ✅ 수정
+      method: 'GET',                                          // ✅ GoogleAuthCallback은 GET
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, redirect_uri: redirectUri }),
+      // GET이라 body 필요 없음 → code, state는 querystring에 있음
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
     return data;
   };
-  
-  export const exchangeGithubCode = async (code, redirectUri) => {
-    const res = await fetch('/auth/callback?provider=github', {
-      method: 'POST',
+  // GitHub
+export const exchangeGithubCode = async (code, redirectUri) => {
+    const res = await fetch('/api/auth/github/callback/', {   // ✅ 수정
+      method: 'GET',                                          // ✅ GitHubAuthCallback도 GET
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, redirect_uri: redirectUri }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.detail || data.message || 'GitHub 코드 교환 실패');
