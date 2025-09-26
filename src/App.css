@@ -10,8 +10,22 @@
   justify-content: center;
   width: 100%; /* 너비 100%로 설정 */
   min-width: 400px;
-  min-height: 90svh;
+  height: 55svh;
+  padding-top: 20svh;
+  /* min-height: 90svh; */
   /* min-height: 90svh; 모바일 반응형 할거면 100svh로 해야됨 100이 최소라서*/
+}
+.googleLogin-area {
+  background-color: #313845;
+  padding: 2rem;
+  font-family: "Pretendard", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* input 중앙 정렬 */
+  width: 100%; /* 너비 100%로 설정 */
+  min-width: 400px;
+  height: 16.5svh;
+  padding-top: 0svh;
 }
 .login-title {
   font-size: 1.4rem;
@@ -76,7 +90,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
-
+  
   width: 30%; /*로그인폼의 퍼센트 비율만큼 로그인 옵션이 차지함*/
   min-width: 400px;
   margin-left: auto;
@@ -126,6 +140,7 @@
   position: relative;
   min-width: 400px;
   font-size: 0.8rem;
+  padding-top: 15px;
 }
 .divider::before,
 .divider::after {

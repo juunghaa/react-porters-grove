@@ -8,6 +8,7 @@ export default function GoogleLoginButton({ disabled }) {
   };
 
   return (
+    <div className="googleLogin-area">
     <button
       type="button"
       onClick={handleGoogle}
@@ -17,5 +18,6 @@ export default function GoogleLoginButton({ disabled }) {
       <img src="/google-icon.svg" alt="" width="20" height="20" />
       Google로 로그인
     </button>
+    </div>
   );
 }
