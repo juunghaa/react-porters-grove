@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LoginForm from '../components/Auth/LoginForm';
-// import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
+import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
 import GoogleLoginButton from '../components/Auth/GoogleLoginButton';
 // import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
 
