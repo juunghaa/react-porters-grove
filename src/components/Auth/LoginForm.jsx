@@ -4,7 +4,7 @@ import GitHubLoginButton from './GitHubLoginButton';
 import ResetPWModal from './ResetPWModal';
 //import { login } from '../../api'; // ← 실제 경로에 맞게 수정
 
-export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submitting=false, onChangeView }) {
+export default function LoginForm({ onSubmit, loginError, submitting=false, onChangeView }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -13,7 +13,8 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmailError(''); setPasswordError('');
+    setEmailError(''); 
+    setPasswordError('');
 
     let valid = true;
     if (!email) { setEmailError('이메일을 입력해주세요.'); valid = false; }
@@ -27,10 +28,12 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
 
   return (
     <form onSubmit={handleSubmit} className="login-form">
-      {loginError && <div className="login-alert" aria-live="assertive">⚠️ {loginError}</div>}
+      {/* {loginError && <div className="login-alert" aria-live="assertive">⚠️ {loginError}</div>} */}
+      {loginError && <div className="login-alert"> ⚠️ {loginError}</div>}
 
       <h2 className="login-title">로그인하고 포트폴리오를 만들어보세요</h2>
       <p className="login-subtitle">지금까지 쌓은 경험을,<br />나만의 방식으로 정리할 수 있어요</p>
+      
       <div className="input-group">
         <label htmlFor="login-email">이메일 주소</label>
         <input
@@ -43,6 +46,7 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
         />
         {emailError && <p className="error-text">{emailError}</p>}
       </div>
+
       <div className="input-group">
         <label htmlFor="login-password">비밀번호</label>
         <input
@@ -68,8 +72,8 @@ export default function LoginForm({ onLoginSuccess, onSubmit, loginError, submit
       <div className="divider">또는</div>
       {/* <GoogleLoginButton onLoginSuccess={onLoginSuccess} /> */}
       {/* <GitHubLoginButton /> */}
-      <GoogleLoginButton disabled={submitting} />
-      <GitHubLoginButton disabled={submitting} />
+      {/* <GoogleLoginButton disabled={submitting} /> */}
+      {/* <GitHubLoginButton disabled={submitting} /> */}
       {showReset && <ResetPWModal onClose={() => setShowReset(false)} />}
 
     </form>

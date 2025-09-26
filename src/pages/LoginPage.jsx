@@ -1,49 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import LoginForm from '../components/Auth/LoginForm';
-import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
+// import { login, exchangeGoogleCode, exchangeGithubCode } from '../api';
 import GoogleLoginButton from '../components/Auth/GoogleLoginButton';
-import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
+// import GitHubLoginButton from '../components/Auth/GitHubLoginButton';
 
 export default function LoginPage({ onLoginSuccess, onChangeView }) {
   const [loginError, setLoginError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const GOOGLE_REDIRECT = process.env.REACT_APP_GOOGLE_REDIRECT;
-  const GITHUB_REDIRECT = process.env.REACT_APP_GITHUB_REDIRECT;
-
-  //소셜 콜백 처리
+  
+  // 콜백 처리를 위한 useEffect임 
   useEffect(() => {
     const qs = new URLSearchParams(window.location.search);
-    const provider = qs.get('provider'); // 'google' | 'github'
-    const code = qs.get('code');
-    const state = qs.get('state');
-    if (!provider || !code) return;
+    const access = qs.get("access");
+    const refresh = qs.get("refresh");
 
-    (async () => {
-      setSubmitting(true);
-      setLoginError('');
-      try {
-        const saved = sessionStorage.getItem(`oauth_state_${provider}`);
-        if (!state || saved !== state) throw new Error('유효하지 않은 로그인 요청입니다.');
-        
-        const redirectUri = provider === 'google' ? GOOGLE_REDIRECT : GITHUB_REDIRECT;
-        const data = provider === 'google'
-          ? await exchangeGoogleCode(code, redirectUri)
-          : await exchangeGithubCode(code, redirectUri);
-        
-        //토큰 저장
-        localStorage.setItem('access', data.access);
-        localStorage.setItem('refresh', data.refresh);
-        //state 정리
-        sessionStorage.removeItem(`oauth_state_${provider}`);
-        //url 정리
-        window.history.replaceState({}, '', window.location.pathname);
-        onLoginSuccess?.(data);
-      } catch (e) {
-        setLoginError(e.message || '소셜 로그인 실패');
-      } finally {
-        setSubmitting(false);
-      }
-    })();
+    if (access && refresh) {
+      // 1. 토큰 저장
+      localStorage.setItem("access", access);
+      localStorage.setItem("refresh", refresh);
+
+      // 2. URL 정리
+      window.history.replaceState({}, "", window.location.pathname);
+
+      // 3. 상위 콜백 호출
+      onLoginSuccess?.({ access, refresh });
+    }
   }, [onLoginSuccess]);
 
   const handleLogin = async (email, password) => {
@@ -76,8 +57,9 @@ export default function LoginPage({ onLoginSuccess, onChangeView }) {
       loginError={loginError} 
       submitting={submitting} 
       onChangeView={onChangeView}/>
-    {/* <GoogleLoginButton redirectUri={GOOGLE_REDIRECT} />
-    <GitHubLoginButton redirectUri={GITHUB_REDIRECT} /> */}
+   
+    <GoogleLoginButton />
+
     </>
   );
 }
