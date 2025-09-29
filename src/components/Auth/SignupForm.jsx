@@ -172,6 +172,9 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
   return (
     <>
     <form onSubmit={handleSubmit} className="sign-form">
+    
+      {signupSuccess && <div className="login-alert">{signupSuccess}</div>}
+
       <h2 className="login-title">나를 보여주는 포트폴리오, 지금부터 시작해볼까요?</h2>
       <p className="login-subtitle">당신의 경험을 더 많은 사람에게<br/>정확하게, 멋지게 전달할 수 있어요</p>
 
@@ -249,8 +252,6 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       <button type="submit" className="submit-button-big" disabled={submitState === 'loading'}>
         {submitState === 'loading' ? '가입 중…' : '가입하기'}
       </button>
-
-      {signupSuccess && <div className="login-alert">{signupSuccess}</div>}
 
       <div className="login-options">
       <span className="divider-vertical"></span>
