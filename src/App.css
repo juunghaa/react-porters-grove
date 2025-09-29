@@ -27,7 +27,6 @@
   justify-content: center;
   width: 100%; /* 너비 100%로 설정 */
   min-width: 400px;
-  padding-top: 20svh;
   min-height: 90svh;
   /* min-height: 90svh; 모바일 반응형 할거면 100svh로 해야됨 100이 최소라서*/
 }
