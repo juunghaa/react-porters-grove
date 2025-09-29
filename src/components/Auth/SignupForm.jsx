@@ -122,6 +122,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
   const [agreeError, setAgreeError] = useState('');
   const [signupError, setSignupError] = useState('');
   const [submitState, setSubmitState] = useState('idle'); // state 이름 정정
+  const [signupSuccess, setSignupSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -152,6 +153,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       // localStorage.setItem('refresh', data.refresh);
 
       setSubmitState('success');
+      setSignupSuccess('⚠️ 회원가입에 성공하였습니다');
       onSignupSuccess?.(data);
 
     } catch (err) {
@@ -247,6 +249,8 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       <button type="submit" className="submit-button-big" disabled={submitState === 'loading'}>
         {submitState === 'loading' ? '가입 중…' : '가입하기'}
       </button>
+
+      {signupSuccess && <div className="login-alert">{signupSuccess}</div>}
 
       <div className="login-options">
       <span className="divider-vertical"></span>
