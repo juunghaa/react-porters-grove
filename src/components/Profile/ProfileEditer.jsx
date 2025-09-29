@@ -117,11 +117,13 @@ export default function ProfileEditer({ initial, onSave, onClose }) {
         </form>
 
         <div className="modal-actions">
-          <button type="button" className="btn" onClick={onClose}>
-            취소
+          {/* <button type="button" className="btn" onClick={onClose}> */}
+          <button type="button" onClick={onClose}>
+          <img src="/cancelButton.png"></img>
           </button>
           <button type="submit" form="__profileEditForm" className="btn primary" disabled={saving}>
-            {saving ? "저장 중…" : "저장"}
+            <img src="/storeButton.png"></img>
+            {saving ? "저장 중…" : ""}
           </button>
         </div>
       </div>
