@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import GoogleLoginButton from './GoogleLoginButton';
-import GitHubLoginButton from './GitHubLoginButton';
 import ResetPWModal from './ResetPWModal';
 //import { login } from '../../api'; // ← 실제 경로에 맞게 수정
 
