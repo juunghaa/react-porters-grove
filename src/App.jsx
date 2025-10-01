@@ -8,6 +8,8 @@ import GithubGrass from "./components/GithubGrass";
 import OAuthCallback from "./pages/OAuthCallback";
 import MainPage from "./pages/MainPage";
 import LeftPanel from "./components/LeftPanel/LeftPanel";
+import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
+
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
