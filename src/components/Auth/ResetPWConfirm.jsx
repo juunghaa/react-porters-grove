@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { validateResetToken, confirmPasswordReset } from "../../api.js";
+import { validateResetToken, confirmPasswordReset } from "../../api";
 import "./ResetPWModal.css"; // 기존 스타일 재사용
 
 export default function ResetPWConfirm() {
