@@ -71,28 +71,6 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   };
 
 
-// // Google
-// export const exchangeGoogleCode = async (code, state) => {
-//     const res = await fetch(
-//       `/api/auth/google/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
-//       { method: 'GET', headers: { 'Content-Type': 'application/json' } }
-//     );
-//     const data = await res.json().catch(() => ({}));
-//     if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
-//     return data;
-//   };
-// // GitHub
-// export const exchangeGithubCode = async (code, state) => {
-//     const res = await fetch(
-//       `/api/auth/github/callback/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
-//       { method: 'GET', headers: { 'Content-Type': 'application/json' } }
-//     );
-//     const data = await res.json().catch(() => ({}));
-//     if (!res.ok) throw new Error(data.detail || data.message || 'GitHub 코드 교환 실패');
-//     return data;
-//   };
-  
-
 // 토큰 갱신 (옵션: 401일 때 한 번만 시도)
 export const refreshAccess = async () => {
     const refresh = localStorage.getItem('refresh');
@@ -214,16 +192,48 @@ async function tryFetch(factory) {
   return res;
 }
 
-export async function requestPasswordReset(email) {
-    const res = await fetch("/api/auth/password/reset/", {
+// export async function requestPasswordReset(email) {
+//     const res = await fetch("/api/auth/password/reset/", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ email }),
+//     });
+  
+//     if (!res.ok) {
+//       throw new Error("비밀번호 재설정 요청 실패");
+//     }
+//     return res.json();
+//   }
+  
+  //비밀번호 재설정 관련 api
+  // api.js
+  export async function requestPasswordReset(email) {
+    const res = await fetch("/api/password_reset/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
-  
-    if (!res.ok) {
-      throw new Error("비밀번호 재설정 요청 실패");
-    }
+    if (!res.ok) throw new Error("비밀번호 재설정 요청 실패");
     return res.json();
   }
-  
+
+  export async function validateResetToken(token) {
+    const res = await fetch("/api/password_reset/validate_token/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    if (!res.ok) throw new Error("유효하지 않은 토큰");
+    return res.json();
+  }
+
+  export async function confirmPasswordReset(token, password) {
+    const res = await fetch("/api/password_reset/confirm/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password }),
+    });
+    if (!res.ok) throw new Error("비밀번호 변경 실패");
+    return res.json();
+  }
+  ///////////////////////////////////
