@@ -6,6 +6,8 @@ export default function ResetPWModal({ onClose }) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,12 +23,12 @@ export default function ResetPWModal({ onClose }) {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="modal-overlay">
       <div className="resetPWmodal">
         <h2>비밀번호 재설정</h2>
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}> */}
           <input
             type="email"
             placeholder="가입한 이메일 주소"
@@ -34,10 +36,10 @@ export default function ResetPWModal({ onClose }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit" disabled={loading}>
+          <button type="submit" onClick={handleSubmit} disabled={loading}>
             {loading ? "전송 중..." : "재설정 메일 보내기"}
           </button>
-        </form>
+        {/* </form> */}
         {message && <p>{message}</p>}
         <button onClick={onClose}>닫기</button>
       </div>
