@@ -124,6 +124,33 @@
   border-radius: 12px;
 }
 
+/* 2열 레이아웃 컨테이너 */
+.tracker-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* 각 컬럼 */
+.tracker-column {
+  min-width: 0; /* 그리드 오버플로우 방지 */
+}
+
+/* 반응형: 태블릿 */
+@media (max-width: 1200px) {
+  .tracker-content {
+    gap: 20px;
+  }
+}
+
+/* 반응형: 모바일 - 1열로 변경 */
+@media (max-width: 768px) {
+  .tracker-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
 /* 애니메이션 */
 @keyframes fadeInUp {
   from {

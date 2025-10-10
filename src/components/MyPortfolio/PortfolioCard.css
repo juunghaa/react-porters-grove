@@ -1,0 +1,81 @@
+/* 포트폴리오 폴더 카드 */
+.portfolio-folder-card {
+    /* background-color: #fff; */
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .portfolio-folder-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* 폴더 이미지 컨테이너 */
+  .folder-image-container {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .folder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* 폴더 정보 */
+  .folder-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .folder-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    line-height: 1.4;
+    word-break: keep-all;
+    text-align: center;
+  }
+  
+  .folder-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    width: fit-content;
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .portfolio-folder-card {
+      padding: 16px;
+    }
+  
+    .folder-title {
+      font-size: 15px;
+    }
+  
+    .folder-count {
+      font-size: 13px;
+      padding: 5px 14px;
+    }
+  }

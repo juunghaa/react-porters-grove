@@ -1,0 +1,79 @@
+/* 모든 활동 섹션 */
+.all-activities {
+    /* 2열 레이아웃에서는 margin-bottom 제거 */
+  }
+  
+  /* 섹션 헤더 */
+  .activities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .activities-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .activities-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+  
+  .activities-count {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  /* 더보기 버튼 */
+  .activities-more-button {
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: color 0.2s;
+  }
+  
+  .activities-more-button:hover {
+    color: #111827;
+  }
+  
+  /* 프로젝트 그리드 - 2열 레이아웃에서는 1열로 */
+  .activities-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* 반응형 디자인 */
+  @media (max-width: 1024px) {
+    .activities-grid {
+      gap: 14px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .all-activities {
+      margin-bottom: 0;
+    }
+  
+    .activities-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  
+    .activities-grid {
+      gap: 16px;
+    }
+  }

@@ -1,0 +1,23 @@
+/* Tracker 헤더 */
+.tracker {
+    margin-bottom: 32px;
+  }
+  
+  .tracker-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #d1d5db;
+    margin: 0;
+    text-align: center;
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .tracker {
+      margin-bottom: 24px;
+    }
+  
+    .tracker-title {
+      font-size: 24px;
+    }
+  }
