@@ -8,7 +8,7 @@ export const login = async (email, password) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ username: email, password }),
+    body: JSON.stringify({ email, password }),
   });
 
   const data = await res.json();
@@ -28,7 +28,6 @@ export const register = async (email, password1, password2) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            username: email,
             email,
             password1,
             password2,
@@ -49,7 +48,7 @@ export const register = async (email, password1, password2) => {
 
 
 export const exchangeGoogleCode = async (code, redirectUri) => {
-    const res = await fetch('/auth/callback?provider=google', {
+    const res = await fetch('/api/v1/auth/google/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, redirect_uri: redirectUri }),
@@ -75,7 +74,7 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
 export const refreshAccess = async () => {
     const refresh = localStorage.getItem('refresh');
     if (!refresh) throw new Error('no refresh token');
-    const res = await fetch('api/auth/token/refresh/', {
+    const res = await fetch('/api/auth/token/refresh/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh }),
@@ -139,8 +138,8 @@ export async function updateMyProfileJson(payload) {
 //   });
      const res = await tryFetch(() =>
        fetch(`/api/profiles/me/`, {
-        //  method: "PATCH",
-         method: "PUT",
+         method: "PATCH",
+        //  method: "PUT",
          headers: { ...authHeaders(), "Content-Type": "application/json" },
          body: JSON.stringify(payload),
        })
