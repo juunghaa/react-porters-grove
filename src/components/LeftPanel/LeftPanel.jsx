@@ -19,24 +19,52 @@ const LeftPanel = ({
   onHomeClick,
   onLogout,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(false); // 고정 상태
+
+  // 실제로 펼쳐질지 여부: 고정되어 있거나, 닫힌 상태에서 hover 중일 때
+  const shouldExpand = !isCollapsed || isPinned || (isCollapsed && isHovered);
+
+  const handlePanelClick = () => {
+    if (isCollapsed && !isPinned) {
+      // 닫힌 상태에서 클릭하면 고정
+      setIsPinned(true);
+      onToggle(); // 열림 상태로 변경
+    }
+  };
+
+  const handleToggleClick = (e) => {
+    e.stopPropagation(); // 패널 클릭 이벤트와 분리
+    if (!isCollapsed) {
+      // 열린 상태에서 토글 버튼 누르면 고정 해제하고 닫기
+      setIsPinned(false);
+    }
+    onToggle();
+  };
+
   return (
-    <div className={`left-panel ${isCollapsed ? "collapsed" : ""}`}>
+    <div
+      className={`left-panel ${shouldExpand ? "" : "collapsed"}`}
+      onMouseEnter={() => isCollapsed && setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handlePanelClick}
+    >
       <div className="panel-header">
         <div className="logo-section">
           <div className="logo">
             <div className="logo-icon">
               <img
-                src={isCollapsed ? cutlogo : logoIcon}
+                src={shouldExpand ? logoIcon : cutlogo}
                 alt="아카이브"
                 className={
-                  isCollapsed ? "logo-img-collapsed" : "logo-img"
-                } /**iscollapsed상태면 logo-img-collasped로, 아니면 logo-img로 */
+                  shouldExpand ? "logo-img" : "logo-img-collapsed"
+                }
               />
             </div>
           </div>
-          <button className="toggle-btn" onClick={onToggle}>
-            <span className={`toggle-icon ${isCollapsed ? "collapsed" : ""}`}>
-              {isCollapsed ? "→" : "←"}
+          <button className="toggle-btn" onClick={handleToggleClick}>
+            <span className={`toggle-icon ${shouldExpand ? "" : "collapsed"}`}>
+              {shouldExpand ? "←" : "→"}
             </span>
           </button>
         </div>
@@ -48,8 +76,7 @@ const LeftPanel = ({
             <div className="nav-icon">
               <img src={homeIcon} alt="홈" className="icon-img" />
             </div>
-
-            {!isCollapsed && <span className="nav-text">홈</span>}
+            {shouldExpand && <span className="nav-text">홈</span>}
           </div>
 
           <div className="nav-item" onClick={onCreateNew}>
@@ -58,25 +85,25 @@ const LeftPanel = ({
             <div className="nav-icon">
               <img src={plusIcon} alt="추가하기" className="icon-img" />
             </div>
-            {!isCollapsed && <span className="nav-text">새로 만들기</span>}
+            {shouldExpand && <span className="nav-text">새로 만들기</span>}
           </div>
 
           <div className="nav-item">
             <div className="nav-icon">
               <img src={archiveIcon} alt="아카이브" className="icon-img" />
             </div>
-            {!isCollapsed && <span className="nav-text">아카이브</span>}
+            {shouldExpand && <span className="nav-text">아카이브</span>}
           </div>
 
           <div className="nav-item">
             <div className="nav-icon">
-              <img src={browseIcon} alt="아카이브" className="icon-img" />
+              <img src={browseIcon} alt="둘러보기" className="icon-img" />
             </div>
-            {!isCollapsed && <span className="nav-text">둘러보기</span>}
+            {shouldExpand && <span className="nav-text">둘러보기</span>}
           </div>
         </nav>
 
-        {!isCollapsed && (
+        {shouldExpand && (
           <div className="bottom-section">
             <div className="github-status">
               <div className="github-item">
@@ -96,12 +123,6 @@ const LeftPanel = ({
                 <span className="nav-text">설정</span>
               </div>
 
-              {/* <div className="nav-item">
-                <div className="nav-icon">
-                  <img src={logoutIcon} alt="로그아웃" className="icon-img" />
-                </div>
-                <span className="nav-text">로그아웃</span>
-              </div> */}
               <LogoutButton onLogout={onLogout} />
             </div>
           </div>

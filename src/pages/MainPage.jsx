@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LeftPanel from "./../components/LeftPanel/LeftPanel";
 import MainHome from "./../components/MainHome/MainHome";
 import ChooseOption from "./../components/ChooseOption/ChooseOption";
-import "./../App.css"; // 스타일 적용
+import "./../App.css";
 import ProfileCard from "../components/Profile/ProfileCard";
 import githubIcon from "../assets/icons/Github.png";
 import banner from "../assets/icons/banner.png";
@@ -10,27 +10,27 @@ import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
 
 export default function MainPage({ onLogout }) {
- const [profile, setProfile] = useState({
-     name: "김포터",
-     title: "Motion designer",
-     tagline: "광주에 사는 냥집사 모션 디자이너",
-     avatarUrl: avatar,
-     bannerUrl: banner,
-     socials: [], // 소셜도 여기서 보관
-   });
+  const [profile, setProfile] = useState({
+    name: "김포터",
+    title: "Motion designer",
+    tagline: "광주에 사는 냥집사 모션 디자이너",
+    avatarUrl: avatar,
+    bannerUrl: banner,
+    socials: [],
+  });
 
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
+  const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false); // 추가
 
   const handlePanelToggle = () => {
     setIsPanelCollapsed(!isPanelCollapsed);
   };
 
   const handleCreateNew = () => {
-    setCurrentPage("chooseOption"); // '새로 만들기' 버튼 클릭 시 페이지 전환
+    setCurrentPage("chooseOption");
   };
 
-  // '홈' 버튼 클릭 시 페이지를 MainHome으로 변경하는 함수
   const handleHomeClick = () => {
     setCurrentPage("home");
   };
@@ -38,6 +38,13 @@ export default function MainPage({ onLogout }) {
   const handleGoToActivity = () => {
     setCurrentPage("Activity");
   };
+
+  // 프로필 설정창이 열릴 때 LeftPanel 자동으로 접기
+  useEffect(() => {
+    if (isProfileSettingsOpen) {
+      setIsPanelCollapsed(true);
+    }
+  }, [isProfileSettingsOpen]);
 
   const renderMainContent = () => {
     if (currentPage === "home") {
@@ -85,22 +92,13 @@ export default function MainPage({ onLogout }) {
               top: "24px",
             }}
           >
-            {/* <ProfileCard
-              bannerUrl={banner}
-              avatarUrl={avatar}
-              name="김포터"
-              title="Motion designer"
-              tagline="광주에 사는 냥집사 모션 디자이너"
-              stats={{ activities: 18, followers: 22, scraps: 12 }}
-              socials={[]}
-              onEdit={(section) => console.log("편집:", section)}
-            /> */}
             <ProfileCard
-            {...profile}
-            socials={profile.socials}
-            onProfileUpdate={(data) =>
+              {...profile}
+              socials={profile.socials}
+              onProfileUpdate={(data) =>
                 setProfile((prev) => ({ ...prev, ...data }))
-            }
+              }
+              onSettingsOpenChange={setIsProfileSettingsOpen} // 추가
             />
           </div>
         )}
