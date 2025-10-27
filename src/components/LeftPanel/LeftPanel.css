@@ -17,6 +17,11 @@
   width: 60px;
 }
 
+/* 프로필 설정창이 열릴 때 z-index 낮춤 */
+.left-panel.behind-overlay {
+  z-index: 999;
+}
+
 .panel-header {
   padding: 16px;
   border-bottom: 1px solid #e9ecef;
@@ -35,12 +40,18 @@
 }
 
 .logo-icon {
-  width: 24px;
-  height: 24px;
+  width: auto;
+  height: auto;
   font-size: 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.left-panel.collapsed .logo-icon {
+  width: 40px;
 }
 
 .logo-text {
@@ -101,18 +112,71 @@
 }
 
 .nav-icon {
-  font-size: 18px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
+/* nav-icon 안의 모든 이미지를 강제로 같은 크기로 */
+.nav-icon img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+}
+
+/* 새로 만들기 버튼 위아래 간격 동일하게 */
+.nav-item:first-child {
+  margin: 16px 0 16px 0;
+}
+
+/* 접힌 상태에서도 동일한 간격 유지 */
+.left-panel.collapsed .nav-item:first-child {
+  margin: 16px 0 16px 0;
+}
+
 .nav-text {
   font-size: 14px;
   font-weight: 500;
+}
+
+.nav-item2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-item2:hover {
+  background-color: #c3e9a0;
+  color: #065f46;
+}
+
+.nav-icon2 {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* nav-icon 안의 모든 이미지를 강제로 같은 크기로 */
+.nav-icon2 img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
 }
 
 .bottom-section {
@@ -168,9 +232,11 @@
   display: none;
 }
 
+/* 접힌 상태에서도 기존 간격 유지 */
 .left-panel.collapsed .nav-item {
   justify-content: center;
   padding: 12px 8px;
+  margin: 4px 0; /* 기본 간격 유지 */
 }
 
 .left-panel.collapsed .github-item {
@@ -193,6 +259,11 @@
   .left-panel .nav-item {
     justify-content: center;
     padding: 12px 8px;
+    margin: 4px 0; /* 기본 간격 유지 */
+  }
+
+  .left-panel .nav-item:first-child {
+    margin: 16px 0 16px 0; /* 첫 번째 아이템 간격 유지 */
   }
 
   .left-panel .github-item {
@@ -217,15 +288,18 @@
 
 /*로고 이미지*/
 .logo-img {
-  width: 100px;
   height: auto;
-  padding-left: 75px;
+  width: 150px;
   object-fit: contain;
+  margin-left: -6px;
+
 }
 
+/* 접힌 상태에서도 같은 클래스 사용 */
 .logo-img-collapsed {
-  width: 25px;
   height: auto;
-  padding-left: 15px;
+  width: 150px;
   object-fit: contain;
+  margin-left: -6px;
+
 }
