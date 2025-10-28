@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import {exchangeGoogleCode} from "./api.js";
+import { exchangeGoogleCode } from "./api.js";
 import LogoutButton from "./components/Auth/LogoutButton";
 import "./App.css";
 import GithubGrass from "./components/GithubGrass";
@@ -9,7 +9,9 @@ import OAuthCallback from "./pages/OAuthCallback";
 import MainPage from "./pages/MainPage";
 import LeftPanel from "./components/LeftPanel/LeftPanel";
 import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
+// import GoogleLoginButton from "./components/GoogleLoginButton"; // ✅ 필요 시 홈 테스트용
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -60,32 +62,47 @@ export default function App() {
   }
   
   return (
-    <div className="App">
-      {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
-            <GithubGrass username="octocat" year="last" />
-            <h1>포트폴리오 사이트</h1> */}
-      {/* <MainPage onLogout={handleLogout}/>  */}
-
-      {isLoggedIn ? (
-        <>
-          <MainPage onLogout={handleLogout} />
-        </>
-      ) : (
-        <>
+    <Router>
+      <Routes>
+        {/* ✅ 1️⃣ Google OAuth redirect callback 처리 */}
+        <Route
+          path="/api/v1/auth/google/callback"
+          element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
+        />
         
-          {view === "login" && <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
-          {view === "signup" && <SignupPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
-          {/* {view === "reset" && <ResetPasswordPage onChangeView={setView} />} */}
-          
-          {/* 
-          {view === "login" ? (
-            <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
-          ) : (
-            <SignupPage onLoginSuccess={handleAuthSuccess} />
-          )} */}
-          {/* 나중에 각각 로그인 회원가입 버튼 여기 위에 형식 맞게 적용해서 넣으면 됩니당!!!!! */}
-        </>
-      )}
-    </div>
+        {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
+        <Route
+          path="/"
+          element={
+            <div className="App">
+              {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
+                    <GithubGrass username="octocat" year="last" />
+                    <h1>포트폴리오 사이트</h1> */}
+              <MainPage onLogout={handleLogout}/> 
+
+              {isLoggedIn ? (
+                <>
+                  <MainPage onLogout={handleLogout} />
+                </>
+              ) : (
+                <>
+                  {view === "login" && <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
+                  {view === "signup" && <SignupPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
+                  {/* {view === "reset" && <ResetPasswordPage onChangeView={setView} />} */}
+                  
+                  {/* 
+                  {view === "login" ? (
+                    <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
+                  ) : (
+                    <SignupPage onLoginSuccess={handleAuthSuccess} />
+                  )} */}
+                  {/* 나중에 각각 로그인 회원가입 버튼 여기 위에 형식 맞게 적용해서 넣으면 됩니당!!!!! */}
+                </>
+              )}
+            </div>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
