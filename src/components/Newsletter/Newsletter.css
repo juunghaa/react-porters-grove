@@ -47,17 +47,6 @@
     flex: 1;
   }
   
-  .more-link {
-    font-size: 13px;
-    color: #999;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  
-  .more-link:hover {
-    color: #666;
-  }
-  
   /* 아티클 리스트 */
   .articles-list {
     display: flex;
@@ -70,41 +59,32 @@
     gap: 12px;
     cursor: pointer;
     transition: opacity 0.2s;
+    margin-left: -10px;
   }
   
   .article-item:hover {
     opacity: 0.8;
   }
-  
-  .article-thumbnail {
+
+   .article-thumbnail {
     position: relative;
     width: 120px;
     height: 120px;
     border-radius: 12px;
     overflow: hidden;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .article-thumbnail img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* cover 대신 contain */
   }
-  
+
   .part-badge {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 4px;
-    backdrop-filter: blur(4px);
-  }
-  
-  .tag-badge {
     position: absolute;
     top: 8px;
     left: 8px;
@@ -130,18 +110,6 @@
     font-size: 15px;
     font-weight: 700;
     color: #000;
-    margin: 0;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .article-subtitle {
-    font-size: 13px;
-    color: #666;
     margin: 0;
     line-height: 1.4;
     display: -webkit-box;
