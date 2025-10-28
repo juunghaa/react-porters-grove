@@ -78,7 +78,7 @@ export default function App() {
               {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
                     <GithubGrass username="octocat" year="last" />
                     <h1>포트폴리오 사이트</h1> */}
-              <MainPage onLogout={handleLogout}/> 
+              {/* <MainPage onLogout={handleLogout}/>  */}
 
               {isLoggedIn ? (
                 <>
