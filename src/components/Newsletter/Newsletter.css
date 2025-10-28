@@ -132,3 +132,12 @@
       max-width: 330px;
     }
   }
+
+  .article-item {
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-decoration: none; /* 링크 밑줄 제거 */
+    color: inherit; /* 링크 색상 상속 */
+  }

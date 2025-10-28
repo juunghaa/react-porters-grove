@@ -14,18 +14,21 @@ export default function Newsletter () {
       title: "회고는 왜 필요할까?",
       thumbnail: topArticle1,
       time: "6시간 전",
+      link: "https://www.instagram.com/p/DOfLYCRkkwJ/?img_index=1" // 링크 추가
     },
     {
       id: 2,
       title: "기록은 보관이 아니라, 이야기가 되어야 한다",
       thumbnail: topArticle2,
       time: "3일 전",
+      link: "https://www.instagram.com/p/DPEKIZMElRn/?img_index=1" // 링크 추가
     },
     {
       id: 3,
       title: "유료 전환에 성공한 MVP 기획 프로세스 공개",
       thumbnail: topArticle3,
       time: "2025.09.29",
+      link: "https://www.instagram.com/p/DPVvTGTklML/?img_index=1" // 링크 추가
     }
   ];
 
@@ -40,7 +43,13 @@ export default function Newsletter () {
 
         <div className="articles-list">
           {articles.map((article) => (
-            <div key={article.id} className="article-item">
+            <a 
+              key={article.id} 
+              href={article.link}
+              className="article-item"
+              target="_blank" // 새 탭에서 열기 (선택사항)
+              rel="noopener noreferrer" // 보안을 위한 속성
+            >
               <div className="article-thumbnail">
                 <img src={article.thumbnail} alt={article.title} />
               </div>
@@ -49,7 +58,7 @@ export default function Newsletter () {
                 {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
                 <span className="article-time">{article.time}</span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
