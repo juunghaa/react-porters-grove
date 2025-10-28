@@ -65,10 +65,11 @@ export default function App() {
     <Router>
       <Routes>
         {/* ✅ 1️⃣ Google OAuth redirect callback 처리 */}
-        <Route
+        {/* <Route
           path="/api/v1/auth/google/callback"
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
-        />
+        /> */}
+        <Route path="/google/callback" element={<GoogleCallback />} />
         
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route

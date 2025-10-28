@@ -51,7 +51,7 @@ export default function GoogleLoginButton({ disabled }) {
     const clientId =
       "279122774110-vhr4qq7m6gm8a6squkk5fde3l4n2d8mu.apps.googleusercontent.com";
     const redirectUri =
-      "https://react-porters-grove.vercel.app/api/v1/auth/google/callback/";
+      "https://react-porters-grove.vercel.app/google/callback/";
     const scope = "email profile";
     const responseType = "code";
     const accessType = "online";

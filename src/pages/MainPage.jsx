@@ -8,6 +8,7 @@ import githubIcon from "../assets/icons/Github.png";
 import banner from "../assets/icons/banner.png";
 import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
+import Newsletter from "./../components/Newsletter/Newsletter";
 
 export default function MainPage({ onLogout }) {
   const [profile, setProfile] = useState({
@@ -100,6 +101,7 @@ export default function MainPage({ onLogout }) {
               }
               onSettingsOpenChange={setIsProfileSettingsOpen} // 추가
             />
+            <Newsletter />
           </div>
         )}
       </div>
