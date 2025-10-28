@@ -84,26 +84,30 @@ export default function MainPage({ onLogout }) {
           {renderMainContent()}
         </div>
 
-        {currentPage === "home" && (
-          <div
-            style={{
-              width: "340px",
-              flex: "0 0 340px",
-              position: "sticky",
-              top: "24px",
-            }}
-          >
-            <ProfileCard
-              {...profile}
-              socials={profile.socials}
-              onProfileUpdate={(data) =>
-                setProfile((prev) => ({ ...prev, ...data }))
-              }
-              onSettingsOpenChange={setIsProfileSettingsOpen} // 추가
-            />
-            <Newsletter />
-          </div>
-        )}
+      {currentPage === "home" && (
+        <div
+          style={{
+            width: "340px",
+            flex: "0 0 340px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1px", // 간격 추가
+            alignSelf: "flex-start", // 상단 정렬
+            position: "sticky",
+            top: "24px",
+          }}
+        >
+          <ProfileCard
+            {...profile}
+            socials={profile.socials}
+            onProfileUpdate={(data) =>
+              setProfile((prev) => ({ ...prev, ...data }))
+            }
+            onSettingsOpenChange={setIsProfileSettingsOpen}
+          />
+          <Newsletter />
+        </div>
+      )}
       </div>
     </div>
   );

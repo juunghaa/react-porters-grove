@@ -1,7 +1,7 @@
 .layout {
     background: white;
-    position: sticky;
-    top: 24px;
+    /* position: sticky; */
+    /* top: 24px; */
     width: 330px;
     /* width: clamp(100px, 32vw, 330px); */
     /* max-width: 100%; */
