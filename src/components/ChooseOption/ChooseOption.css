@@ -1,4 +1,4 @@
-.choose-option {
+/* .choose-option {
   padding: 24px;
   background-color: #f9fafb;
   flex: 1;
@@ -46,16 +46,124 @@
 }
 
 #retrospective {
-  border-left: 5px solid #3e8e41; /* 초록색 */
+  border-left: 5px solid #3e8e41; 
 }
 
 #activity-log {
-  border-left: 5px solid #8e3e3e; /* 빨간색 */
-}
+  border-left: 5px solid #8e3e3e; 
+} 
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .choose-option {
     padding: 16px;
+  }
+} */
+
+.choose-option {
+  padding: 24px;
+  background-color: #f5f5f5;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.choose-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.choose-logo {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 20px;
+}
+
+.choose-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.choose-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.choose-subtitle {
+  font-size: 14px;
+  color: #999;
+  font-weight: 400;
+}
+
+.option-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.option-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.option-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.option-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .option-container {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .choose-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .choose-option {
+    padding: 16px;
+  }
+
+  .choose-header {
+    margin-bottom: 30px;
+  }
+
+  .choose-logo {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+  }
+
+  .choose-title {
+    font-size: 22px;
+  }
+
+  .choose-subtitle {
+    font-size: 13px;
   }
 }
