@@ -10,7 +10,7 @@ export default function GoogleCallback({ onLoginSuccess }) {
         "https://react-porters-grove.vercel.app/google/callback/";
 
       // Django 백엔드로 code + redirect_uri 전송
-      fetch("/api/proxy", {
+      fetch("https://react-porters-grove.vercel.app/api/proxy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, redirect_uri: redirectUri }),
