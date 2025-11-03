@@ -1,64 +1,3 @@
-/* .choose-option {
-  padding: 24px;
-  background-color: #f9fafb;
-  flex: 1;
-  overflow-y: auto;
-  min-height: 100vh;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.option-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.option-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
-}
-
-.option-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.option-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
-}
-
-.option-description {
-  font-size: 14px;
-  color: #6b7280;
-}
-
-#retrospective {
-  border-left: 5px solid #3e8e41; 
-}
-
-#activity-log {
-  border-left: 5px solid #8e3e3e; 
-} 
-
-@media (max-width: 768px) {
-  .choose-option {
-    padding: 16px;
-  }
-} */
-
 .choose-option {
   padding: 24px;
   background-color: #f5f5f5;
@@ -90,7 +29,7 @@
 }
 
 .choose-title {
-  font-size: 2px;
+  font-size: 23px;
   font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 10px;
@@ -109,27 +48,191 @@
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+  align-items: start;  /* 각 카드가 독립적인 높이를 가지도록 */
+  grid-auto-rows: min-content;  /* 행 높이를 내용에 맞게 자동 조정 */
 }
 
+/* 카드 기본 스타일 - 절대 건들지 않음 */
 .option-card {
-  background-color: #ffffff;
+  background-color: #F8F8F8;
   border-radius: 16px;
-  overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: none;
+  position: relative;
+  overflow: visible;
+  align-self: start;  /* 카드 위치 고정 */
+  display: flex;
+  flex-direction: column;
 }
 
-.option-card:hover {
-  transform: translateY(-8px);
+.option-card:hover:not(.expanded) {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 확장된 카드 스타일 - 세로로만 늘어남 */
+.option-card.expanded {
+  background: #FFFFFF;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+}
+
+.option-card.expanded:hover {
+  background: #FFFFFF;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .option-card img {
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 16px;
+  flex-shrink: 0;  /* 이미지 크기 고정 */
+}
+
+/* 확장된 카드 내부 콘텐츠 - 원래 카드 너비 유지, 세로로만 확장 */
+.card-expanded-content {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #F8F8F8;
+  border-radius: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;  /* 상단 여백 제거 */
+  animation: expandCard 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes expandCard {
+  from {
+    opacity: 0;
+    transform: scaleY(0.95);
+    transform-origin: top;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+}
+
+.card-header {
+  margin-bottom: 0;
+}
+
+/* 태그 컨테이너 - 기본 */
+.tag-container {
+  display: grid;
+  height: 309px;
+  padding: 24px 36px;
+  row-gap: 12px;       /* 18px → 12px */
+  column-gap: 16px;    /* 24px → 16px */
+  align-self: stretch;
+}
+
+/* 경험 카드 - 5행 2열 */
+.tag-container.experience-tags {
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 스펙 카드 - 5행 2열 (왼쪽만 사용) */
+.tag-container.spec-tags {
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tag-container.spec-tags .tag-chip {
+  grid-column: 1;  /* 왼쪽 열에만 배치 */
+}
+
+/* 포트폴리오 카드 - 2행 2열 (왼쪽만 사용, 높이 축소) */
+.tag-container.portfolio-tags {
+  height: 150px;  /* 309px → 150px */
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tag-container.portfolio-tags .tag-chip {
+  grid-column: 1;  /* 왼쪽 열에만 배치 */
+}
+
+/* 태그 칩 스타일 */
+.tag-chip {
+  display: inline-flex;
+  height: 38px;
+  padding: 4px 4px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  font-weight: 600;
+  color: #999999;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.tag-chip:nth-child(1) { animation-delay: 0.05s; }
+.tag-chip:nth-child(2) { animation-delay: 0.1s; }
+.tag-chip:nth-child(3) { animation-delay: 0.15s; }
+.tag-chip:nth-child(4) { animation-delay: 0.2s; }
+.tag-chip:nth-child(5) { animation-delay: 0.25s; }
+.tag-chip:nth-child(6) { animation-delay: 0.3s; }
+.tag-chip:nth-child(7) { animation-delay: 0.35s; }
+.tag-chip:nth-child(8) { animation-delay: 0.4s; }
+.tag-chip:nth-child(9) { animation-delay: 0.45s; }
+.tag-chip:nth-child(10) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 호버된 태그 스타일 */
+.tag-chip.hovered {
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+/* 선택된 태그 스타일 */
+.tag-chip.selected {
+  background-color: #2C2C2C;
+  color: #FFFFFF;
+}
+
+.tag-chip .tag-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;  /* 크기 고정 */
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+}
+
+.tag-chip .tag-label {
+  line-height: 1;
+  flex: 0 1 auto;  /* flex: 1 제거 */
+}
+
+/* 선택 완료 버튼 - 사용하지 않음 */
+.confirm-button {
+  display: none;
 }
 
 /* 반응형 디자인 */
@@ -141,6 +244,54 @@
 
   .choose-title {
     font-size: 24px;
+  }
+  
+  .card-expanded-content {
+    padding: 0;
+  }
+  
+  .tag-container {
+    height: 280px;
+    padding: 20px 30px;
+    row-gap: 10px;     /* 16px → 10px */
+    column-gap: 14px;  /* 20px → 14px */
+  }
+  
+  .tag-container.experience-tags {
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.spec-tags {
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.spec-tags .tag-chip {
+    grid-column: 1;
+  }
+  
+  .tag-container.portfolio-tags {
+    height: 140px;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.portfolio-tags .tag-chip {
+    grid-column: 1;
+  }
+  
+  .tag-chip {
+    height: 36px;
+    padding: 4px 4px;
+    font-size: 15px;
+    gap: 6px;
+  }
+  
+  .tag-chip .tag-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
   }
 }
 
@@ -165,5 +316,53 @@
 
   .choose-subtitle {
     font-size: 13px;
+  }
+  
+  .card-expanded-content {
+    padding: 0;
+  }
+  
+  .tag-container {
+    height: 250px;
+    padding: 16px 24px;
+    row-gap: 8px;      /* 14px → 8px */
+    column-gap: 12px;  /* 16px → 12px */
+  }
+  
+  .tag-container.experience-tags {
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.spec-tags {
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.spec-tags .tag-chip {
+    grid-column: 1;
+  }
+  
+  .tag-container.portfolio-tags {
+    height: 120px;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .tag-container.portfolio-tags .tag-chip {
+    grid-column: 1;
+  }
+  
+  .tag-chip {
+    height: 34px;
+    padding: 4px 3px;
+    font-size: 14px;
+    gap: 5px;
+  }
+  
+  .tag-chip .tag-icon {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
   }
 }

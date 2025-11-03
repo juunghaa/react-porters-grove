@@ -76,44 +76,39 @@
 // };
 
 // export default ChooseOption;
-
-
-
 import React, { useState } from "react";
 import "./ChooseOption.css";
+import grayFlag from '../../assets/icons/flag.png'; 
+import blackFlag from '../../assets/icons/flag2.png'; 
 
 const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
   const [expandedCard, setExpandedCard] = useState(null);
-  const [selectedTags, setSelectedTags] = useState({
-    experience: [],
-    spec: [],
-    portfolio: []
-  });
+  const [hoveredTag, setHoveredTag] = useState(null);
 
-  // 각 카드별 태그 옵션
+  // 각 카드별 태그 옵션 (icon 제거)
   const tagOptions = {
     experience: [
-      { id: 'project', label: '프로젝트', icon: '🚀' },
-      { id: 'contest', label: '공모전', icon: '🏆' },
-      { id: 'campus', label: '교내활동', icon: '🎓' },
-      { id: 'external', label: '대외활동', icon: '🌍' },
-      { id: 'club', label: '동아리', icon: '👥' },
-      { id: 'hackathon', label: '해커톤', icon: '💻' },
-      { id: 'startup', label: '창업', icon: '💡' },
-      { id: 'research', label: '연구', icon: '🔬' },
-      { id: 'volunteer', label: '봉사', icon: '🤝' }
+      { id: 'project', label: '프로젝트' },
+      { id: 'contest', label: '공모전' },
+      { id: 'campus', label: '교내활동' },
+      { id: 'external', label: '대외활동' },
+      { id: 'club', label: '동아리' },
+      { id: 'hackathon', label: '해커톤' },
+      { id: 'startup', label: '창업' },
+      { id: 'research', label: '연구' },
+      { id: 'volunteer', label: '봉사' },
+      { id: 'education', label: '교육' }
     ],
     spec: [
-      { id: 'certificate', label: '자격증', icon: '📜' },
-      { id: 'award', label: '수상', icon: '🏅' },
-      { id: 'language', label: '어학', icon: '🗣️' },
-      { id: 'exam', label: '시험', icon: '📝' }
+      { id: 'certificate', label: '자격증' },
+      { id: 'award', label: '수상' },
+      { id: 'career', label: '경력' },
+      { id: 'intern', label: '인턴' },
+      { id: 'overseas', label: '해외경험' }
     ],
     portfolio: [
-      { id: 'all', label: '전체', icon: '📋' },
-      { id: 'design', label: '디자인', icon: '🎨' },
-      { id: 'development', label: '개발', icon: '⚙️' },
-      { id: 'planning', label: '기획', icon: '📊' }
+      { id: 'resume', label: '이력서' },
+      { id: 'portfolio', label: '포트폴리오' }
     ]
   };
 
@@ -125,31 +120,14 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
     }
   };
 
-  const handleTagSelect = (cardType, tagId) => {
-    setSelectedTags(prev => {
-      const currentTags = prev[cardType];
-      if (currentTags.includes(tagId)) {
-        return {
-          ...prev,
-          [cardType]: currentTags.filter(id => id !== tagId)
-        };
-      } else {
-        return {
-          ...prev,
-          [cardType]: [...currentTags, tagId]
-        };
-      }
-    });
-  };
-
-  const handleConfirm = (cardType) => {
-    // 선택 완료 후 해당 페이지로 이동
+  // 태그 클릭 시 바로 페이지 이동
+  const handleTagClick = (cardType, tagId) => {
     if (cardType === 'experience' && onGoToExperience) {
-      onGoToExperience(selectedTags.experience);
+      onGoToExperience([tagId]);
     } else if (cardType === 'spec' && onGoToSpec) {
-      onGoToSpec(selectedTags.spec);
+      onGoToSpec([tagId]);
     } else if (cardType === 'portfolio' && onGoToPortfolio) {
-      onGoToPortfolio(selectedTags.portfolio);
+      onGoToPortfolio([tagId]);
     }
   };
 
@@ -166,31 +144,29 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
       <div className="option-container">
         {/* 경험 카드 */}
         <div 
-          className={`option-card ${expandedCard === 'experience' ? 'expanded' : ''}`}
+          className={`option-card ${expandedCard === 'experience' ? 'expanded experience-card' : ''}`}
           onClick={() => handleCardClick('experience')}
         >
           {expandedCard === 'experience' ? (
             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
-              <div className="card-header">
-              </div>
-              <div className="tag-container">
+              <div className="tag-container experience-tags">
                 {tagOptions.experience.map(tag => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${selectedTags.experience.includes(tag.id) ? 'selected' : ''}`}
-                    onClick={() => handleTagSelect('experience', tag.id)}
+                    className={`tag-chip ${hoveredTag === `experience-${tag.id}` ? 'hovered' : ''}`}
+                    onClick={() => handleTagClick('experience', tag.id)}
+                    onMouseEnter={() => setHoveredTag(`experience-${tag.id}`)}
+                    onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <span className="tag-icon">{tag.icon}</span>
+                    <img 
+                      src={hoveredTag === `experience-${tag.id}` ? blackFlag : grayFlag} 
+                      alt="flag" 
+                      className="tag-icon"
+                    />
                     <span className="tag-label">{tag.label}</span>
                   </button>
                 ))}
               </div>
-              <button 
-                className="confirm-button"
-                onClick={() => handleConfirm('experience')}
-              >
-                선택 완료
-              </button>
             </div>
           ) : (
             <img 
@@ -202,31 +178,29 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
 
         {/* 스펙 카드 */}
         <div 
-          className={`option-card ${expandedCard === 'spec' ? 'expanded' : ''}`}
+          className={`option-card ${expandedCard === 'spec' ? 'expanded spec-card' : ''}`}
           onClick={() => handleCardClick('spec')}
         >
           {expandedCard === 'spec' ? (
             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
-              <div className="card-header">
-              </div>
-              <div className="tag-container">
+              <div className="tag-container spec-tags">
                 {tagOptions.spec.map(tag => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${selectedTags.spec.includes(tag.id) ? 'selected' : ''}`}
-                    onClick={() => handleTagSelect('spec', tag.id)}
+                    className={`tag-chip ${hoveredTag === `spec-${tag.id}` ? 'hovered' : ''}`}
+                    onClick={() => handleTagClick('spec', tag.id)}
+                    onMouseEnter={() => setHoveredTag(`spec-${tag.id}`)}
+                    onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <span className="tag-icon">{tag.icon}</span>
+                    <img 
+                      src={hoveredTag === `spec-${tag.id}` ? blackFlag : grayFlag} 
+                      alt="flag" 
+                      className="tag-icon"
+                    />
                     <span className="tag-label">{tag.label}</span>
                   </button>
                 ))}
               </div>
-              <button 
-                className="confirm-button"
-                onClick={() => handleConfirm('spec')}
-              >
-                선택 완료
-              </button>
             </div>
           ) : (
             <img 
@@ -238,31 +212,29 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
 
         {/* 포트폴리오 카드 */}
         <div 
-          className={`option-card ${expandedCard === 'portfolio' ? 'expanded' : ''}`}
+          className={`option-card ${expandedCard === 'portfolio' ? 'expanded portfolio-card' : ''}`}
           onClick={() => handleCardClick('portfolio')}
         >
           {expandedCard === 'portfolio' ? (
             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
-              <div className="card-header">
-              </div>
-              <div className="tag-container">
+              <div className="tag-container portfolio-tags">
                 {tagOptions.portfolio.map(tag => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${selectedTags.portfolio.includes(tag.id) ? 'selected' : ''}`}
-                    onClick={() => handleTagSelect('portfolio', tag.id)}
+                    className={`tag-chip ${hoveredTag === `portfolio-${tag.id}` ? 'hovered' : ''}`}
+                    onClick={() => handleTagClick('portfolio', tag.id)}
+                    onMouseEnter={() => setHoveredTag(`portfolio-${tag.id}`)}
+                    onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <span className="tag-icon">{tag.icon}</span>
+                    <img 
+                      src={hoveredTag === `portfolio-${tag.id}` ? blackFlag : grayFlag} 
+                      alt="flag" 
+                      className="tag-icon"
+                    />
                     <span className="tag-label">{tag.label}</span>
                   </button>
                 ))}
               </div>
-              <button 
-                className="confirm-button"
-                onClick={() => handleConfirm('portfolio')}
-              >
-                선택 완료
-              </button>
             </div>
           ) : (
             <img 
