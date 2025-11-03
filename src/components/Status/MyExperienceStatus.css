@@ -1,0 +1,97 @@
+.experience-status {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px; */
+    /* width: 672px; 원래는 672인데... 뭔가 비율상 왜 더 줄이는게 더 낫지? */
+    width: 472px;
+
+    display: flex;
+    padding: 20px 10px 10px 10px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+
+    border-radius: 30px;
+    background: #F7F7F7;
+  
+    /* box-sizing: border-box; */
+  }
+  
+  .experience-header {
+    /* text-align: center; */
+
+    display: flex;
+    padding: 0 12px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
+  }
+  
+  .experience-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+  }
+  
+  .experience-subtext {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+  
+  .highlight {
+    color: #126431;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .experience-grid {
+    /* display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+    text-align: center; */
+
+    width: 432px;
+    display: flex;
+    /* height: 132px; */
+    height: 112px;
+    padding: 8px 20px;
+    align-items: center;
+    gap: 12px;
+    border-radius: 20px;
+    background: #FFF;
+
+    flex-wrap: wrap;
+    justify-content: center;
+      
+  }
+  
+  .exp-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .exp-icon {
+    font-size: 24px;
+  }
+  
+  .exp-label {
+    font-size: 13px;
+    color: #111;
+  }
+  
+  .exp-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  

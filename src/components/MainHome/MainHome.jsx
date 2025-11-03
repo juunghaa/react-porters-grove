@@ -3,15 +3,16 @@ import "./MainHome.css";
 import Tracker from "../Tracker/Tracker";
 import AllActivities from "../ActivityCard/AllActivities";
 import MyPortfolio from "../MyPortfolio/MyPortfolio";
+import MyExperienceStatus from "../Status/MyExperienceStatus";
 
 const MainHome = () => {
   return (
     <div className="main-home">
       {/* 환영 메시지 */}
       <div className="welcome-section">
-        <h1 className="welcome-title">김포트님,</h1>
+        <h1 className="welcome-title">김포터님, 안녕하세요</h1>
         <p className="welcome-subtitle">
-          하나씩 쌓여 쓰다 보면, 나만의 이야기가 완성돼요.
+          오늘 기록한 경험이, 내일의 포트폴리오가 돼요
         </p>
       </div>
 
@@ -27,8 +28,9 @@ const MainHome = () => {
       </div> */}
 
     {/* Tracker 헤더 */}
-    <Tracker />
+    {/* <Tracker /> */}
 
+    <MyExperienceStatus />
 
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 */}
     <div className="tracker-content">
