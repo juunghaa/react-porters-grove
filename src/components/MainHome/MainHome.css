@@ -1,7 +1,8 @@
 /* MainHome.css */
 .main-home {
   padding: 24px;
-  background-color: #f9fafb;
+  border-radius: 30px;
+  background-color: #FFFFFF;
   flex: 1;
   overflow-y: auto;
   min-height: 100vh;

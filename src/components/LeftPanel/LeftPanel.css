@@ -1,8 +1,8 @@
 .left-panel {
   width: 240px;
   height: 100vh;
-  background-color: #f8f9fa;
-  border-right: 1px solid #e9ecef;
+  background-color: #F7F7F7;
+  /* border-right: 1px solid #e9ecef; */
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
@@ -24,7 +24,7 @@
 
 .panel-header {
   padding: 16px;
-  border-bottom: 1px solid #e9ecef;
+  /* border-bottom: 1px solid #e9ecef; */
 }
 
 .logo-section {
@@ -65,7 +65,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: -4px;
   border-radius: 4px;
   transition: background-color 0.2s ease;
   display: flex;
@@ -186,7 +186,7 @@
 
 .github-status {
   padding: 16px 0;
-  border-top: 1px solid #e9ecef;
+  /* border-top: 1px solid #e9ecef; */
   margin-bottom: 16px;
 }
 
@@ -221,7 +221,7 @@
 }
 
 .settings-section {
-  border-top: 1px solid #e9ecef;
+  /* border-top: 1px solid #e9ecef; */
   padding-top: 16px;
 }
 
