@@ -4,6 +4,7 @@ import Tracker from "../Tracker/Tracker";
 import AllActivities from "../ActivityCard/AllActivities";
 import MyPortfolio from "../MyPortfolio/MyPortfolio";
 import MyExperienceStatus from "../Status/MyExperienceStatus";
+import GoalStatus from "../Status/GoalStatus";
 
 const MainHome = () => {
   return (
@@ -30,7 +31,11 @@ const MainHome = () => {
     {/* Tracker 헤더 */}
     {/* <Tracker /> */}
 
-    <MyExperienceStatus />
+    {/* Status 컴포넌트들 */}
+    <div className="status-container">
+      <MyExperienceStatus />
+      <GoalStatus />
+    </div>
 
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 */}
     <div className="tracker-content">
