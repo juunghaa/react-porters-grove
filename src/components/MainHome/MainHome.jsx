@@ -6,7 +6,7 @@ import MyPortfolio from "../MyPortfolio/MyPortfolio";
 import MyExperienceStatus from "../Status/MyExperienceStatus";
 import GoalStatus from "../Status/GoalStatus";
 
-const MainHome = () => {
+const MainHome = ({ isPanelCollapsed }) => {
   return (
     <div className="main-home">
       {/* 환영 메시지 */}
@@ -33,8 +33,8 @@ const MainHome = () => {
 
     {/* Status 컴포넌트들 */}
     <div className="status-container">
-      <MyExperienceStatus />
-      <GoalStatus />
+        <MyExperienceStatus isPanelCollapsed={isPanelCollapsed} />
+        <GoalStatus isPanelCollapsed={isPanelCollapsed} />
     </div>
 
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 */}

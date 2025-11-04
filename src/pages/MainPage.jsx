@@ -49,7 +49,7 @@ export default function MainPage({ onLogout }) {
 
   const renderMainContent = () => {
     if (currentPage === "home") {
-      return <MainHome />;
+      return <MainHome isPanelCollapsed={isPanelCollapsed} />;
     } else if (currentPage === "chooseOption") {
       return <ChooseOption onGoToActivity={handleGoToActivity} />;
     } else if (currentPage === "Activity") {

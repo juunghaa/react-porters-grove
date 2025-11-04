@@ -3,7 +3,7 @@ import './GoalStatus.css';
 import leafIcon from '../../assets/image/leaf.png';
 import checkIcon from '../../assets/image/check.png';
 
-const GoalStatus = () => {
+const GoalStatus = ({ isPanelCollapsed }) => {
   const [goal, setGoal] = useState('');
   const [savedGoal, setSavedGoal] = useState('');
 
@@ -21,7 +21,7 @@ const GoalStatus = () => {
   };
 
   return (
-    <div className="goal-status">
+    <div className={`goal-status ${isPanelCollapsed ? 'expanded' : ''}`}>
       <div className="goal-header">
         <h2 className="goal-title">목표 시각화</h2>
         <p className="goal-subtext">지금의 나를 돌아보고, 앞으로의 미래를 그려보세요</p>

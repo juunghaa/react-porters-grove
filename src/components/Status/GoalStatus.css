@@ -1,5 +1,5 @@
 .goal-status {
-    width: 300px; /*692 400  482 */
+    width: 290px; /*692 400  482 */
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
@@ -8,8 +8,13 @@
     gap: 16px;
     border-radius: 30px;
     background: #F7F7F7;
+    transition: width 0.3s ease; /* 부드러운 전환 */
   }
-  
+  /* 패널이 닫혔을 때 - 더 넓게 */
+    .goal-status.expanded {
+    width: 355px; /* 원하는 크기로 조정 */
+    }
+
   .goal-header {
     display: flex;
     padding: 0 12px;
@@ -44,15 +49,18 @@
   }
   
   .goal-content {
-    width: 260px;
+    width: 250px;
     display: flex;
     padding: 20px;
     flex-direction: column;
     gap: 12px;
     border-radius: 20px;
     background: #FFF;
+    transition: width 0.3s ease;
   }
-  
+  .goal-status.expanded .goal-content {
+    width: 315px; /* 비율에 맞춰 조정 */
+  }
   .goal-question {
     display: flex;
     align-items: center;

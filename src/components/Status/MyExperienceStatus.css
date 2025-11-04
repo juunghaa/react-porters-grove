@@ -8,8 +8,13 @@
     gap: 4px;
     border-radius: 30px;
     background: #F7F7F7;
+    transition: width 0.3s ease; /* 부드러운 전환 */
   }
-  
+    /* 패널이 닫혔을 때 (공간 넓음) - 더 넓게 */
+    .experience-status.expanded {
+        width: 580px; 
+    }
+
   .experience-header {
     display: flex;
     padding: 0 12px;
@@ -67,8 +72,11 @@
     background: #FFF;
     flex-wrap: wrap;
     justify-content: space-between;
+    transition: width 0.3s ease;
   }
-  
+  .experience-status.expanded .experience-grid {
+    width: 540px; /* 비율에 맞춰 조정 */
+  }
   .exp-item {
     display: flex;
     flex-direction: column;
@@ -96,7 +104,7 @@
     .exp-item:nth-child(2) .exp-icon img {
         opacity: 0.45; /* 투명도 조정 */
     }
-    
+
   .exp-label {
     font-size: 13px;
     color: rgba(0, 0, 0, 0.60);

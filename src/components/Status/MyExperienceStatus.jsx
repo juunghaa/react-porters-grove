@@ -10,9 +10,9 @@ import certificateIcon from "../../assets/image/certificate.png";
 import languageIcon from "../../assets/image/language.png";
 import globalIcon from "../../assets/image/overseas.png";
 
-const MyExperienceStatus = () => {
+const MyExperienceStatus = ({ isPanelCollapsed }) => {
   return (
-    <div className="experience-status">
+    <div className={`experience-status ${isPanelCollapsed ? 'expanded' : ''}`}>
       <div className="experience-header">
         <h2 className="experience-title">나의 경험 현황</h2>
         <p className="experience-subtext">
