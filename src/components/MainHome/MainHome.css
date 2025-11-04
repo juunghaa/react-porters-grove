@@ -5,12 +5,33 @@
   background-color: #FFFFFF;
   flex: 1;
   overflow-y: auto;
-  min-height: 100vh;
+  overflow-x: hidden;
+  /* min-height: 100vh; */
+  height: 100vh;
   width: 100%;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  margin-left: -24px;
+  /* margin-left: -24px; */
 }
+/* 
+.main-home::-webkit-scrollbar {
+  width: 7px;
+}
+
+.main-home::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.main-home::-webkit-scrollbar-thumb {
+  background: transparent; 
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.main-home:hover::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+} */
+
 .welcome-title,
 .welcome-subtitle {
   margin: 0;

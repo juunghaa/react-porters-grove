@@ -59,7 +59,7 @@ export default function MainPage({ onLogout }) {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{backgroundColor: "#F7F7F7"}}>
       <LeftPanel
         isCollapsed={isPanelCollapsed}
         onToggle={handlePanelToggle}
@@ -70,44 +70,50 @@ export default function MainPage({ onLogout }) {
       <div
         className="main-content"
         style={{
-          marginLeft: isPanelCollapsed ? "60px" : "240px",
-          transition: "margin-left 0.3s ease",
-          width: `calc(100% - ${isPanelCollapsed ? "60px" : "240px"})`,
+          marginLeft: isPanelCollapsed ? "60px" : "220px", // 원래 240이였음 
+          // transition: "margin-left 0.3s ease",
+          width: `calc(100% - ${isPanelCollapsed ? "60px" : "220px"})`,
+          height: "100vh",
           display: "flex",
           gap: "24px",
           padding: "24px",
           boxSizing: "border-box",
-          overflow: "hidden",
+          // overflow: "hidden",
+          flex: "1",
+          borderRadius: "30px",
+          backgroundColor: "#F7F7F7",
+          // overflowY: "auto",
+          // overflowX: "hidden",
+          transition: "all 0.3s ease",
         }}
       >
-        <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+        <div style={{ flex: "1 1 auto", minWidth: 0, height: "100%", display: "flex",}}>
           {renderMainContent()}
         </div>
 
-      {currentPage === "home" && (
-        <div
-          style={{
-            width: "340px",
-            flex: "0 0 340px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1px", // 간격 추가
-            alignSelf: "flex-start", // 상단 정렬
-            position: "sticky",
-            top: "24px",
-          }}
-        >
-          <ProfileCard
-            {...profile}
-            socials={profile.socials}
-            onProfileUpdate={(data) =>
-              setProfile((prev) => ({ ...prev, ...data }))
-            }
-            onSettingsOpenChange={setIsProfileSettingsOpen}
-          />
-          <Newsletter />
-        </div>
-      )}
+        {currentPage === "home" && (
+          <div
+            style={{
+              width: "340px",
+              flex: "0 0 340px",
+              position: "sticky",
+              top: "24px",
+              marginLeft: "auto", // 추가! 오른쪽 끝으로 밀어냄
+              marginRight: "-40px", // 추가! 오른쪽에 딱 붙음
+
+            }}
+          >
+            <ProfileCard
+              {...profile}
+              socials={profile.socials}
+              onProfileUpdate={(data) =>
+                setProfile((prev) => ({ ...prev, ...data }))
+              }
+              onSettingsOpenChange={setIsProfileSettingsOpen} // 추가
+            />
+            <Newsletter />
+          </div>
+        )}
       </div>
     </div>
   );
