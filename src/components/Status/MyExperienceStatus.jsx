@@ -1,6 +1,15 @@
 import React from "react";
 import "./MyExperienceStatus.css";
 
+// 이미지 import
+import projectIcon from "../../assets/image/flag.png";
+import portfolioIcon from "../../assets/image/star.png";
+import careerIcon from "../../assets/image/career.png";
+import awardIcon from "../../assets/image/award.png";
+import certificateIcon from "../../assets/image/certificate.png";
+import languageIcon from "../../assets/image/language.png";
+import globalIcon from "../../assets/image/overseas.png";
+
 const MyExperienceStatus = () => {
   return (
     <div className="experience-status">
@@ -14,16 +23,18 @@ const MyExperienceStatus = () => {
 
       <div className="experience-grid">
         {[
-          { icon: "📁", label: "프로젝트", count: 0 },
-          { icon: "💼", label: "포트폴리오", count: 0 },
-          { icon: "🎓", label: "경력", count: 0 },
-          { icon: "🏆", label: "수상", count: 0 },
-          { icon: "🪪", label: "자격증", count: 0 },
-          { icon: "🗣️", label: "외국어", count: 0 },
-          { icon: "🌏", label: "해외경험", count: 0 },
+          { icon: projectIcon, label: "프로젝트", count: 0 },
+          { icon: portfolioIcon, label: "포트폴리오", count: 0 },
+          { icon: careerIcon, label: "경력", count: 0 },
+          { icon: awardIcon, label: "수상", count: 0 },
+          { icon: certificateIcon, label: "자격증", count: 0 },
+          { icon: languageIcon, label: "외국어", count: 0 },
+          { icon: globalIcon, label: "해외경험", count: 0 },
         ].map((item) => (
           <div className="exp-item" key={item.label}>
-            <div className="exp-icon">{item.icon}</div>
+            <div className="exp-icon">
+              <img src={item.icon} alt={item.label} />
+            </div>
             <div className="exp-label">{item.label}</div>
             <div className="exp-count">{item.count}</div>
           </div>
