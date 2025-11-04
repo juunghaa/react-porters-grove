@@ -61,6 +61,7 @@
   display: flex;
   gap: 14px;
   margin-bottom: 20px; /* 아래 컨텐츠와의 간격 조정 필요시 수정 */
+  margin-top: 20px;
 }
 
 /* CTA 카드 */
