@@ -2,7 +2,7 @@
     background: white;
     position: sticky;
     top: 24px;
-    width: 330px;
+    width: 268px; /*214 366 */
     border-radius: 30px;
     /* width: clamp(100px, 32vw, 330px); */
     /* max-width: 100%; */
@@ -14,7 +14,7 @@
   }
   
   .profile-banner {
-    height: 150px;
+    height: 128px;
     background: linear-gradient(180deg, #b9d7ff 0%, #9bd3c7 100%);
     background-size: cover;
     background-position: center;
@@ -37,12 +37,12 @@
   } */
   
   .avatar {
-    width: 80px; 
-    height: 80px;
+    width: 70px; /*원래 80 80이었는데 프로필바 가로 아예수정하면서 더 줄임 */
+    height: 70px;
     border-radius: 50%;
     position: absolute;
     bottom: -40px; 
-    left: 20%;
+    left: 17%; /*원래 20% 였음 */
     transform: translateX(-50%);
     z-index: 1;
   }
@@ -50,7 +50,7 @@
   .profile-main {
     display: flex;
     gap: 12px;
-    padding: 0 16px;
+    padding: 0 17px;
     margin-top: 50px; 
     align-items: center;
     margin-bottom: 12px;

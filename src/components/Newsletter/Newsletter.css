@@ -1,8 +1,8 @@
 .layout {
-    background: white;
+    background: #F7F7F7;
     position: sticky;
     /* top: 24px; */
-    width: 330px;
+    width: 268px;
     /* width: clamp(100px, 32vw, 330px); */
     /* max-width: 100%; */
     /* box-sizing: border-box; */
@@ -37,8 +37,9 @@
   }
   
   .stars-icon {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 17px;
+    margin-right: 2px;
   }
   
   .section-header h3 {

@@ -62,6 +62,7 @@
   gap: 14px;
   margin-bottom: 20px; /* 아래 컨텐츠와의 간격 조정 필요시 수정 */
   margin-top: 20px;
+  flex-wrap: wrap; /* 공간이 부족하면 아래로 내림 */
 }
 
 /* CTA 카드 */

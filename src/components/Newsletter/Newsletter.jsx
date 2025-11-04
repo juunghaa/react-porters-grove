@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Newsletter.css";
-import starsIcon from "./images/stars.png";
+// import starsIcon from "./images/stars.png";
+import cutLogo from "./images/cutlogo.png";
 import topArticle1 from "./images/TopArticle1.png";
 import topArticle2 from "./images/TopArticle2.png";
 import topArticle3 from "./images/TopArticle3.png";
@@ -37,7 +38,7 @@ export default function Newsletter () {
       {/* 추천 글 섹션 */}
       <div className="recommended-section">
         <div className="section-header">
-          <img src={starsIcon} alt="✨" className="stars-icon" />
+          <img src={cutLogo} alt="✨" className="stars-icon" />
           <h3>지금 읽기 좋은 글</h3>
         </div>
 
