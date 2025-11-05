@@ -1,6 +1,7 @@
 .layout {
     background: #F7F7F7;
-    position: sticky;
+    position: auto;
+    /* position: sticky; */
     /* top: 24px; */
     width: 268px;
     /* width: clamp(100px, 32vw, 330px); */

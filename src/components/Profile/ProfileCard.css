@@ -1,6 +1,7 @@
 .profile-card {
     background: white;
-    position: sticky;
+    position: auto;
+    /* position: sticky; */
     top: 24px;
     width: 268px; /*214 366 */
     border-radius: 30px;

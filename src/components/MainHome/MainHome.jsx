@@ -54,8 +54,8 @@ const MainHome = ({ isPanelCollapsed }) => {
           <MyPortfolio />
         </div>
       </div>
-    </div>
-    
+    </div>    
+  
   );
 };
 
