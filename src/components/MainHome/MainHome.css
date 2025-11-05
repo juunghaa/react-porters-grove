@@ -86,6 +86,14 @@
   flex-wrap: wrap; /* 공간이 부족하면 아래로 내림 */
 }
 
+.status-container2 {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px; /* 아래 컨텐츠와의 간격 조정 필요시 수정 */
+  margin-top: 20px;
+  flex-wrap: wrap; /* 공간이 부족하면 아래로 내림 */
+}
+
 /* CTA 카드 */
 .cta-card {
   background: linear-gradient(135deg, #3e8e41 0%, #3e8e41 100%);

@@ -37,8 +37,8 @@ const MainHome = ({ isPanelCollapsed }) => {
         <MyExperienceStatus isPanelCollapsed={isPanelCollapsed} />
         <GoalStatus isPanelCollapsed={isPanelCollapsed} />
     </div>
-    
-    <div className="status-container">
+
+    <div className="status-container2">
     <ActivityNote isPanelCollapsed={isPanelCollapsed} />
     </div>
 
