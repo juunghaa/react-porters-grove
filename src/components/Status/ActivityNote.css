@@ -1,5 +1,5 @@
 .activityNote-status {
-    width: 786; /*290 14 482 = 496+290 = 786*/
+    width: 772; /*290 14 482 = 496+290 = 786*/
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
@@ -12,7 +12,7 @@
   }
   /* 패널이 닫혔을 때 - 더 넓게 */
     .activityNote-status.expanded {
-    width: 994px; /* 355 14 580 = 355+594= 994*/
+    width: 980px; /* 355 14 580 = 355+594= 994*/
     }
 
   .activityNote-header {
@@ -49,7 +49,7 @@
   }
   
   .activityNote-content {
-    width: 746px;
+    width: 732px; /*746*/
     display: flex;
     padding: 20px;
     flex-direction: column;
@@ -59,7 +59,7 @@
     transition: width 0.3s ease;
   }
   .activityNote-status.expanded .activityNote-content {
-    width: 954px; /* 비율에 맞춰 조정 */
+    width: 940px; /* 비율에 맞춰 조정 954*/
   }
   .activityNote-question {
     display: flex;
