@@ -70,9 +70,9 @@ export default function MainPage({ onLogout }) {
       <div
         className="main-content"
         style={{
-          marginLeft: isPanelCollapsed ? "60px" : "220px", // 원래 240이였음 
+          marginLeft: isPanelCollapsed ? "60px" : "210px", // 원래 240이였다가 220 이였다가  
           // transition: "margin-left 0.3s ease",
-          width: `calc(100% - ${isPanelCollapsed ? "60px" : "220px"})`,
+          width: `calc(100% - ${isPanelCollapsed ? "60px" : "210px"})`,
           height: "100vh",
           display: "flex",
           gap: "24px",
