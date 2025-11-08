@@ -154,15 +154,15 @@ export default function ProfileCard({
       <div className="stats">
         <div className="stat">
           <div className="num">{stats.activities ?? 0}</div>
-          <div className="label">활동</div>
+          <div className="label">경험</div>
         </div>
         <div className="stat">
           <div className="num">{stats.followers ?? 0}</div>
-          <div className="label">회고</div>
+          <div className="label">스펙</div>
         </div>
         <div className="stat">
           <div className="num">{stats.scraps ?? 0}</div>
-          <div className="label">스크랩</div>
+          <div className="label">포트폴리오</div>
         </div>
       </div>
 

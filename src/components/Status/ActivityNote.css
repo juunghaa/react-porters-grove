@@ -1,5 +1,7 @@
 .activityNote-status {
-    width: 772; /*290 14 482 = 496+290 = 786*/
+    flex: 1; /* 부모 컨테이너 너비 전체 차지 */
+    min-width: 600px; /* 최소 너비 */
+    max-width: 100%; /* 최대 너비 제한 */
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
@@ -8,12 +10,30 @@
     gap: 16px;
     border-radius: 30px;
     background: #F7F7F7;
-    transition: width 0.3s ease; /* 부드러운 전환 */
+    transition: all 0.3s ease;
+    box-sizing: border-box;
   }
-  /* 패널이 닫혔을 때 - 더 넓게 */
+  
+  /* expanded 클래스 - 동일하게 전체 너비 차지 */
+  .activityNote-status.expanded {
+    flex: 1;
+  }
+
+/* .activityNote-status {
+    width: 772; 
+    display: flex;
+    padding: 20px 10px 10px 10px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    border-radius: 30px;
+    background: #F7F7F7;
+    transition: width 0.3s ease; 
+  }
     .activityNote-status.expanded {
-    width: 980px; /* 355 14 580 = 355+594= 994*/
-    }
+    width: 980px; 
+    } */
 
   .activityNote-header {
     display: flex;
@@ -49,18 +69,22 @@
   }
   
   .activityNote-content {
-    width: 732px; /*746*/
+    width: 100%; /* 고정 px 제거 */
+    max-width: 940px; /* 최대 너비 */
     display: flex;
     padding: 20px;
     flex-direction: column;
     gap: 12px;
     border-radius: 20px;
     background: #FFF;
-    transition: width 0.3s ease;
+    box-sizing: border-box;
   }
+  
   .activityNote-status.expanded .activityNote-content {
-    width: 940px; /* 비율에 맞춰 조정 954*/
+    width: 100%; /* 동일하게 100% */
+    max-width: 940px;
   }
+  
   .activityNote-question {
     display: flex;
     align-items: center;

@@ -1,4 +1,32 @@
 .experience-status {
+    flex: 1.65; /* 약 62% 차지 */
+    min-width: 400px; /* 최소 너비 보장 */
+    max-width: 580px; /* 최대 너비 제한 */
+    display: flex;
+    padding: 20px 10px 10px 10px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    border-radius: 30px;
+    background: #F7F7F7;
+    transition: all 0.3s ease;
+  }
+/* MyExperienceStatus.css와 GoalStatus.css 각각에 추가 */
+
+@media (max-width: 1024px) {
+    .status-container {
+      flex-direction: column; /* 작은 화면에서는 세로로 */
+    }
+    
+    .experience-status,
+    .goal-status {
+      flex: none;
+      width: 100%;
+      max-width: none;
+    }
+  }
+/* .experience-status {
     width: 482px;
     display: flex;
     padding: 20px 10px 10px 10px;
@@ -8,12 +36,12 @@
     gap: 4px;
     border-radius: 30px;
     background: #F7F7F7;
-    transition: width 0.3s ease; /* 부드러운 전환 */
-  }
+    transition: width 0.3s ease; 
+  } */
     /* 패널이 닫혔을 때 (공간 넓음) - 더 넓게 */
-    .experience-status.expanded {
+    /* .experience-status.expanded {
         width: 580px; 
-    }
+    } */
 
   .experience-header {
     display: flex;
@@ -60,8 +88,21 @@
     font-style: normal;
 
   }
-  
   .experience-grid {
+    width: 100%; /* 고정 px 제거 */
+    max-width: 560px;
+    display: flex;
+    height: 112px;
+    padding: 8px 20px;
+    align-items: center;
+    gap: 8px;
+    border-radius: 20px;
+    background: #FFF;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+  /* .experience-grid {
     width: 442px;
     display: flex;
     height: 112px;
@@ -75,8 +116,8 @@
     transition: width 0.3s ease;
   }
   .experience-status.expanded .experience-grid {
-    width: 540px; /* 비율에 맞춰 조정 */
-  }
+    width: 540px; 
+  } */
   .exp-item {
     display: flex;
     flex-direction: column;

@@ -84,7 +84,8 @@
   gap: 14px;
   margin-bottom: 20px; /* 아래 컨텐츠와의 간격 조정 필요시 수정 */
   margin-top: 20px;
-  flex-wrap: wrap; /* 공간이 부족하면 아래로 내림 */
+  flex-wrap: nowrap; /* 공간이 부족하면 아래로 내림 */
+  /* flex-wrap: wrap; 공간이 부족하면 아래로 내림 */
 }
 
 .status-container2 {
@@ -92,9 +93,14 @@
   gap: 14px;
   margin-bottom: 20px; /* 아래 컨텐츠와의 간격 조정 필요시 수정 */
   margin-top: 20px;
-  flex-wrap: wrap; /* 공간이 부족하면 아래로 내림 */
+  flex-wrap: nowrap; /* 공간이 부족하면 아래로 내림 */
 }
-
+/* 반응형 */
+@media (max-width: 1024px) {
+  .status-container2 {
+    flex-direction: column; /* 작은 화면에서는 세로로 */
+  }
+}
 /* CTA 카드 */
 .cta-card {
   background: linear-gradient(135deg, #3e8e41 0%, #3e8e41 100%);
