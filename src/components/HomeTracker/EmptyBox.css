@@ -122,8 +122,8 @@
 }
 
 .empty-box-image {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     margin-bottom: 6px; /* 👈 8px에서 6px로 */
 }
 
@@ -131,7 +131,7 @@
     margin: -2px;
     color: rgba(0, 0, 0, 0.60);
     font-family: "SUIT Variable";
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -142,7 +142,7 @@
     margin: 0;
     color: rgba(0, 0, 0, 0.30);
     font-family: "SUIT Variable";
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -155,7 +155,7 @@
     padding: 10px;
     border: none;
     color: rgba(0, 0, 0, 0.70);
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 600;
     cursor: pointer;

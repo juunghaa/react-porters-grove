@@ -39,7 +39,7 @@ const EmptyBox = ({
 
         {/* 하단 추가 버튼 */}
         <button className="empty-box-add-button" onClick={onAdd}>
-          <span style={{fontSize: "24px", paddingLeft: "6px", paddingTop:"1.5px"}}>+</span>
+          <span style={{fontSize: "18px", paddingLeft: "6px", paddingTop:"0.5px"}}>+</span>
           {config.buttonText}
         </button>
       </div>
