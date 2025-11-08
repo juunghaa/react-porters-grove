@@ -127,10 +127,10 @@
 /* 태그 컨테이너 - 기본 */
 .tag-container {
   display: grid;
-  height: 309px;
+  height: 280px; /*원래 309 -> 280*/
   padding: 24px 36px;
-  row-gap: 12px;       /* 18px → 12px */
-  column-gap: 16px;    /* 24px → 16px */
+  row-gap: 12px;       /* 세로 간격 18px → 12px */
+  column-gap: 16px;    /* 가로 간격 24px → 16px */
   align-self: stretch;
 }
 
@@ -152,7 +152,7 @@
 
 /* 포트폴리오 카드 - 2행 2열 (왼쪽만 사용, 높이 축소) */
 .tag-container.portfolio-tags {
-  height: 150px;  /* 309px → 150px */
+  height: 130px;  /* 309px → 150px -> 130 */
   grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -251,7 +251,7 @@
   }
   
   .tag-container {
-    height: 280px;
+    height: 260px;
     padding: 20px 30px;
     row-gap: 10px;     /* 16px → 10px */
     column-gap: 14px;  /* 20px → 14px */
@@ -272,7 +272,7 @@
   }
   
   .tag-container.portfolio-tags {
-    height: 140px;
+    height: 120px;
     grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -323,7 +323,7 @@
   }
   
   .tag-container {
-    height: 250px;
+    height: 230px;
     padding: 16px 24px;
     row-gap: 8px;      /* 14px → 8px */
     column-gap: 12px;  /* 16px → 12px */
@@ -344,7 +344,7 @@
   }
   
   .tag-container.portfolio-tags {
-    height: 120px;
+    height: 110px;
     grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

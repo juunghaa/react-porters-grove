@@ -42,18 +42,17 @@ const MainHome = ({ isPanelCollapsed }) => {
     <ActivityNote isPanelCollapsed={isPanelCollapsed} />
     </div>
 
-    {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 */}
-    <div className="tracker-content">
-        {/* 왼쪽: 모든 활동 */}
+    {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 
+    이거 디자인 수정돼서 안쓸 것 같은데 혹시 몰라서 남겨둠 */}
+    {/* <div className="tracker-content">
         <div className="tracker-column">
           <AllActivities />
         </div>
 
-        {/* 오른쪽: 내 포트폴리오 */}
         <div className="tracker-column">
           <MyPortfolio />
         </div>
-      </div>
+      </div> */}
     </div>    
   
   );

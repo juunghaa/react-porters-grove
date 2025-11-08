@@ -1,41 +1,58 @@
 // import React, { useState } from "react";
 // import "./ChooseOption.css";
-// import ReviewPopup from "./ReviewPopup";
+// import grayFlag from '../../assets/icons/flag.png'; 
+// import blackFlag from '../../assets/icons/flag2.png'; 
 
-// // const ChooseOption = ({ onGoToActivity }) => {
-// //   const [isPopupOpen, setIsPopupOpen] = useState(false);
-
-// //   const openPopup = () => {
-// //     setIsPopupOpen(true);
-// //   };
-
-// //   const closePopup = () => {
-// //     setIsPopupOpen(false);
-// //   };
-
-// //   return (
-// //     <div className="choose-option">
-// //       <div className="option-container">
-// //         <div className="option-card" id="retrospective" onClick={openPopup}>
-// //           <h2 className="option-title">회고 작성하기</h2>
-// //           <p className="option-description">
-// //             지난 활동을 돌아보고 나만의 회고를 작성하세요.
-// //           </p>
-// //         </div>
-// //         <div className="option-card" id="activity-log" onClick={onGoToActivity}>
-// //           <h2 className="option-title">활동 기록하기</h2>
-// //           <p className="option-description">
-// //             스터디, 사이드 프로젝트 등 활동 내역을 기록하고 관리해보세요.
-// //           </p>
-// //         </div>
-// //       </div>
-// //       {isPopupOpen && <ReviewPopup onClose={closePopup} />}{" "}
-// //       {/* isPopupOpen이 켜져있을때만 팝업창 나타남. 닫을때는 closePopuup사용함 */}
-// //       {/* isPopupOpen이 켜져있을때만 팝업창 나타남*/}
-// //     </div>
-// //   );
-// // };
 // const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
+//   const [expandedCard, setExpandedCard] = useState(null);
+//   const [hoveredTag, setHoveredTag] = useState(null);
+
+//   // 각 카드별 태그 옵션 (icon 제거)
+//   const tagOptions = {
+//     experience: [
+//       { id: 'project', label: '프로젝트' },
+//       { id: 'contest', label: '공모전' },
+//       { id: 'campus', label: '교내활동' },
+//       { id: 'external', label: '대외활동' },
+//       { id: 'club', label: '동아리' },
+//       { id: 'hackathon', label: '해커톤' },
+//       { id: 'startup', label: '창업' },
+//       { id: 'research', label: '연구' },
+//       { id: 'volunteer', label: '봉사' },
+//       { id: 'education', label: '교육' }
+//     ],
+//     spec: [
+//       { id: 'certificate', label: '자격증' },
+//       { id: 'award', label: '수상' },
+//       { id: 'career', label: '경력' },
+//       { id: 'intern', label: '인턴' },
+//       { id: 'overseas', label: '해외경험' }
+//     ],
+//     portfolio: [
+//       { id: 'resume', label: '이력서' },
+//       { id: 'portfolio', label: '포트폴리오' }
+//     ]
+//   };
+
+//   const handleCardClick = (cardType) => {
+//     if (expandedCard === cardType) {
+//       setExpandedCard(null);
+//     } else {
+//       setExpandedCard(cardType);
+//     }
+//   };
+
+//   // 태그 클릭 시 바로 페이지 이동
+//   const handleTagClick = (cardType, tagId) => {
+//     if (cardType === 'experience' && onGoToExperience) {
+//       onGoToExperience([tagId]);
+//     } else if (cardType === 'spec' && onGoToSpec) {
+//       onGoToSpec([tagId]);
+//     } else if (cardType === 'portfolio' && onGoToPortfolio) {
+//       onGoToPortfolio([tagId]);
+//     }
+//   };
+
 //   return (
 //     <div className="choose-option">
 //       <div className="choose-header">
@@ -48,27 +65,105 @@
 
 //       <div className="option-container">
 //         {/* 경험 카드 */}
-//         <div className="option-card" onClick={onGoToExperience}>
-//           <img 
-//             src="./images/Card_Experience.png" 
-//             alt="경험 - 프로젝트, 동아리, 공모전 등 나의 경험을 기록해요" 
-//           />
+//         <div 
+//           className={`option-card ${expandedCard === 'experience' ? 'expanded experience-card' : ''}`}
+//           onClick={() => handleCardClick('experience')}
+//         >
+//           {expandedCard === 'experience' ? (
+//             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+//               <div className="tag-container experience-tags">
+//                 {tagOptions.experience.map(tag => (
+//                   <button
+//                     key={tag.id}
+//                     className={`tag-chip ${hoveredTag === `experience-${tag.id}` ? 'hovered' : ''}`}
+//                     onClick={() => handleTagClick('experience', tag.id)}
+//                     onMouseEnter={() => setHoveredTag(`experience-${tag.id}`)}
+//                     onMouseLeave={() => setHoveredTag(null)}
+//                   >
+//                     <img 
+//                       src={hoveredTag === `experience-${tag.id}` ? blackFlag : grayFlag} 
+//                       alt="flag" 
+//                       className="tag-icon"
+//                     />
+//                     <span className="tag-label">{tag.label}</span>
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           ) : (
+//             <img 
+//               src="./images/Card_Experience.png" 
+//               alt="경험 - 프로젝트, 동아리, 공모전 등 나의 경험을 기록해요" 
+//             />
+//           )}
 //         </div>
 
 //         {/* 스펙 카드 */}
-//         <div className="option-card" onClick={onGoToSpec}>
-//           <img 
-//             src="./images/Card_Spec.png" 
-//             alt="스펙 - 자격증, 수상, 어학 등 나의 역량을 정리해요" 
-//           />
+//         <div 
+//           className={`option-card ${expandedCard === 'spec' ? 'expanded spec-card' : ''}`}
+//           onClick={() => handleCardClick('spec')}
+//         >
+//           {expandedCard === 'spec' ? (
+//             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+//               <div className="tag-container spec-tags">
+//                 {tagOptions.spec.map(tag => (
+//                   <button
+//                     key={tag.id}
+//                     className={`tag-chip ${hoveredTag === `spec-${tag.id}` ? 'hovered' : ''}`}
+//                     onClick={() => handleTagClick('spec', tag.id)}
+//                     onMouseEnter={() => setHoveredTag(`spec-${tag.id}`)}
+//                     onMouseLeave={() => setHoveredTag(null)}
+//                   >
+//                     <img 
+//                       src={hoveredTag === `spec-${tag.id}` ? blackFlag : grayFlag} 
+//                       alt="flag" 
+//                       className="tag-icon"
+//                     />
+//                     <span className="tag-label">{tag.label}</span>
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           ) : (
+//             <img 
+//               src="./images/Card_Spec.png" 
+//               alt="스펙 - 자격증, 수상, 어학 등 나의 역량을 정리해요" 
+//             />
+//           )}
 //         </div>
 
 //         {/* 포트폴리오 카드 */}
-//         <div className="option-card" onClick={onGoToPortfolio}>
-//           <img 
-//             src="./images/Card_Portfolio.png" 
-//             alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요" 
-//           />
+//         <div 
+//           className={`option-card ${expandedCard === 'portfolio' ? 'expanded portfolio-card' : ''}`}
+//           onClick={() => handleCardClick('portfolio')}
+//         >
+//           {expandedCard === 'portfolio' ? (
+//             <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+//               <div className="tag-container portfolio-tags">
+//                 {tagOptions.portfolio.map(tag => (
+//                   <button
+//                     key={tag.id}
+//                     className={`tag-chip ${hoveredTag === `portfolio-${tag.id}` ? 'hovered' : ''}`}
+//                     onClick={() => handleTagClick('portfolio', tag.id)}
+//                     onMouseEnter={() => setHoveredTag(`portfolio-${tag.id}`)}
+//                     onMouseLeave={() => setHoveredTag(null)}
+//                   >
+//                     <img 
+//                       src={hoveredTag === `portfolio-${tag.id}` ? blackFlag : grayFlag} 
+//                       alt="flag" 
+//                       className="tag-icon"
+//                     />
+//                     <span className="tag-label">{tag.label}</span>
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           ) : (
+//             <img 
+//               src="./images/Card_Portfolio.png" 
+//               alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요" 
+//             />
+//           )}
 //         </div>
 //       </div>
 //     </div>
@@ -76,6 +171,7 @@
 // };
 
 // export default ChooseOption;
+
 import React, { useState } from "react";
 import "./ChooseOption.css";
 import grayFlag from '../../assets/icons/flag.png'; 
@@ -85,7 +181,7 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [hoveredTag, setHoveredTag] = useState(null);
 
-  // 각 카드별 태그 옵션 (icon 제거)
+  // 각 카드별 태그 옵션
   const tagOptions = {
     experience: [
       { id: 'project', label: '프로젝트' },
@@ -110,14 +206,6 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
       { id: 'resume', label: '이력서' },
       { id: 'portfolio', label: '포트폴리오' }
     ]
-  };
-
-  const handleCardClick = (cardType) => {
-    if (expandedCard === cardType) {
-      setExpandedCard(null);
-    } else {
-      setExpandedCard(cardType);
-    }
   };
 
   // 태그 클릭 시 바로 페이지 이동
@@ -145,10 +233,11 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
         {/* 경험 카드 */}
         <div 
           className={`option-card ${expandedCard === 'experience' ? 'expanded experience-card' : ''}`}
-          onClick={() => handleCardClick('experience')}
+          onMouseEnter={() => setExpandedCard('experience')}
+          onMouseLeave={() => setExpandedCard(null)}
         >
           {expandedCard === 'experience' ? (
-            <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+            <div className="card-expanded-content">
               <div className="tag-container experience-tags">
                 {tagOptions.experience.map(tag => (
                   <button
@@ -179,10 +268,11 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
         {/* 스펙 카드 */}
         <div 
           className={`option-card ${expandedCard === 'spec' ? 'expanded spec-card' : ''}`}
-          onClick={() => handleCardClick('spec')}
+          onMouseEnter={() => setExpandedCard('spec')}
+          onMouseLeave={() => setExpandedCard(null)}
         >
           {expandedCard === 'spec' ? (
-            <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+            <div className="card-expanded-content">
               <div className="tag-container spec-tags">
                 {tagOptions.spec.map(tag => (
                   <button
@@ -213,10 +303,11 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
         {/* 포트폴리오 카드 */}
         <div 
           className={`option-card ${expandedCard === 'portfolio' ? 'expanded portfolio-card' : ''}`}
-          onClick={() => handleCardClick('portfolio')}
+          onMouseEnter={() => setExpandedCard('portfolio')}
+          onMouseLeave={() => setExpandedCard(null)}
         >
           {expandedCard === 'portfolio' ? (
-            <div className="card-expanded-content" onClick={(e) => e.stopPropagation()}>
+            <div className="card-expanded-content">
               <div className="tag-container portfolio-tags">
                 {tagOptions.portfolio.map(tag => (
                   <button
