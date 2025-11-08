@@ -64,7 +64,7 @@ export default function MainPage({ onLogout }) {
 
   const companyLogos = [
     { name: "saramin", logo: saraminLogo, url: "https://www.saramin.co.kr" },
-    { name: "LINKareer", logo: linkcareerLogo, url: "https://www.linkcareer.co.kr" },
+    { name: "LINKareer", logo: linkcareerLogo, url: "https://www.linkareer.com" },
     { name: "wanted", logo: wantedLogo, url: "https://www.wanted.co.kr" },
     { name: "CATCH", logo: catchLogo, url: "https://www.catch.co.kr" },
   ];
