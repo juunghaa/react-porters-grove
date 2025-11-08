@@ -6,6 +6,7 @@ import MyPortfolio from "../MyPortfolio/MyPortfolio";
 import MyExperienceStatus from "../Status/MyExperienceStatus";
 import GoalStatus from "../Status/GoalStatus";
 import ActivityNote from "../Status/ActivityNote";
+import HomeTracker from "../HomeTracker/HomeTracker";
 
 const MainHome = ({ isPanelCollapsed }) => {
   return (
@@ -40,6 +41,10 @@ const MainHome = ({ isPanelCollapsed }) => {
 
     <div className="status-container2">
     <ActivityNote isPanelCollapsed={isPanelCollapsed} />
+    </div>
+    
+    <div className="status-container2">
+    <HomeTracker isPanelCollapsed={isPanelCollapsed} />
     </div>
 
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 

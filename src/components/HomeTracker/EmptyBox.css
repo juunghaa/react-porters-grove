@@ -1,0 +1,184 @@
+/* EmptyBox.css */
+.box-status {
+    flex: 1;
+    min-width: 239px;
+    max-width: 400px;
+    display: flex;
+    padding: 15px 10px 10px 10px; /* 👈 20px에서 15px로 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px; /* 👈 16px에서 12px로 */
+    transition: all 0.3s ease;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.box-status.expanded {
+    flex: 1;
+    min-width: 30px;
+    max-width: none;
+}
+
+.box-content {
+    width: 100%;
+    display: flex;
+    padding-left: 5px;
+    flex-direction: column;
+    gap: 10px; /* 👈 12px에서 10px로 */
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+.empty-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px; /* 👈 8px에서 6px로 */
+    color: rgba(0, 0, 0, 0.70);
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.18px;
+}
+
+.empty-box-title-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    aspect-ratio: 1/1;
+}
+
+.empty-box-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(0, 0, 0, 0.70);
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.18px;
+}
+
+.empty-box-icon {
+    font-size: 20px;
+}
+
+.empty-box-title h3 {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.70);
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.18px;
+}
+
+.empty-box-count {
+    font-size: 16px;
+    color: #999;
+    margin-left: 4px;
+    font-family: "SUIT Variable"; 
+}
+
+.empty-box-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.empty-box-menu-btn,
+.empty-box-add-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    font-family: "SUIT Variable";
+}
+
+.empty-box-menu-btn:hover,
+.empty-box-add-btn:hover {
+    color: #1a1a1a;
+}
+
+/* 빈 상태 콘텐츠 */
+.empty-box-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px; /* 👈 60px에서 40px로! 가장 큰 변화 */
+    gap: 10px; /* 👈 12px에서 10px로 */
+}
+
+.empty-box-image {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 6px; /* 👈 8px에서 6px로 */
+}
+
+.empty-box-main-text {
+    margin: -2px;
+    color: rgba(0, 0, 0, 0.60);
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.2px;
+}
+
+.empty-box-sub-text {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.30);
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.18px;
+}
+
+/* 하단 추가 버튼 */
+.empty-box-add-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    color: rgba(0, 0, 0, 0.70);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    transition: all 0.2s;
+    border-radius: 21.316px;
+    border: 1px solid #F3F3F3;
+    background: #FCFCFC;
+    font-family: "SUIT Variable";
+    line-height: normal;
+    letter-spacing: -0.16px;
+}
+
+.empty-box-add-button:hover {
+    background: #efefef;
+    color: #1a1a1a;
+}
+
+.empty-box-add-button span {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "SUIT Variable";
+}

@@ -1,0 +1,55 @@
+.home-tracker {
+    width: 100%; /* 👈 추가 */
+    /* padding: 20px; 혹시라도 여백 필요하면 써.... 필요없음 */
+  }
+  
+  .tracker-tabs {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  
+  .tab {
+    background: none;
+    border: none;
+    padding: 12px 4px;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  
+  .tab.active {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #1a1a1a;
+  }
+  
+  .tab span {
+    margin-left: 6px;
+    font-size: 14px;
+  }
+  
+  .tracker-boxes {
+    display: flex;
+    gap: 16px;
+    width: 100%; /* 👈 추가 */
+    flex-wrap: nowrap; /* 👈 wrap에서 nowrap으로 변경! */
+  }
+  
+  @media (max-width: 1024px) {
+    .tracker-boxes {
+      flex-direction: column;
+    }
+  }
