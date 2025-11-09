@@ -234,6 +234,7 @@
     letter-spacing: -0.14px;
     outline: none;
     transition: background 0.2s ease;
+    background-color: #FFF;
   }
   
   .activityNote-input::placeholder {
