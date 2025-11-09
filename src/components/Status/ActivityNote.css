@@ -237,7 +237,7 @@
   }
   
   .activityNote-input::placeholder {
-    color: rgba(0, 0, 0, 0.30);
+    /* color: rgba(0, 0, 0, 0.30); */
     font-family: "SUIT Variable";
     font-size: 14px;
     font-style: normal;
