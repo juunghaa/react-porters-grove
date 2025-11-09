@@ -1,12 +1,12 @@
 .activityNote-status {
-    flex: 1; /* 부모 컨테이너 너비 전체 차지 */
-    min-width: 600px; /* 최소 너비 */
-    max-width: 100%; /* 최대 너비 제한 */
+    flex: 1;
+    min-width: 600px;
+    max-width: 100%;
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
     border-radius: 30px;
     background: #F7F7F7;
@@ -14,27 +14,10 @@
     box-sizing: border-box;
   }
   
-  /* expanded 클래스 - 동일하게 전체 너비 차지 */
   .activityNote-status.expanded {
     flex: 1;
   }
-
-/* .activityNote-status {
-    width: 772; 
-    display: flex;
-    padding: 20px 10px 10px 10px;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 16px;
-    border-radius: 30px;
-    background: #F7F7F7;
-    transition: width 0.3s ease; 
-  }
-    .activityNote-status.expanded {
-    width: 980px; 
-    } */
-
+  
   .activityNote-header {
     display: flex;
     padding: 0 12px;
@@ -69,8 +52,8 @@
   }
   
   .activityNote-content {
-    width: 100%; /* 고정 px 제거 */
-    max-width: 940px; /* 최대 너비 */
+    width: 100%;
+    max-width: 940px;
     display: flex;
     padding: 20px;
     flex-direction: column;
@@ -81,15 +64,131 @@
   }
   
   .activityNote-status.expanded .activityNote-content {
-    width: 100%; /* 동일하게 100% */
+    width: 100%;
     max-width: 940px;
   }
   
-  .activityNote-question {
+  /* 경험 선택 드롭다운 스타일 */
+  .experience-selector {
+    /* display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative; */
+
+    display: flex;
+    width: 452px;
+    height: 30px;
+    padding: 8px 14px;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-radius: 999px;
+    background: #EFEFEF;
+  }
+  
+  .folder-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+  
+  .dropdown-wrapper {
+    flex: 1;
+    position: relative;
+  }
+  
+  .dropdown-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 6px;
+    border: none;
+    border-radius: 12px;
+    /* background: #F7F7F7; */
+    cursor: pointer;
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    color: rgba(0, 0, 0, 0.30);
+    /* font-size: 18px; */
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.18px;
+  }
+  
+  .dropdown-button:hover {
+    background: #EFEFEF;
+  }
+  
+  .dropdown-button .placeholder {
+    color: rgba(0, 0, 0, 0.30);
+  }
+  
+  .dropdown-button .selected {
+    color: #000;
+  }
+  
+  .dropdown-arrow {
+    transition: transform 0.2s ease;
+    color: rgba(0, 0, 0, 0.60);
+  }
+  
+  .dropdown-arrow.open {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #FFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+    animation: dropdownFadeIn 0.2s ease;
+  }
+  
+  @keyframes dropdownFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.14px;
+    color: #000;
+    transition: background 0.2s ease;
+  }
+  
+  .dropdown-item:hover {
+    background: #F7F7F7;
+  }
+  
+  .dropdown-item:active {
+    background: #EFEFEF;
+  }
+  
+  /* 기존 스타일 */
+  /* .activityNote-question {
     display: flex;
     align-items: center;
     gap: 8px;
-  }
+  } */
   
   .leaf-icon {
     width: 24px;
@@ -97,27 +196,36 @@
     object-fit: contain;
   }
   
-  .question-text {
+  /* .question-text {
     font-size: 16px;
     font-weight: 600;
-    color: #000;
     font-family: "SUIT Variable";
     line-height: normal;
     letter-spacing: -0.18px;
     font-style: normal;
-  }
+    color: rgba(0, 0, 0, 0.30);
+  } */
   
   .activityNote-input-wrapper {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
-    margin-left: 17px;
-    margin-top: -10px;
+    /* margin-left: 17px;
+    margin-top: -10px; */
+
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "SUIT Variable";
+    line-height: normal;
+    letter-spacing: -0.18px;
+    font-style: normal;
+    /* color: rgba(0, 0, 0, 0.30); */
   }
   
   .activityNote-input {
     flex: 1;
-    padding: 12px 16px;
+    /* padding: 12px 16px; */
+    padding-top: 4px;
     border: none;
     border-radius: 12px;
     font-size: 14px;
@@ -139,7 +247,12 @@
   }
   
   .activityNote-input:focus {
-    background: #EFEFEF;
+    /* background: #EFEFEF; */
+  }
+  
+  .activityNote-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
   
   .check-button {
