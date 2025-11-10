@@ -14,22 +14,22 @@ export default function Newsletter () {
       id: 1,
       title: "회고는 왜 필요할까?",
       thumbnail: topArticle1,
-      time: "6시간 전",
+      time: "2025.09.12",
       link: "https://www.instagram.com/p/DOfLYCRkkwJ/?img_index=1" // 링크 추가
     },
     {
       id: 2,
-      title: "기록은 보관이 아니라, 이야기가 되어야 한다",
-      thumbnail: topArticle2,
-      time: "3일 전",
-      link: "https://www.instagram.com/p/DPEKIZMElRn/?img_index=1" // 링크 추가
+      title: "이력서 쓸 때마다 '자료 찾기 전쟁'",
+      thumbnail: topArticle3,
+      time: "2025.09.19",
+      link: "https://www.instagram.com/p/DOxOcswEudx/?utm_source=ig_web_copy_link" // 링크 추가
     },
     {
       id: 3,
-      title: "유료 전환에 성공한 MVP 기획 프로세스 공개",
-      thumbnail: topArticle3,
-      time: "2025.09.29",
-      link: "https://www.instagram.com/p/DPVvTGTklML/?img_index=1" // 링크 추가
+      title: "기록은 보관이 아니라, 이야기가 되어야 한다",
+      thumbnail: topArticle2,
+      time: "2025.09.26",
+      link: "https://www.instagram.com/p/DPEKIZMElRn/?img_index=1" // 링크 추가
     }
   ];
 
