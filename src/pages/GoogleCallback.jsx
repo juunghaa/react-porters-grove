@@ -234,14 +234,11 @@
 
 
 
-
-
-
 // src/pages/GoogleCallback.jsx
 import { useEffect } from "react";
 import { exchangeGoogleCode } from "../api";
 
-export default function GoogleCallback() {
+export default function GoogleCallback({ onLoginSuccess }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
@@ -252,15 +249,26 @@ export default function GoogleCallback() {
       return;
     }
 
-    // ✅ 배포 고정값 (구글 콘솔과 완전 일치해야 함)
+    // ✅ 배포 환경의 redirect_uri (Google Console에 등록된 값과 일치해야 함)
     const redirectUri = "https://react-porters-grove.vercel.app/google/callback/";
 
     (async () => {
       try {
+        console.log("🔄 Google code 교환 시작...");
         const data = await exchangeGoogleCode(code, redirectUri);
+        
+        console.log("✅ 토큰 수신 성공:", data);
+        
         if (data?.access) localStorage.setItem("access", data.access);
         if (data?.refresh) localStorage.setItem("refresh", data.refresh);
         if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+        
+        // App.jsx의 상태 업데이트
+        if (onLoginSuccess) {
+          onLoginSuccess(data);
+        }
+        
+        // 메인 페이지로 이동
         window.location.replace("/");
       } catch (err) {
         console.error("❌ Google 코드 교환 실패:", err);
@@ -268,7 +276,17 @@ export default function GoogleCallback() {
         window.location.replace("/");
       }
     })();
-  }, []);
+  }, [onLoginSuccess]);
 
-  return <p>Google 로그인 처리 중…</p>;
+  return (
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      height: '100vh',
+      fontFamily: 'sans-serif'
+    }}>
+      <p>Google 로그인 처리 중…</p>
+    </div>
+  );
 }
