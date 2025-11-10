@@ -70,145 +70,205 @@
 //   return <p>Google 로그인 처리 중…</p>;
 // }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // src/pages/GoogleCallback.jsx
+// import { useEffect, useState } from "react";
+
+// export default function GoogleCallback({ onLoginSuccess }) {
+//   const [error, setError] = useState(null);
+//   const [status, setStatus] = useState("처리 중...");
+
+//   useEffect(() => {
+//     const params = new URLSearchParams(window.location.search);
+    
+//     // ✅ Option A: 백엔드가 이미 JWT를 쿼리 파라미터로 반환한 경우
+//     const access = params.get("access");
+//     const refresh = params.get("refresh");
+    
+//     // ✅ Option B: Google에서 받은 authorization code
+//     const code = params.get("code");
+//     const state = params.get("state");
+
+//     // Option A: JWT 토큰이 이미 있는 경우
+//     if (access && refresh) {
+//       console.log("✅ [Option A] 백엔드에서 JWT 토큰 수신 완료");
+//       setStatus("로그인 성공! 메인 페이지로 이동 중...");
+      
+//       localStorage.setItem("access", access);
+//       localStorage.setItem("refresh", refresh);
+
+//       if (onLoginSuccess) {
+//         onLoginSuccess({ access, refresh });
+//       }
+
+//       // 메인 페이지로 리다이렉트
+//       setTimeout(() => {
+//         window.location.href = "/";
+//       }, 500);
+//       return;
+//     }
+
+//     // Option B: authorization code가 있는 경우 - 백엔드로 GET 요청
+//     if (code) {
+//       console.log("✅ [Option B] Google authorization code 수신:", code);
+//       setStatus("백엔드에서 토큰 교환 중...");
+
+//       // ✅ GET 요청으로 백엔드에 code 전달
+//       const backendCallbackUrl = `https://grove.beer/api/v1/auth/google/callback/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+      
+//       console.log("📤 백엔드 요청 URL:", backendCallbackUrl);
+
+//       fetch(backendCallbackUrl, {
+//         method: "GET",
+//         headers: { 
+//           "Content-Type": "application/json" 
+//         },
+//       })
+//         .then(async (res) => {
+//           if (!res.ok) {
+//             const errorText = await res.text();
+//             console.error("❌ 백엔드 응답 에러:", errorText);
+//             throw new Error(`서버 에러 (${res.status})`);
+//           }
+//           return res.json();
+//         })
+//         .then((data) => {
+//           console.log("✅ 백엔드 응답 성공:", data);
+
+//           // JWT 저장
+//           if (data.access && data.refresh) {
+//             localStorage.setItem("access", data.access);
+//             localStorage.setItem("refresh", data.refresh);
+
+//             if (onLoginSuccess) {
+//               onLoginSuccess(data);
+//             }
+
+//             setStatus("로그인 성공! 메인 페이지로 이동 중...");
+//             setTimeout(() => {
+//               window.location.href = "/";
+//             }, 500);
+//           } else {
+//             console.error("❌ 토큰이 응답에 없음:", data);
+//             setError("토큰을 받지 못했습니다.");
+//           }
+//         })
+//         .catch((err) => {
+//           console.error("❌ 로그인 실패:", err);
+//           setError(err.message || "로그인 처리 중 오류가 발생했습니다.");
+//           setStatus("로그인 실패");
+          
+//           // 3초 후 로그인 페이지로 리다이렉트
+//           setTimeout(() => {
+//             window.location.href = "/";
+//           }, 3000);
+//         });
+      
+//       return;
+//     }
+
+//     // code도 token도 없는 경우
+//     console.error("❌ URL에 code나 token이 없습니다.");
+//     setError("인증 정보가 없습니다.");
+//     setStatus("로그인 실패");
+    
+//     setTimeout(() => {
+//       window.location.href = "/";
+//     }, 3000);
+
+//   }, [onLoginSuccess]);
+
+//   return (
+//     <div style={{ 
+//       display: 'flex', 
+//       flexDirection: 'column',
+//       alignItems: 'center', 
+//       justifyContent: 'center', 
+//       height: '100vh',
+//       fontFamily: 'sans-serif'
+//     }}>
+//       <h2>Google 로그인</h2>
+//       <p>{status}</p>
+//       {error && (
+//         <p style={{ color: 'red', marginTop: '10px' }}>
+//           ⚠️ {error}
+//         </p>
+//       )}
+//       <div style={{ marginTop: '20px' }}>
+//         <div className="spinner" style={{
+//           border: '4px solid #f3f3f3',
+//           borderTop: '4px solid #3498db',
+//           borderRadius: '50%',
+//           width: '40px',
+//           height: '40px',
+//           animation: 'spin 1s linear infinite'
+//         }}></div>
+//       </div>
+//       <style>{`
+//         @keyframes spin {
+//           0% { transform: rotate(0deg); }
+//           100% { transform: rotate(360deg); }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
 // src/pages/GoogleCallback.jsx
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { exchangeGoogleCode } from "../api";
 
-export default function GoogleCallback({ onLoginSuccess }) {
-  const [error, setError] = useState(null);
-  const [status, setStatus] = useState("처리 중...");
-
+export default function GoogleCallback() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    
-    // ✅ Option A: 백엔드가 이미 JWT를 쿼리 파라미터로 반환한 경우
-    const access = params.get("access");
-    const refresh = params.get("refresh");
-    
-    // ✅ Option B: Google에서 받은 authorization code
     const code = params.get("code");
-    const state = params.get("state");
-
-    // Option A: JWT 토큰이 이미 있는 경우
-    if (access && refresh) {
-      console.log("✅ [Option A] 백엔드에서 JWT 토큰 수신 완료");
-      setStatus("로그인 성공! 메인 페이지로 이동 중...");
-      
-      localStorage.setItem("access", access);
-      localStorage.setItem("refresh", refresh);
-
-      if (onLoginSuccess) {
-        onLoginSuccess({ access, refresh });
-      }
-
-      // 메인 페이지로 리다이렉트
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
-      return;
-    }
-
-    // Option B: authorization code가 있는 경우 - 백엔드로 GET 요청
-    if (code) {
-      console.log("✅ [Option B] Google authorization code 수신:", code);
-      setStatus("백엔드에서 토큰 교환 중...");
-
-      // ✅ GET 요청으로 백엔드에 code 전달
-      const backendCallbackUrl = `https://grove.beer/api/v1/auth/google/callback/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
-      
-      console.log("📤 백엔드 요청 URL:", backendCallbackUrl);
-
-      fetch(backendCallbackUrl, {
-        method: "GET",
-        headers: { 
-          "Content-Type": "application/json" 
-        },
-      })
-        .then(async (res) => {
-          if (!res.ok) {
-            const errorText = await res.text();
-            console.error("❌ 백엔드 응답 에러:", errorText);
-            throw new Error(`서버 에러 (${res.status})`);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log("✅ 백엔드 응답 성공:", data);
-
-          // JWT 저장
-          if (data.access && data.refresh) {
-            localStorage.setItem("access", data.access);
-            localStorage.setItem("refresh", data.refresh);
-
-            if (onLoginSuccess) {
-              onLoginSuccess(data);
-            }
-
-            setStatus("로그인 성공! 메인 페이지로 이동 중...");
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 500);
-          } else {
-            console.error("❌ 토큰이 응답에 없음:", data);
-            setError("토큰을 받지 못했습니다.");
-          }
-        })
-        .catch((err) => {
-          console.error("❌ 로그인 실패:", err);
-          setError(err.message || "로그인 처리 중 오류가 발생했습니다.");
-          setStatus("로그인 실패");
-          
-          // 3초 후 로그인 페이지로 리다이렉트
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 3000);
-        });
-      
-      return;
-    }
-
-    // code도 token도 없는 경우
-    console.error("❌ URL에 code나 token이 없습니다.");
-    setError("인증 정보가 없습니다.");
-    setStatus("로그인 실패");
     
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 3000);
+    if (!code) {
+      console.error("❌ Google OAuth - code 파라미터 없음");
+      window.location.replace("/");
+      return;
+    }
 
-  }, [onLoginSuccess]);
+    // ✅ 배포 고정값 (구글 콘솔과 완전 일치해야 함)
+    const redirectUri = "https://react-porters-grove.vercel.app/google/callback/";
 
-  return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column',
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      height: '100vh',
-      fontFamily: 'sans-serif'
-    }}>
-      <h2>Google 로그인</h2>
-      <p>{status}</p>
-      {error && (
-        <p style={{ color: 'red', marginTop: '10px' }}>
-          ⚠️ {error}
-        </p>
-      )}
-      <div style={{ marginTop: '20px' }}>
-        <div className="spinner" style={{
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          animation: 'spin 1s linear infinite'
-        }}></div>
-      </div>
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
-    </div>
-  );
+    (async () => {
+      try {
+        const data = await exchangeGoogleCode(code, redirectUri);
+        if (data?.access) localStorage.setItem("access", data.access);
+        if (data?.refresh) localStorage.setItem("refresh", data.refresh);
+        if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+        window.location.replace("/");
+      } catch (err) {
+        console.error("❌ Google 코드 교환 실패:", err);
+        alert("구글 로그인에 실패했어요. 잠시 후 다시 시도해주세요.");
+        window.location.replace("/");
+      }
+    })();
+  }, []);
+
+  return <p>Google 로그인 처리 중…</p>;
 }
