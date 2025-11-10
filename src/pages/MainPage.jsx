@@ -81,8 +81,8 @@ export default function MainPage({ onLogout }) {
       <div
         className="main-content-wrapper"
         style={{
-          marginLeft: isPanelCollapsed ? "60px" : "210px",
-          width: `calc(100% - ${isPanelCollapsed ? "60px" : "210px"})`,
+          marginLeft: isPanelCollapsed ? "60px" : "194px",
+          width: `calc(100% - ${isPanelCollapsed ? "60px" : "194px"})`,
           minHeight: "100vh", // height에서 minHeight로 변경
           display: "flex",
           flexDirection: "column",
@@ -99,7 +99,7 @@ export default function MainPage({ onLogout }) {
             display: "flex",
             gap: "24px",
             // padding: "24px",
-            marginLeft: "24px",
+            marginLeft: "14px",
             paddingTop: "24px",
             flex: "1 1 auto",
             // minHeight 제거! (내부 스크롤 방지)

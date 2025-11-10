@@ -17,6 +17,7 @@
     flex: 1; /* 약 38% 차지 */
     min-width: 250px; /* 최소 너비 보장 */
     max-width: 355px; /* 최대 너비 제한 */
+    min-height: 190px;
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
@@ -80,11 +81,13 @@
     line-height: normal;
     letter-spacing: -0.18px;
     font-style: normal;
+    padding-bottom: 20px;
   }
   .goal-content {
     width: 100%; /* 고정 px 제거 */
-    max-width: 335px;
+    max-width: 345px;
     display: flex;
+    margin-top: auto;
     padding: 20px;
     flex-direction: column;
     gap: 12px;

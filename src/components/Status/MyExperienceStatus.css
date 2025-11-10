@@ -1,7 +1,8 @@
 .experience-status {
     flex: 1.65; /* 약 62% 차지 */
-    min-width: 400px; /* 최소 너비 보장 */
+    min-width: 300px; /* 최소 너비 보장 */
     max-width: 580px; /* 최대 너비 제한 */
+    /* height: 190px; */
     display: flex;
     padding: 20px 10px 10px 10px;
     flex-direction: column;
@@ -12,6 +13,11 @@
     background: #F7F7F7;
     transition: all 0.3s ease;
   }
+/* 
+.experience-status.expanded {
+    flex: 1; 
+    max-height: 200px;
+  } */
 /* MyExperienceStatus.css와 GoalStatus.css 각각에 추가 */
 
 @media (max-width: 1024px) {
@@ -24,8 +30,38 @@
       flex: none;
       width: 100%;
       max-width: none;
+      min-width: unset; /* 👈 추가: 작은 화면에서 min-width 제거 */
     }
   }
+  /* 👇 추가: 작은 화면 대응 */
+  @media (max-width: 768px) {
+    .experience-grid {
+      padding: 12px 16px; /* 패딩 축소 */
+      gap: 12px; /* gap 증가로 여유 공간 확보 */
+      justify-content: space-around; /* space-between → space-around */
+    }
+
+    .exp-item {
+      width: 48px; /* 52px → 48px로 살짝 축소 */
+    }
+
+    .exp-label {
+      font-size: 12px; /* 13px → 12px */
+    }
+  }
+
+    /* 👇 추가: 매우 작은 화면 대응 */
+    @media (max-width: 480px) {
+        .experience-grid {
+          gap: 8px;
+          justify-content: flex-start; /* 왼쪽 정렬 */
+        }
+    
+        .exp-item {
+          width: calc((100% - 48px) / 4); /* 한 줄에 4개씩 */
+          min-width: 45px;
+        }
+      }
 /* .experience-status {
     width: 482px;
     display: flex;
@@ -90,9 +126,10 @@
   }
   .experience-grid {
     width: 100%; /* 고정 px 제거 */
-    max-width: 560px;
+    max-width: 570px;
     display: flex;
-    height: 112px;
+    margin-top: auto;
+    min-height: 112px;
     padding: 8px 20px;
     align-items: center;
     gap: 8px;

@@ -236,18 +236,18 @@ const LeftPanel = ({
             {shouldExpand && <span className="nav-text">아카이브</span>}
           </div>
 
-          <div className="nav-item">
+          {/* <div className="nav-item">
             <div className="nav-icon">
               <img src={trackerIcon} alt="역량 트래커" className="icon-img" />
             </div>
             {shouldExpand && <span className="nav-text">역량 트래커</span>}
-          </div>
+          </div> */}
 
         </nav>
 
         {/* shouldExpand 조건 제거 - 항상 표시 */}
         <div className="bottom-section">
-          <div className="github-status">
+          {/* <div className="github-status">
             <div className="github-item">
               <div className="github-icon">
                 <img src={githubIcon} alt="깃허브" className="icon-img" />
@@ -255,14 +255,14 @@ const LeftPanel = ({
               {shouldExpand && <span className="github-text">Github 연동 중</span>}
               {shouldExpand && <div className="status-indicator active"></div>}
             </div>
-          </div>
+          </div> */}
 
           <div className="settings-section">
             <div className="nav-item2">
               <div className="nav-icon2">
                 <img src={settingsIcon} alt="설정" className="icon-img" />
               </div>
-              {shouldExpand && <span className="nav-text">설정</span>}
+              {shouldExpand && <span className="nav-text">프로필 설정</span>}
             </div>
 
             <LogoutButton onLogout={onLogout} />
