@@ -10,14 +10,16 @@ import certificateIcon from "../../assets/image/certificate.png";
 import languageIcon from "../../assets/image/language.png";
 import globalIcon from "../../assets/image/overseas.png";
 
-const MyExperienceStatus = ({ isPanelCollapsed }) => {
+const MyExperienceStatus = ({ isPanelCollapsed, onGoToChooseOption }) => {
   return (
     <div className={`experience-status ${isPanelCollapsed ? 'expanded' : ''}`}>
       <div className="experience-header">
         <h2 className="experience-title">나의 경험 현황</h2>
         <p className="experience-subtext">
           아직 등록된 경험이 없어요. 지금 바로 남겨볼까요?{" "}
-          <span className="highlight">+ 경험 정리하기</span>
+          <span className="highlight" onClick={onGoToChooseOption} style={{ cursor: 'pointer' }}>
+            + 경험 정리하기
+          </span>
         </p>
       </div>
 

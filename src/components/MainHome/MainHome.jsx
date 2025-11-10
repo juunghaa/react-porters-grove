@@ -8,7 +8,7 @@ import GoalStatus from "../Status/GoalStatus";
 import ActivityNote from "../Status/ActivityNote";
 import HomeTracker from "../HomeTracker/HomeTracker";
 
-const MainHome = ({ isPanelCollapsed }) => {
+const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
   return (
     <div className="main-home">
       {/* 환영 메시지 */}
@@ -35,7 +35,8 @@ const MainHome = ({ isPanelCollapsed }) => {
 
     {/* Status 컴포넌트들 */}
     <div className="status-container">
-        <MyExperienceStatus isPanelCollapsed={isPanelCollapsed} />
+        <MyExperienceStatus isPanelCollapsed={isPanelCollapsed} 
+        onGoToChooseOption={onGoToChooseOption}/>
         <GoalStatus isPanelCollapsed={isPanelCollapsed} />
     </div>
 

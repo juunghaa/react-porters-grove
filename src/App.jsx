@@ -12,6 +12,7 @@ import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 // import GoogleLoginButton from "./components/GoogleLoginButton"; // ✅ 필요 시 홈 테스트용
+import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -71,6 +72,22 @@ export default function App() {
         /> */}
         <Route path="/google/callback" element={<GoogleCallback />} />
         
+        {/* ✅ ChooseOption 페이지 라우트 추가 */}
+        <Route 
+          path="/choose-option" 
+          element={
+            isLoggedIn ? (
+              <ChooseOption 
+                onGoToExperience={(tags) => console.log('경험:', tags)}
+                onGoToSpec={(tags) => console.log('스펙:', tags)}
+                onGoToPortfolio={(tags) => console.log('포트폴리오:', tags)}
+              />
+            ) : (
+              <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
+            )
+          } 
+        />
+
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
           path="/"

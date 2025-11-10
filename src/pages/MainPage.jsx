@@ -8,6 +8,7 @@ import banner from "../assets/icons/banner.png";
 import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
 import Newsletter from "./../components/Newsletter/Newsletter";
+import { useNavigate } from "react-router-dom"; // ✅ 추가
 
 // 로고 이미지 import
 import saraminLogo from "../assets/logos/saramin.png";
@@ -28,6 +29,12 @@ export default function MainPage({ onLogout }) {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
+  const navigate = useNavigate(); // ✅ 추가
+
+  // ✅ ChooseOption 페이지로 이동하는 함수
+  const handleGoToChooseOption = () => {
+    navigate('/choose-option');
+  };
 
   const handlePanelToggle = () => {
     setIsPanelCollapsed(!isPanelCollapsed);
@@ -53,7 +60,8 @@ export default function MainPage({ onLogout }) {
 
   const renderMainContent = () => {
     if (currentPage === "home") {
-      return <MainHome isPanelCollapsed={isPanelCollapsed} />;
+      return <MainHome isPanelCollapsed={isPanelCollapsed} 
+      onGoToChooseOption={handleGoToChooseOption}/>;
     } else if (currentPage === "chooseOption") {
       return <ChooseOption onGoToActivity={handleGoToActivity} />;
     } else if (currentPage === "Activity") {
