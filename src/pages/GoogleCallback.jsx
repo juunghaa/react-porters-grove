@@ -70,7 +70,6 @@
 //   return <p>Google 로그인 처리 중…</p>;
 // }
 
-
 // src/pages/GoogleCallback.jsx
 import { useEffect, useState } from "react";
 
@@ -108,31 +107,27 @@ export default function GoogleCallback({ onLoginSuccess }) {
       return;
     }
 
-    // Option B: authorization code가 있는 경우 - 백엔드로 전송
+    // Option B: authorization code가 있는 경우 - 백엔드로 GET 요청
     if (code) {
       console.log("✅ [Option B] Google authorization code 수신:", code);
       setStatus("백엔드에서 토큰 교환 중...");
 
-      // 방법 1: GET 요청으로 백엔드 callback 엔드포인트 호출
-      // (백엔드가 알아서 리다이렉트해주는 경우)
-      const backendCallbackUrl = `https://grove.beer/api/v1/auth/google/callback/?code=${code}${state ? `&state=${state}` : ''}`;
+      // ✅ GET 요청으로 백엔드에 code 전달
+      const backendCallbackUrl = `https://grove.beer/api/v1/auth/google/callback/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
       
-      // 또는 방법 2: POST 요청으로 직접 토큰 받기
-      fetch("https://grove.beer/api/v1/auth/google/callback/", {
-        method: "POST",
+      console.log("📤 백엔드 요청 URL:", backendCallbackUrl);
+
+      fetch(backendCallbackUrl, {
+        method: "GET",
         headers: { 
           "Content-Type": "application/json" 
         },
-        body: JSON.stringify({ 
-          code: code,
-          state: state || null
-        }),
       })
         .then(async (res) => {
           if (!res.ok) {
             const errorText = await res.text();
             console.error("❌ 백엔드 응답 에러:", errorText);
-            throw new Error(`서버 에러 (${res.status}): ${errorText}`);
+            throw new Error(`서버 에러 (${res.status})`);
           }
           return res.json();
         })
