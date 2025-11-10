@@ -146,8 +146,9 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       setSubmitState('loading');
 
       // 회원가입 API 호출
-      const data = await register(email, pw1, pw2); // { access, refresh, user } 기대
-
+      // const data = await register(email, pw1, pw2); // { access, refresh, user } 기대
+      // handleSubmit 함수의 API 호출 부분을
+      const data = await register(email, pw1, pw2, name); // name 파라미터 추가
       // 필요하면 토큰 저장
       // localStorage.setItem('access', data.access);
       // localStorage.setItem('refresh', data.refresh);

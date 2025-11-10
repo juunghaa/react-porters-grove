@@ -21,29 +21,29 @@ export const login = async (email, password) => {
   return data; // { access, refresh, user }
 };
 
-
 // 회원가입 
-export const register = async (email, password1, password2) => {
-    const res = await fetch(`/api/auth/registration/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email,
-            password1,
-            password2,
-        }),
-    });
-    const data = await res.json();
-    console.log('회원가입 백엔드 응답:', data);
-    
-    if (!res.ok) {
-        // 백엔드에서 에러 메시지들이 객체로 올 수 있어서 예쁘게 정리
-        const errorMessages = Object.values(data)
-        .flat()
-        .join(' ');
-        throw new Error(errorMessages || '회원가입 실패');
-    }
-    return data; // { access, refresh, user }
+export const register = async (email, password1, password2, name) => {
+  const res = await fetch(`/api/auth/registration/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+          username: email,  // ← 추가: username을 email과 동일하게
+          email,
+          password1,
+          password2,
+          // name은 추가 정보라면 필요시 포함
+      }),
+  });
+  const data = await res.json();
+  console.log('회원가입 백엔드 응답:', data);
+  
+  if (!res.ok) {
+      const errorMessages = Object.values(data)
+      .flat()
+      .join(' ');
+      throw new Error(errorMessages || '회원가입 실패');
+  }
+  return data;
 };
 
   export const exchangeGoogleCode = async (code, redirectUri) => {
