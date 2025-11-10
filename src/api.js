@@ -1,4 +1,4 @@
-const BASE = "https://grove.beer";
+// const BASE = "https://grove.beer";
 // const BASE_URL = process.env.REACT_APP_API_URL;
 
 // 로그인
@@ -46,21 +46,9 @@ export const register = async (email, password1, password2, name) => {
   return data;
 };
 
-  // export const exchangeGoogleCode = async (code, redirectUri) => {
-  //   const res = await fetch('https://grove.beer/api/v1/auth/google/', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ code, redirect_uri: redirectUri }),
-  //   });
-  //   const data = await res.json().catch(() => ({}));
-  //   if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
-  //   return data;
-  // };
-
-// 구글 code → JWT 교환
 export const exchangeGoogleCode = async (code, redirectUri) => {
-  const res = await fetch(`${BASE}/api/v1/auth/google/`, {
-    method: "POST",  // ✅ POST 방식
+  const res = await fetch("https://grove.beer/api/v1/auth/google/", {
+    method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, redirect_uri: redirectUri }),
   });
@@ -68,6 +56,18 @@ export const exchangeGoogleCode = async (code, redirectUri) => {
   if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
   return data;
 };
+
+// 구글 code → JWT 교환
+// export const exchangeGoogleCode = async (code, redirectUri) => {
+//   const res = await fetch(`${BASE}/api/v1/auth/google/`, {
+//     method: "POST",  // ✅ POST 방식
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ code, redirect_uri: redirectUri }),
+//   });
+//   const data = await res.json().catch(() => ({}));
+//   if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
+//   return data;
+// };
 
 // 토큰 갱신 (옵션: 401일 때 한 번만 시도)
 export const refreshAccess = async () => {

@@ -232,48 +232,105 @@
 
 
 
-
-
 // src/pages/GoogleCallback.jsx
-import { useEffect } from "react";
-import { exchangeGoogleCode } from "../api";
+import { useEffect, useState } from "react";
 
 export default function GoogleCallback({ onLoginSuccess }) {
+  const [status, setStatus] = useState("처리 중...");
+  const [debugInfo, setDebugInfo] = useState(null);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     
+    console.log("=== Google Callback Debug ===");
+    console.log("1. Full URL:", window.location.href);
+    console.log("2. Code:", code ? code.substring(0, 20) + "..." : "없음");
+    
     if (!code) {
-      console.error("❌ Google OAuth - code 파라미터 없음");
-      window.location.replace("/");
+      console.error("❌ code 파라미터 없음");
+      setStatus("인증 코드가 없습니다.");
       return;
     }
 
-    // ✅ 배포 환경의 redirect_uri (Google Console에 등록된 값과 일치해야 함)
+    // ✅ 체크 포인트 1: redirect_uri가 GoogleLoginButton과 동일한지
     const redirectUri = "https://react-porters-grove.vercel.app/google/callback/";
+    console.log("3. Redirect URI:", redirectUri);
 
     (async () => {
       try {
-        console.log("🔄 Google code 교환 시작...");
-        const data = await exchangeGoogleCode(code, redirectUri);
+        setStatus("백엔드로 인증 코드 전송 중...");
         
-        console.log("✅ 토큰 수신 성공:", data);
+        // ✅ 체크 포인트 2: 백엔드 URL 확인
+        const backendUrl = "https://grove.beer/api/v1/auth/google/";
+        // 또는 상대 경로: "/api/v1/auth/google/"
         
-        if (data?.access) localStorage.setItem("access", data.access);
-        if (data?.refresh) localStorage.setItem("refresh", data.refresh);
-        if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("4. Backend URL:", backendUrl);
+        console.log("5. Request Body:", { code: code.substring(0, 20) + "...", redirect_uri: redirectUri });
+
+        const response = await fetch(backendUrl, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            // ✅ 체크 포인트 3: CORS 문제가 있다면 credentials 추가
+            // "Access-Control-Allow-Origin": "*",
+          },
+          // credentials: "include", // 쿠키가 필요한 경우
+          body: JSON.stringify({ 
+            code: code,
+            redirect_uri: redirectUri 
+          }),
+        });
+
+        console.log("6. Response Status:", response.status);
+        console.log("7. Response OK:", response.ok);
+
+        const responseText = await response.text();
+        console.log("8. Response Body (raw):", responseText);
+
+        setDebugInfo({
+          url: backendUrl,
+          status: response.status,
+          responseText: responseText.substring(0, 500)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${responseText}`);
+        }
+
+        const data = JSON.parse(responseText);
+        console.log("9. Parsed Data:", data);
+
+        if (data?.access) {
+          localStorage.setItem("access", data.access);
+          console.log("✅ Access token 저장됨");
+        }
+        if (data?.refresh) {
+          localStorage.setItem("refresh", data.refresh);
+          console.log("✅ Refresh token 저장됨");
+        }
+        if (data?.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          console.log("✅ User 정보 저장됨");
+        }
         
-        // App.jsx의 상태 업데이트
         if (onLoginSuccess) {
           onLoginSuccess(data);
         }
         
-        // 메인 페이지로 이동
-        window.location.replace("/");
+        setStatus("로그인 성공! 메인 페이지로 이동 중...");
+        console.log("✅ 로그인 성공, 리다이렉트 시작");
+        
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 1000);
+        
       } catch (err) {
-        console.error("❌ Google 코드 교환 실패:", err);
-        alert("구글 로그인에 실패했어요. 잠시 후 다시 시도해주세요.");
-        window.location.replace("/");
+        console.error("❌ 전체 에러:", err);
+        console.error("❌ 에러 메시지:", err.message);
+        console.error("❌ 에러 스택:", err.stack);
+        
+        setStatus(`로그인 실패: ${err.message}`);
       }
     })();
   }, [onLoginSuccess]);
@@ -281,12 +338,42 @@ export default function GoogleCallback({ onLoginSuccess }) {
   return (
     <div style={{ 
       display: 'flex', 
+      flexDirection: 'column',
       alignItems: 'center', 
       justifyContent: 'center', 
-      height: '100vh',
-      fontFamily: 'sans-serif'
+      minHeight: '100vh',
+      padding: '20px',
+      fontFamily: 'monospace',
+      backgroundColor: '#f5f5f5'
     }}>
-      <p>Google 로그인 처리 중…</p>
+      <h2>Google 로그인 디버그</h2>
+      <p style={{ marginTop: '20px', fontSize: '16px' }}>{status}</p>
+      
+      {debugInfo && (
+        <div style={{ 
+          marginTop: '30px', 
+          padding: '20px', 
+          backgroundColor: '#fff',
+          border: '2px solid #ddd',
+          borderRadius: '8px',
+          maxWidth: '800px',
+          width: '100%',
+          textAlign: 'left'
+        }}>
+          <h3>🔍 디버그 정보</h3>
+          <p><strong>URL:</strong> {debugInfo.url}</p>
+          <p><strong>Status:</strong> {debugInfo.status}</p>
+          <p><strong>Response:</strong></p>
+          <pre style={{ 
+            backgroundColor: '#f5f5f5', 
+            padding: '10px',
+            overflow: 'auto',
+            fontSize: '12px'
+          }}>
+            {debugInfo.responseText}
+          </pre>
+        </div>
+      )}
     </div>
   );
 }
