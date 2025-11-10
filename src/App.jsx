@@ -70,7 +70,8 @@ export default function App() {
           path="/api/v1/auth/google/callback"
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
         /> */}
-        <Route path="/google/callback" element={<GoogleCallback />} />
+        <Route path="/api/v1/auth/google/callback" element={<GoogleCallback 
+        onLoginSuccess={handleAuthSuccess}/>} />
         
         {/* ✅ ChooseOption 페이지 라우트 추가 */}
         <Route 
