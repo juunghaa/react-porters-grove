@@ -92,6 +92,15 @@ const ActivityNote = ({ isPanelCollapsed }) => {
           />
           <span className="question-text">내용을 입력하세요</span>
         </div> */}
+        <div className="timestamp">
+            {new Date().toLocaleString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+        </div>
 
         <div className="activityNote-input-wrapper">
         <img 
@@ -107,6 +116,7 @@ const ActivityNote = ({ isPanelCollapsed }) => {
             onKeyPress={handleKeyPress}
             disabled={!selectedExperience}
           />
+
           <button 
             className="check-button"
             onClick={handleSaveActivityNote}
