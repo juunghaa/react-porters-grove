@@ -72,22 +72,6 @@ export default function App() {
         /> */}
         <Route path="/google/callback/" element={<GoogleCallback 
         onLoginSuccess={handleAuthSuccess}/>} />
-        
-        {/* ✅ ChooseOption 페이지 라우트 추가 */}
-        <Route 
-          path="/choose-option" 
-          element={
-            isLoggedIn ? (
-              <ChooseOption 
-                onGoToExperience={(tags) => console.log('경험:', tags)}
-                onGoToSpec={(tags) => console.log('스펙:', tags)}
-                onGoToPortfolio={(tags) => console.log('포트폴리오:', tags)}
-              />
-            ) : (
-              <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
-            )
-          } 
-        />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route

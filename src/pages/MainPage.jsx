@@ -31,9 +31,9 @@ export default function MainPage({ onLogout }) {
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
   const navigate = useNavigate(); // ✅ 추가
 
-  // ✅ ChooseOption 페이지로 이동하는 함수
+  // ChooseOption 페이지로 이동하는 함수
   const handleGoToChooseOption = () => {
-    navigate('/choose-option');
+    setCurrentPage("chooseOption");
   };
 
   const handlePanelToggle = () => {
