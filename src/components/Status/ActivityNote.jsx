@@ -118,7 +118,7 @@ const ActivityNote = ({ isPanelCollapsed }) => {
           />
 
           <button 
-            className="check-button"
+            className="check-button2"
             onClick={handleSaveActivityNote}
             disabled={!activityNote.trim() || !selectedExperience}
           >

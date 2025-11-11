@@ -272,7 +272,7 @@
     margin-left: auto; /* 이 줄 추가 */
     align-self: flex-end; /* 이 줄 추가 */
   }
-  .check-button {
+  .check-button2 {
     width: 44px;
     height: 44px;
     border: none;
@@ -286,7 +286,9 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
     /* margin-top: 20px; */
-
+    position: absolute; /* 추가 */
+    bottom: 20px; /* 추가 */
+    right: 20px; /* 추가 */
   }
   
   .check-button:hover:not(:disabled) {
