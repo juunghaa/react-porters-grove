@@ -156,7 +156,8 @@ const LeftPanel = ({
   onCreateNew,
   onHomeClick,
   onLogout,
-  isProfileSettingsOpen, // 추가
+  isProfileSettingsOpen,
+  onOpenProfileSettings,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
@@ -258,7 +259,7 @@ const LeftPanel = ({
           </div> */}
 
           <div className="settings-section">
-            <div className="nav-item2">
+            <div className="nav-item2" onClick={onOpenProfileSettings}>
               <div className="nav-icon2">
                 <img src={settingsIcon} alt="설정" className="icon-img" />
               </div>

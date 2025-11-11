@@ -8,8 +8,8 @@ import grayLight from './images/graylight.png';
 import grayCheck from './images/graycheck.png';
 import './HomeTracker.css';
 
-const HomeTracker = () => {
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
+//   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   
   // 각 박스 타입별 설정
   const boxConfigs = {
@@ -42,9 +42,9 @@ const HomeTracker = () => {
     }
   };
 
-  const handleAddExperience = (type) => {
-    console.log(`${type} 추가하기`);
-  };
+//   const handleAddExperience = (type) => {
+//     console.log(`${type} 추가하기`);
+//   };
 
   const handleMenuClick = (type) => {
     console.log(`${type} 메뉴 클릭`);
@@ -63,21 +63,21 @@ const HomeTracker = () => {
         <EmptyBox 
           isPanelCollapsed={isPanelCollapsed}
           config={boxConfigs.ongoing}
-          onAdd={() => handleAddExperience('ongoing')}
+          onGoToChooseOption={onGoToChooseOption}
           onMenuClick={() => handleMenuClick('ongoing')}
         />
         
         <EmptyBox 
           isPanelCollapsed={isPanelCollapsed}
           config={boxConfigs.spec}
-          onAdd={() => handleAddExperience('spec')}
+          onGoToChooseOption={onGoToChooseOption}
           onMenuClick={() => handleMenuClick('spec')}
         />
         
         <EmptyBox 
           isPanelCollapsed={isPanelCollapsed}
           config={boxConfigs.completed}
-          onAdd={() => handleAddExperience('completed')}
+          onGoToChooseOption={onGoToChooseOption}
           onMenuClick={() => handleMenuClick('completed')}
         />
       </div>

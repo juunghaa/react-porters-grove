@@ -4,7 +4,7 @@ import './EmptyBox.css';
 const EmptyBox = ({ 
   isPanelCollapsed,
   config,
-  onAdd,
+  onGoToChooseOption,
   onMenuClick
 }) => {
   if (!config) return null;
@@ -24,7 +24,7 @@ const EmptyBox = ({
             <button className="empty-box-menu-btn" onClick={onMenuClick}>
               <span>⋯</span>
             </button>
-            <button className="empty-box-add-btn" onClick={onAdd}>
+            <button className="empty-box-add-btn" onClick={onGoToChooseOption}>
               <span style={{fontSize: "24px", paddingRight: "6px"}}>+</span>
             </button>
           </div>
@@ -38,7 +38,7 @@ const EmptyBox = ({
         </div>
 
         {/* 하단 추가 버튼 */}
-        <button className="empty-box-add-button" onClick={onAdd}>
+        <button className="empty-box-add-button" onClick={onGoToChooseOption}>
           <span style={{fontSize: "18px", paddingLeft: "6px", paddingTop:"0.5px"}}>+</span>
           {config.buttonText}
         </button>

@@ -17,6 +17,8 @@ export default function ProfileCard({
   onEdit,
   onOpen,
   onSettingsOpenChange, // 추가!
+  triggerEdit, // ✅ 추가
+  onEditTriggered, // ✅ 추가
 }) {
     const SOCIALS = {
         github:   { name: "GitHub",   domain: "github.com",    icon: linkGithubIcon },
@@ -74,6 +76,15 @@ export default function ProfileCard({
     const [links, setLinks] = useState(socials);
     useEffect(()=>setLinks(socials), [socials]);
     const [editing, setEditing] = useState(false);
+    // 외부에서 트리거되면 에디터 열기
+    useEffect(() => {
+      if (triggerEdit) {
+        setEditing(true);
+        onSettingsOpenChange?.(true);
+        onEditTriggered?.(); // 트리거 초기화
+      }
+    }, [triggerEdit, onSettingsOpenChange, onEditTriggered]);
+
     const [profile, setProfile] = useState({
         name,
         title,

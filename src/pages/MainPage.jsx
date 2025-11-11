@@ -29,6 +29,7 @@ export default function MainPage({ onLogout }) {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState("home");
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
+  const [triggerProfileEdit, setTriggerProfileEdit] = useState(false);
   const navigate = useNavigate(); // ✅ 추가
 
   // ChooseOption 페이지로 이동하는 함수
@@ -50,6 +51,10 @@ export default function MainPage({ onLogout }) {
 
   const handleGoToActivity = () => {
     setCurrentPage("Activity");
+  };
+
+  const handleOpenProfileSettings = () => {
+    setTriggerProfileEdit(true);
   };
 
   useEffect(() => {
@@ -85,6 +90,8 @@ export default function MainPage({ onLogout }) {
         onCreateNew={handleCreateNew}
         onHomeClick={handleHomeClick}
         onLogout={onLogout}
+        isProfileSettingsOpen={isProfileSettingsOpen}
+        onOpenProfileSettings={handleOpenProfileSettings} 
       />
       <div
         className="main-content-wrapper"
@@ -138,6 +145,8 @@ export default function MainPage({ onLogout }) {
                   setProfile((prev) => ({ ...prev, ...data }))
                 }
                 onSettingsOpenChange={setIsProfileSettingsOpen}
+                triggerEdit={triggerProfileEdit}
+                onEditTriggered={() => setTriggerProfileEdit(false)}
               />
               <Newsletter />
             </div>

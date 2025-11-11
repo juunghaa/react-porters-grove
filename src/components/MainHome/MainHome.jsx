@@ -45,7 +45,8 @@ const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
     </div>
     
     <div className="status-container2">
-    <HomeTracker isPanelCollapsed={isPanelCollapsed} />
+    <HomeTracker isPanelCollapsed={isPanelCollapsed} 
+    onGoToChooseOption={onGoToChooseOption}/>
     </div>
 
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 
