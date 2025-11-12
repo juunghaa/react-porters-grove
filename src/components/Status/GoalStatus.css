@@ -85,7 +85,7 @@
   }
   .goal-content {
     width: 100%; /* 고정 px 제거 */
-    max-width: 345px;
+    /* max-width: 345px; */
     display: flex;
     margin-top: auto;
     padding: 20px;
