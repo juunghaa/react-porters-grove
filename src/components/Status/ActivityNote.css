@@ -120,6 +120,9 @@
     font-style: normal;
     line-height: normal;
     letter-spacing: -0.18px;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
   }
   
   .dropdown-button:hover {
@@ -136,7 +139,7 @@
   
   .dropdown-arrow {
     transition: transform 0.2s ease;
-    /* color: rgba(0, 0, 0, 0.60); */
+    color: rgba(0, 0, 0, 0.60);
   }
   
   .dropdown-arrow.open {
