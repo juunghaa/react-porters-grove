@@ -136,7 +136,7 @@
   
   .dropdown-arrow {
     transition: transform 0.2s ease;
-    color: rgba(0, 0, 0, 0.60);
+    /* color: rgba(0, 0, 0, 0.60); */
   }
   
   .dropdown-arrow.open {
@@ -287,9 +287,9 @@
     transition: all 0.2s ease;
     flex-shrink: 0;
     /* margin-top: 20px; */
-    position: absolute; /* 추가 */
-    bottom: 20px; /* 추가 */
-    right: 20px; /* 추가 */
+    position: absolute; 
+    bottom: 20px; 
+    right: 20px; 
   }
   
   .check-button:hover:not(:disabled) {
