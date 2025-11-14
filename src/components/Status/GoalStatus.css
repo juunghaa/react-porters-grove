@@ -84,6 +84,7 @@
     padding-bottom: 20px;
   }
   .goal-content {
+    flex: 1;
     width: 100%; /* 고정 px 제거 */
     /* max-width: 345px; */
     display: flex;
