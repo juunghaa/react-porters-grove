@@ -82,6 +82,7 @@
   background: #F7F7F7;
   border-radius: 30px;
   box-sizing: border-box;
+  margin-bottom: 30px;
 }
 
 /* 섹션 제목 */
@@ -175,7 +176,8 @@
 }
 
 .profile-editor input,
-.profile-editor textarea {
+.profile-editor textarea,
+.profile-editor select {
   border: none !important;        /* 기본 테두리 제거 */
   outline: none !important;       /* focus 시 외곽선 제거 */
   display: flex;
@@ -199,7 +201,8 @@
 }
 
 .profile-editor input::placeholder,
-.profile-editor textarea::placeholder {
+.profile-editor textarea::placeholder 
+.profile-editor select::placeholder {
   color: rgba(0, 0, 0, 0.30);
   /* text-align: center; */
   font-family: "SUIT Variable";
@@ -313,9 +316,9 @@
   letter-spacing: -0.2px;
 }
 
-.add-link:before {
+.add-link:after {
   content: '+';
-  margin-right: 0.3rem;
+  margin-left: 0.3rem;
   font-size: 1.1rem;
 }
 
@@ -326,9 +329,51 @@
 
 .date-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
 }
+
+/* 추가된 요소 스타일 */
+.major-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  }
+  
+  
+  .score-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  }
+  
+  .add-major-button {
+    margin-top: -1rem;
+    /* color: #00a8e1; */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+  
+    color: var(--Grove-Green, #126431);
+    text-align: center;
+    font-family: "SUIT Variable";
+    /* font-size: 20px; */
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.2px;
+  }
+  
+  .add-major-button:after {
+    content: '+';
+    margin-left: 0.3rem;
+    font-size: 1.1rem;
+  }
+
 
 /* 반응형 - 태블릿 */
 @media (max-width: 1200px) {

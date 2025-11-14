@@ -238,43 +238,152 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                 </div>
               </div>
 
-              {/* 학력 정보 */}
-              <div className="education-section">
-                <h2>학력 정보</h2>
+              </form>
+              </div>
 
+
+              <div className="profile-editor-content">
+              {/* 학력 정보 */}
+                <h2>학력 정보</h2>
+              <div className="education-section">
                 <div className="form-group">
                   <label>학교명</label>
+                  <div className="form-group-inner">
                   <input
                     type="text"
                     value={form.schoolEmail}
                     onChange={(e) => setForm(f => ({ ...f, schoolEmail: e.target.value }))}
-                    placeholder="학교명을 입력하세요"
+                    placeholder="학교 이름을 입력하세요"
                   />
+                  </div>
                 </div>
 
                 {/* 입학년도 + 졸업년도 */}
                 <div className="date-row">
                   <div className="form-group">
                     <label>입학년도</label>
+                    <div className="form-group-inner">
                     <input
                       type="text"
                       value={form.admissionDate}
                       onChange={(e) => setForm(f => ({ ...f, admissionDate: e.target.value }))}
-                      placeholder="2022.03"
+                      placeholder="YYYY.MM"
                     />
+                    </div>
                   </div>
                   <div className="form-group">
                     <label>졸업년도</label>
+                    <div className="form-group-inner">
                     <input
                       type="text"
                       value={form.graduationDate}
                       onChange={(e) => setForm(f => ({ ...f, graduationDate: e.target.value }))}
-                      placeholder="2026.02"
+                      placeholder="YYYY.MM"
                     />
+                    </div>
                   </div>
+
+                  {/* ================== 🔹 추가 1: 졸업 여부 ================== */}
+                <div className="form-group">
+                <label>졸업 여부</label>
+                <div className="form-group-inner">
+                <select
+                value={form.graduationStatus}
+                onChange={(e) => setForm(f => ({ ...f, graduationStatus: e.target.value }))}
+                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
+                >
+                <option value="" disabled selected hidden>
+                  졸업 여부를 선택하세요
+                </option>
+                <option value="재학중">재학중</option>
+                <option value="졸업">졸업</option>
+                <option value="수료">수료</option>
+                <option value="졸업예정">졸업예정</option>
+                <option value="중퇴">중퇴</option>
+                <option value="휴학">휴학</option>
+                <option value="자퇴">자퇴</option>
+                </select>
                 </div>
+                </div>
+                </div>
+
+                  
+
+                {/* ================== 🔹 추가 2: 전공구분 + 전공 ================== */}
+                <div className="major-row">
+                <div className="form-group">
+                <label>전공 구분</label>
+                <div className="form-group-inner">
+                <select
+                value={form.majorType}
+                onChange={(e) => setForm(f => ({ ...f, majorType: e.target.value }))}
+                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
+                >
+                <option value="" disabled selected hidden>
+                  전공 구분을 선택하세요
+                </option>
+                <option value="주전공">주전공</option>
+                <option value="부전공">부전공</option>
+                <option value="이중전공">이중전공</option>
+                <option value="복수전공">복수전공</option>
+                </select>
+                </div>
+                </div>
+
+
+                <div className="form-group">
+                <label>전공</label>
+                <div className="form-group-inner">
+                <input
+                type="text"
+                value={form.majorName}
+                onChange={(e) => setForm(f => ({ ...f, majorName: e.target.value }))}
+                placeholder="전공명 입력"
+                />
+                </div>
+                </div>
+                </div>
+
+                {/* ================== 🔹 추가 3: 전공 추가 버튼 ================== */}
+                <button type="button" className="add-major-button">전공 추가하기</button>
+
+
+                {/* ================== 🔹 추가 4: 학점 + 총점 ================== */}
+                <div className="score-row">
+                <div className="form-group">
+                <label>학점</label>
+                <div className="form-group-inner">
+                <input
+                type="text"
+                value={form.gpa}
+                onChange={(e) => setForm(f => ({ ...f, gpa: e.target.value }))}
+                placeholder="학점을 입력하세요"
+                />
+                </div>
+                </div>
+
+
+                <div className="form-group">
+                <label>총점</label>
+                <div className="form-group-inner">
+                <select
+                value={form.gpaTotal}
+                onChange={(e) => setForm(f => ({ ...f, gpaTotal: e.target.value }))}
+                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
+                >
+                <option value="" disabled selected hidden>
+                  총점을 선택하세요
+                </option>
+                <option value="4.5">4.5</option>
+                <option value="4.3">4.3</option>
+                <option value="4.0">4.0</option>
+                <option value="100">100</option>
+                </select>
+                </div>
+                </div>
+                </div>
+
               </div>
-            </form>
           </div>
         </div>
       </div>
