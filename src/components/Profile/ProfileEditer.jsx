@@ -129,57 +129,79 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
 
                 <div className="name-field form-group">
                   <label>이름</label>
+                  <div className="form-group-inner">
                   <input
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
-                    placeholder="김윤주"
+                    placeholder="이름을 입력하세요"
                   />
+                  </div>
                 </div>
               </div>
 
               {/* 소개 */}
               <div className="form-group">
                 <label>소개</label>
+                <div className="form-group-inner">
                 <textarea
                   value={form.tagline}
                   onChange={(e) => setForm(f => ({ ...f, tagline: e.target.value }))}
-                  placeholder="안녕하세요 ✿ ✿"
+                  placeholder="나를 표현하는 소개글을 적어보세요"
                   rows={3}
                 />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>직무</label>
+                <div className="form-group-inner">
+                <input
+                  value={form.tagline}
+                  onChange={(e) => setForm(f => ({ ...f, tagline: e.target.value }))}
+                  placeholder="지금 하고 있거나 희망하는 직무를 입력하세요"
+                  rows={3}
+                />
+                </div>
               </div>
 
               {/* 생년월일 + 전화번호 */}
               <div className="form-row">
                 <div className="form-group">
                   <label>생년월일</label>
+                  <div className="form-group-inner">
                   <input
                     type="text"
                     value={form.birthday}
                     onChange={(e) => setForm(f => ({ ...f, birthday: e.target.value }))}
-                    placeholder="yyyy.mm.dd"
+                    placeholder="YYYY.MM.DD"
                   />
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>전화번호</label>
+                  <div className="form-group-inner">
                   <input
                     type="tel"
                     value={form.phone}
                     onChange={(e) => setForm(f => ({ ...f, phone: e.target.value }))}
                     placeholder="010-0000-0000"
                   />
+                  </div>
                 </div>
               </div>
 
               {/* 이메일 */}
               <div className="form-group">
                 <label>이메일</label>
+                <div className="form-group-inner">
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm(f => ({ ...f, email: e.target.value }))}
                   placeholder="grove@gmail.com"
                 />
+                </div>
               </div>
 
               {/* 대표 링크 */}
@@ -188,12 +210,17 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                 <div className="links-container">
                   {form.links.map((link, i) => (
                     <div key={i} className="link-item">
-                      <span className="link-icon">🔗</span>
+                      <span className="link-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <path d="M9 9C6.084 9 4 10.737 4 14C4 17.263 6.084 19 9 19H12C14.916 19 17 17.263 17 14C17 13.904 17 13.124 17 13C17 11.667 15 11.667 15 13C15 13.132 15 14.063 15 14.063C14.975 16.083 13.863 17 12 17H9C7.116 17 6 16.07 6 14C6 11.93 7.116 11 9 11H10C10.552 11 11 10.552 11 10C11 9.448 10.552 9 10 9H9ZM16 9C14.579 9 13.422 9.40201 12.562 10.156C11.508 11.081 11 12.451 11 14C11 14.129 11 14.296 11 15C11 15.552 11.448 16 12 16C12.552 16 13 15.552 13 15C13 14.296 13 14.129 13 14C13 12.983 13.301 12.16 13.875 11.656C14.35 11.239 15.043 11 16 11H19C21.07 11 22 12.116 22 14C22 15.884 21.07 17 19 17H18C17.448 17 17 17.448 17 18C17 18.552 17.448 19 18 19H19C22.263 19 24 16.916 24 14C24 11.084 22.263 9 19 9H16Z" fill="#9F9F9F"/>
+                      </svg>
+                      </span>
+                      <span style={{color: "#D9D9D9", paddingTop: "3px"}}>|</span>
                       <input
                         type="url"
                         value={link}
                         onChange={(e) => updateLink(i, e.target.value)}
-                        placeholder={i === 0 ? "Notion" : "https://..."}
+                        placeholder={i === 0 ? "https://..." : "https://..."}
                       />
                       <button
                         type="button"
@@ -206,7 +233,7 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                     </div>
                   ))}
                   <button type="button" className="add-link" onClick={addLink}>
-                    링크 추가
+                    링크 추가하기
                   </button>
                 </div>
               </div>
