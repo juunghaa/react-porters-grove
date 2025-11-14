@@ -140,6 +140,7 @@ export default function MainPage({ onLogout }) {
             >
               <ProfileCard
                 {...profile}
+                isPanelCollapsed={isPanelCollapsed}  // 추가
                 socials={profile.socials}
                 onProfileUpdate={(data) =>
                   setProfile((prev) => ({ ...prev, ...data }))

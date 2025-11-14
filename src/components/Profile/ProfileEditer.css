@@ -1,290 +1,343 @@
+/* 배경 - leftpanel 제외한 영역 전체 */
 .profile-editor-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 194px;
+  right: 0;
+  bottom: 0;
+  background: #F7F7F7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  transition: left 0.3s ease;
+}
+
+.profile-editor-backdrop.panel-collapsed {
+  left: 50px;
+}
+
+/* 흰색 컨테이너 - 고정 크기, 반응형 */
+.profile-editor {
+  width: 100%;
+  max-width: 1200px;
+  height: 90vh;
+  background: #FFF;
+  border-radius: 18px;
+  border: 1px solid #F2F2F2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "Noto Sans KR", sans-serif;
+  position: relative;
+}
+
+/* 취소 버튼 - 왼쪽 상단 고정 */
+.profile-editor .cancel-button {
+  position: absolute;
+  top: 24px;
+  left: 22px;
+  width: 60px;
+  height: auto;
+  cursor: pointer;
+  z-index: 100;
+  transition: opacity 0.2s;
+}
+
+.profile-editor .cancel-button:hover {
+  opacity: 0.8;
+}
+
+/* 저장 버튼 - 오른쪽 상단 고정 */
+.profile-editor .save-button {
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  width: 72px;
+  height: auto;
+  cursor: pointer;
+  z-index: 100;
+  transition: opacity 0.2s;
+}
+
+.profile-editor .save-button:hover {
+  opacity: 0.8;
+}
+
+/* 스크롤 가능한 본문 영역 - 전체 */
+.profile-editor-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px;
+}
+
+/* 회색 박스 - 실제 폼이 들어가는 영역 */
+.profile-editor-content {
+  width: 100%;
+  max-width: 781px;
+  margin: 0 auto;
+  padding: 36px;
+  background: #F7F7F7;
+  border-radius: 30px;
+  box-sizing: border-box;
+}
+
+/* 섹션 제목 */
+.profile-editor h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 2rem 0;
+  color: #000;
+}
+
+/* 프로필 사진 섹션 */
+.avatar-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.avatar-placeholder,
+.avatar-preview {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+
+.avatar-placeholder {
+  object-fit: contain;
+  background: #f9f9f9;
+}
+
+.avatar-preview {
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+.change-avatar-text {
+  display: block;
+  margin-top: 0.6rem;
+  color: #00a8e1;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.name-field {
+  flex: 1;
+}
+
+/* 폼 필드 */
+.form-group {
+  margin-bottom: 1.8rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.8rem;
+}
+
+.profile-editor label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: #000;
+}
+
+.profile-editor input,
+.profile-editor textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif;
+  transition: border-color 0.2s;
+}
+
+.profile-editor input::placeholder,
+.profile-editor textarea::placeholder {
+  color: #9ca3af;
+}
+
+.profile-editor input:focus,
+.profile-editor textarea:focus {
+  outline: none;
+  border-color: #00a8e1;
+  box-shadow: 0 0 0 3px rgba(0, 168, 225, 0.1);
+}
+
+.profile-editor textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* 대표 링크 */
+.links-container {
+  margin-top: 0;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.link-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.link-item input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.link-item input:focus {
+  box-shadow: none;
+  border: none;
+}
+
+.remove-link {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 1.3rem;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  transition: color 0.2s;
+}
+
+.remove-link:hover {
+  color: #6b7280;
+}
+
+.add-link {
+  margin-top: 0.8rem;
+  color: #00a8e1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.add-link:before {
+  content: '+';
+  margin-right: 0.3rem;
+  font-size: 1.1rem;
+}
+
+/* 학력 정보 */
+.education-section {
+  margin-top: 3rem;
+}
+
+.date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* 반응형 - 태블릿 */
+@media (max-width: 1200px) {
   .profile-editor {
-    background: #fff;
-    border-radius: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 900px;
-    max-height: 90vh;
-    overflow-y: auto;
-    font-family: "Noto Sans KR", sans-serif;
-    color: #333;
-    position: relative;
-
-
-    /* display: flex; */
-    /* padding: 36px; */
-    /* flex-direction: column; */
-    /* align-items: flex-start; */
-    /* gap: 20px; */
-    background: #F7F7F7;
-  }
-  
-  /* 상단 헤더 - 취소/저장 버튼 */
-  .profile-editor-header {
-    background: #fff;
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: none;
-  }
-  .profile-editor-header .cancel-button {
-    width: 60px;  
-    height: auto;
-    cursor: pointer;
-  }
-  
-  
-  .profile-editor-header .save-button {
-    width: 72px;  
-    height: auto;
-    cursor: pointer;
+    max-width: 90%;
   }
 
-  
-  /* 본문 컨텐츠 */
+  .profile-editor-scroll {
+    padding: 24px;
+  }
+
   .profile-editor-content {
-    padding: 0 10rem 2.5rem 10rem;
+    padding: 28px;
+  }
+}
 
+/* 반응형 - 모바일 */
+@media (max-width: 768px) {
+  .profile-editor-backdrop {
+    padding: 20px;
+    left: 0;
   }
-  
-  /* 섹션 제목 */
-  .profile-editor h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: #000;
-    margin-top: 0;
+
+  .profile-editor-backdrop.panel-collapsed {
+    left: 0;
   }
-  
-  /* 프로필 사진 섹션 */
+
+  .profile-editor {
+    height: 95vh;
+  }
+
+  .profile-editor .cancel-button,
+  .profile-editor .save-button {
+    top: 16px;
+    width: 50px;
+  }
+
+  .profile-editor .cancel-button {
+    left: 20px;
+  }
+
+  .profile-editor .save-button {
+    right: 20px;
+  }
+
+  .profile-editor-scroll {
+    padding: 16px;
+  }
+
+  .profile-editor-content {
+    padding: 24px;
+    border-radius: 20px;
+  }
+
   .avatar-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .avatar-upload {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    cursor: pointer;
-    flex-shrink: 0;
+    gap: 1rem;
   }
-  .avatar-placeholder {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: contain; /* <-- placeholder PNG는 contain 추천 */
-    background: #f9f9f9;
-  }
-  
-  .avatar-preview {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #eee;
-  }
-  
-  .change-avatar-text {
-    display: block;
-    margin-top: 0.6rem;
-    color: #00a8e1;
-    font-size: 0.85rem;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  /* 이름 필드 */
+
   .name-field {
-    flex: 1;
-  }
-  
-  /* 폼 필드 */
-  .form-group {
-    margin-bottom: 1.8rem;
-  }
-  
-  /* 2열 레이아웃 (생년월일, 전화번호) */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 1.8rem;
-  }
-  
-  .profile-editor label {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    color: #000;
-  }
-  
-  .profile-editor input,
-  .profile-editor textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-    font-family: "Noto Sans KR", sans-serif;
   }
-  
-  .profile-editor input::placeholder,
-  .profile-editor textarea::placeholder {
-    color: #9ca3af;
-  }
-  
-  .profile-editor input:focus,
-  .profile-editor textarea:focus {
-    outline: none;
-    border-color: #00a8e1;
-    box-shadow: 0 0 0 3px rgba(0, 168, 225, 0.1);
-  }
-  
-  .profile-editor textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  /* 대표 링크 섹션 */
-  .links-container {
-    margin-top: 0;
-  }
-  
-  .link-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-    padding: 0.8rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background: #fff;
-  }
-  
-  .link-icon {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-  
-  .link-item input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 0;
-    font-size: 0.95rem;
-  }
-  
-  .link-item input:focus {
-    box-shadow: none;
-    border: none;
-  }
-  
-  .remove-link {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    cursor: pointer;
-    font-size: 1.3rem;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: color 0.2s;
-  }
-  
-  .remove-link:hover {
-    color: #6b7280;
-  }
-  
-  .add-link {
-    margin-top: 0.8rem;
-    color: #00a8e1;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 0.9rem;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  
-  .add-link:before {
-    content: '+';
-    font-size: 1.1rem;
-  }
-  
-  /* 학력 정보 섹션 */
-  .education-section {
-    margin-top: 3rem;
-    padding-top: 0;
-  }
-  
-  .education-section h2 {
-    margin-bottom: 2rem;
-  }
-  
-  /* 입학년도/졸업년도 2열 */
+
+  .form-row,
   .date-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-  
-  
-  @media (max-width: 768px) {
-    .profile-editor {
-      max-width: 95%;
-      border-radius: 8px;
-      border-width: 2px;
-    }
-  
-    .profile-editor-header {
-      padding: 1rem 1.5rem;
-    }
-  
-    .profile-editor-content {
-      padding: 0 1.5rem 1.5rem 1.5rem;
-    }
-  
-    .avatar-section {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  
-    .form-row,
-    .date-row {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
- 
+
+  .profile-editor h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
   }
+}

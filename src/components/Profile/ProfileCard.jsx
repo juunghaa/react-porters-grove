@@ -19,6 +19,7 @@ export default function ProfileCard({
   onSettingsOpenChange, // 추가!
   triggerEdit, // ✅ 추가
   onEditTriggered, // ✅ 추가
+  isPanelCollapsed = false,  // 추가
 }) {
     const SOCIALS = {
         github:   { name: "GitHub",   domain: "github.com",    icon: linkGithubIcon },
@@ -203,6 +204,7 @@ export default function ProfileCard({
     
       {editing && (
         <ProfileEditer
+          isPanelCollapsed={isPanelCollapsed}  // 전달
           initial={profile}
           onClose={() => {
             setEditing(false);
