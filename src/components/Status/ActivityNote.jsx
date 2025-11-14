@@ -110,7 +110,7 @@ const ActivityNote = ({ isPanelCollapsed }) => {
           /><input
             type="text"
             className="activityNote-input"
-            placeholder="내용을 입력하세요"
+            placeholder="이번 작업은 어떤 고민에서 시작됐나요?"
             value={activityNote}
             onChange={(e) => setActivityNote(e.target.value)}
             onKeyPress={handleKeyPress}

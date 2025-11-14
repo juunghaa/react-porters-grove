@@ -22,6 +22,14 @@
     font-family: "Noto Sans KR", sans-serif;
     color: #333;
     position: relative;
+
+
+    /* display: flex; */
+    /* padding: 36px; */
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
+    /* gap: 20px; */
+    background: #F7F7F7;
   }
   
   /* 상단 헤더 - 취소/저장 버튼 */
