@@ -44,7 +44,7 @@ export default function ToastMessage({ message, onClose, duration = 2000 }) {
       <span style={{
         color: '#000',
         fontFamily: 'SUIT Variable',
-        fontSize: '20px',
+        fontSize: '16px',
         fontWeight: 600,
         lineHeight: '160%',
         letterSpacing: '-0.2px',
