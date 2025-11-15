@@ -110,6 +110,7 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
 
   // 저장 팝업에서 "저장" 클릭
   const handleConfirmSave = async () => {
+    console.log("저장 시작");
     setSaving(true);
     setShowSavePopup(false); // 저장 팝업 먼저 닫기
     
@@ -118,11 +119,13 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
         await onSave(form);
       }
       
+      console.log("저장 완료, 토스트 표시");
       // 저장 성공 후 토스트 표시
       setShowToast(true);
       
       // 토스트가 표시된 후 2.5초 뒤에 에디터 닫기
       setTimeout(() => {
+        console.log("토스트 숨기기 및 에디터 닫기");
         setShowToast(false);
         if (onClose) {
           onClose();
