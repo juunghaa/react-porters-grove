@@ -6,14 +6,18 @@ export default function ToastMessage({ message, onClose, duration = 2000 }) {
   console.log("ToastMessage 렌더링됨:", message);
   
   useEffect(() => {
-    console.log("ToastMessage useEffect 실행");
+    console.log("ToastMessage mounted");
+    
+    // duration 후에 자동으로 사라지는 애니메이션 시작
     const timer = setTimeout(() => {
-      console.log("타이머 완료, onClose 호출");
-      onClose();
+      console.log("ToastMessage 애니메이션 완료");
     }, duration);
 
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
+    return () => {
+      console.log("ToastMessage unmounted");
+      clearTimeout(timer);
+    };
+  }, [duration]);
 
   return createPortal(
     <div 

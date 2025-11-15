@@ -123,19 +123,16 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
       // 저장 성공 후 토스트 표시
       setShowToast(true);
       
-      // 토스트가 표시된 후 2.5초 뒤에 에디터 닫기
+      // 토스트가 완전히 사라진 후(2초 + 여유 0.5초)에 에디터 닫기
       setTimeout(() => {
-        console.log("토스트 숨기기 및 에디터 닫기");
-        setShowToast(false);
+        console.log("에디터 닫기");
         if (onClose) {
           onClose();
         }
       }, 2500);
     } catch (error) {
       console.error("저장 실패:", error);
-      // 저장 실패 시 토스트 숨기고 에디터는 유지
       setShowToast(false);
-    } finally {
       setSaving(false);
     }
   };
