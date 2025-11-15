@@ -15,6 +15,10 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     schoolEmail: initial?.schoolEmail || "",
     admissionDate: initial?.admissionDate || "",
     graduationDate: initial?.graduationDate || "",
+    graduationStatus: initial?.graduationStatus || "",
+    majors: initial?.majors || [{ majorType: "", majorName: "" }], // 전공 배열로 관리
+    gpa: initial?.gpa || "",
+    gpaTotal: initial?.gpaTotal || "",
   });
 
   useEffect(() => {
@@ -29,6 +33,10 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
       schoolEmail: initial?.schoolEmail || "",
       admissionDate: initial?.admissionDate || "",
       graduationDate: initial?.graduationDate || "",
+      graduationStatus: initial?.graduationStatus || "",
+      majors: initial?.majors || [{ majorType: "", majorName: "" }],
+      gpa: initial?.gpa || "",
+      gpaTotal: initial?.gpaTotal || "",
     });
   }, [initial]);
 
@@ -70,6 +78,25 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     const newLinks = [...form.links];
     newLinks[index] = value;
     setForm(f => ({ ...f, links: newLinks }));
+  };
+
+  // 전공 추가
+  const addMajor = () => {
+    setForm(f => ({ ...f, majors: [...f.majors, { majorType: "", majorName: "" }] }));
+  };
+
+  // 전공 삭제
+  const removeMajor = (index) => {
+    if (form.majors.length > 1) {
+      setForm(f => ({ ...f, majors: f.majors.filter((_, i) => i !== index) }));
+    }
+  };
+
+  // 전공 업데이트
+  const updateMajor = (index, field, value) => {
+    const newMajors = [...form.majors];
+    newMajors[index][field] = value;
+    setForm(f => ({ ...f, majors: newMajors }));
   };
 
   return createPortal(
@@ -258,7 +285,7 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                   </div>
                 </div>
 
-                {/* 입학년도 + 졸업년도 */}
+                {/* 입학년도 + 졸업년도 + 졸업여부 */}
                 <div className="date-row">
                   <div className="form-group">
                     <label>입학년도</label>
@@ -283,104 +310,117 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                     </div>
                   </div>
 
-                  {/* ================== 🔹 추가 1: 졸업 여부 ================== */}
-                <div className="form-group">
-                <label>졸업 여부</label>
-                <div className="form-group-inner">
-                <select
-                value={form.graduationStatus}
-                onChange={(e) => setForm(f => ({ ...f, graduationStatus: e.target.value }))}
-                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
-                >
-                <option value="" disabled selected hidden>
-                  졸업 여부를 선택하세요
-                </option>
-                <option value="재학중">재학중</option>
-                <option value="졸업">졸업</option>
-                <option value="수료">수료</option>
-                <option value="졸업예정">졸업예정</option>
-                <option value="중퇴">중퇴</option>
-                <option value="휴학">휴학</option>
-                <option value="자퇴">자퇴</option>
-                </select>
-                </div>
-                </div>
+                  <div className="form-group">
+                    <label>졸업 여부</label>
+                    <div className="form-group-inner">
+                    <select 
+                      value={form.graduationStatus}
+                      onChange={(e) => setForm(f => ({ ...f, graduationStatus: e.target.value }))}
+                    >
+                      <option value="" disabled>
+                        졸업 여부를 선택하세요
+                      </option>
+                      <option value="재학중">재학중</option>
+                      <option value="졸업">졸업</option>
+                      <option value="수료">수료</option>
+                      <option value="졸업예정">졸업예정</option>
+                      <option value="중퇴">중퇴</option>
+                      <option value="휴학">휴학</option>
+                      <option value="자퇴">자퇴</option>
+                    </select>
+                    </div>
+                  </div>
                 </div>
 
-                  
+                {/* 전공 목록 */}
+                {form.majors.map((major, index) => (
+                  <div key={index}>
+                    <div className="major-row">
+                      <div className="form-group">
+                        <label>전공 구분</label>
+                        <div className="form-group-inner">
+                        <select
+                          value={major.majorType}
+                          onChange={(e) => updateMajor(index, 'majorType', e.target.value)}
+                        >
+                          <option value="" disabled>
+                            전공 구분을 선택하세요
+                          </option>
+                          <option value="주전공">주전공</option>
+                          <option value="부전공">부전공</option>
+                          <option value="이중전공">이중전공</option>
+                          <option value="복수전공">복수전공</option>
+                        </select>
+                        </div>
+                      </div>
 
-                {/* ================== 🔹 추가 2: 전공구분 + 전공 ================== */}
-                <div className="major-row">
-                <div className="form-group">
-                <label>전공 구분</label>
-                <div className="form-group-inner">
-                <select
-                value={form.majorType}
-                onChange={(e) => setForm(f => ({ ...f, majorType: e.target.value }))}
-                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
-                >
-                <option value="" disabled selected hidden>
-                  전공 구분을 선택하세요
-                </option>
-                <option value="주전공">주전공</option>
-                <option value="부전공">부전공</option>
-                <option value="이중전공">이중전공</option>
-                <option value="복수전공">복수전공</option>
-                </select>
-                </div>
-                </div>
+                      <div className="form-group">
+                        <label>전공</label>
+                        <div className="form-group-inner" style={{ position: 'relative' }}>
+                          <input
+                            type="text"
+                            value={major.majorName}
+                            onChange={(e) => updateMajor(index, 'majorName', e.target.value)}
+                            placeholder="전공명 입력"
+                          />
+                          {form.majors.length > 1 && (
+                            <button
+                              type="button"
+                              className="remove-link"
+                              onClick={() => removeMajor(index)}
+                              aria-label="전공 삭제"
+                              style={{ 
+                                position: 'absolute', 
+                                right: '10px', 
+                                top: '50%', 
+                                transform: 'translateY(-50%)'
+                              }}
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
 
+                {/* 전공 추가 버튼 */}
+                <button type="button" className="add-major-button" onClick={addMajor}>
+                  전공 추가하기
+                </button>
 
-                <div className="form-group">
-                <label>전공</label>
-                <div className="form-group-inner">
-                <input
-                type="text"
-                value={form.majorName}
-                onChange={(e) => setForm(f => ({ ...f, majorName: e.target.value }))}
-                placeholder="전공명 입력"
-                />
-                </div>
-                </div>
-                </div>
-
-                {/* ================== 🔹 추가 3: 전공 추가 버튼 ================== */}
-                <button type="button" className="add-major-button">전공 추가하기</button>
-
-
-                {/* ================== 🔹 추가 4: 학점 + 총점 ================== */}
+                {/* 학점 + 총점 */}
                 <div className="score-row">
-                <div className="form-group">
-                <label>학점</label>
-                <div className="form-group-inner">
-                <input
-                type="text"
-                value={form.gpa}
-                onChange={(e) => setForm(f => ({ ...f, gpa: e.target.value }))}
-                placeholder="학점을 입력하세요"
-                />
-                </div>
-                </div>
+                  <div className="form-group">
+                    <label>학점</label>
+                    <div className="form-group-inner">
+                    <input
+                      type="text"
+                      value={form.gpa}
+                      onChange={(e) => setForm(f => ({ ...f, gpa: e.target.value }))}
+                      placeholder="학점을 입력하세요"
+                    />
+                    </div>
+                  </div>
 
-
-                <div className="form-group">
-                <label>총점</label>
-                <div className="form-group-inner">
-                <select
-                value={form.gpaTotal}
-                onChange={(e) => setForm(f => ({ ...f, gpaTotal: e.target.value }))}
-                style={{ width: "100%", padding: "20px", border: "none", background: "#fff", borderRadius: "16px" }}
-                >
-                <option value="" disabled selected hidden>
-                  총점을 선택하세요
-                </option>
-                <option value="4.5">4.5</option>
-                <option value="4.3">4.3</option>
-                <option value="4.0">4.0</option>
-                <option value="100">100</option>
-                </select>
-                </div>
-                </div>
+                  <div className="form-group">
+                    <label>총점</label>
+                    <div className="form-group-inner">
+                    <select
+                      value={form.gpaTotal}
+                      onChange={(e) => setForm(f => ({ ...f, gpaTotal: e.target.value }))}
+                    >
+                      <option value="" disabled>
+                        총점을 선택하세요
+                      </option>
+                      <option value="4.5">4.5</option>
+                      <option value="4.3">4.3</option>
+                      <option value="4.0">4.0</option>
+                      <option value="100">100</option>
+                    </select>
+                    </div>
+                  </div>
                 </div>
 
               </div>
