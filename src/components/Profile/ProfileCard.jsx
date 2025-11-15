@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./ProfileCard.css";
 import ProfileEditer from "./ProfileEditer";
+import ToastMessage from "./ToastMessage";
 import linkGithubIcon from "../../assets/icons/linkGithub.png";
 import linkLinkedinIcon from "../../assets/icons/linkLinkedin.png";
 import linkDribbbleIcon from "../../assets/icons/linkDribbble.png";
@@ -16,10 +17,10 @@ export default function ProfileCard({
   socials = [],
   onEdit,
   onOpen,
-  onSettingsOpenChange, // 추가!
-  triggerEdit, // ✅ 추가
-  onEditTriggered, // ✅ 추가
-  isPanelCollapsed = false,  // 추가
+  onSettingsOpenChange,
+  triggerEdit,
+  onEditTriggered,
+  isPanelCollapsed = false,
 }) {
     const SOCIALS = {
         github:   { name: "GitHub",   domain: "github.com",    icon: linkGithubIcon },
@@ -27,6 +28,7 @@ export default function ProfileCard({
         dribbble: { name: "Dribbble", domain: "dribbble.com",  icon: linkDribbbleIcon },
     };
     const [showPicker, setShowPicker] = useState(false);
+    const [showToast, setShowToast] = useState(false); // 🍞 토스트 상태 추가!
 
     function normalizeUrl(raw) {
         let url = raw.trim();
@@ -77,12 +79,13 @@ export default function ProfileCard({
     const [links, setLinks] = useState(socials);
     useEffect(()=>setLinks(socials), [socials]);
     const [editing, setEditing] = useState(false);
+    
     // 외부에서 트리거되면 에디터 열기
     useEffect(() => {
       if (triggerEdit) {
         setEditing(true);
         onSettingsOpenChange?.(true);
-        onEditTriggered?.(); // 트리거 초기화
+        onEditTriggered?.();
       }
     }, [triggerEdit, onSettingsOpenChange, onEditTriggered]);
 
@@ -149,96 +152,114 @@ export default function ProfileCard({
           }, []);
 
   return (
-    <div className="profile-card">
-      <div className="profile-banner" 
-        style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}>
-        <img className="avatar" src={avatarUrl} alt={`${profile.name} 아바타`} />
-      </div>
-
-      <div className="profile-main">
-        <div className="identity">
-          <div className="name">{profile.name}</div>
-          <div className="title">{profile.title}</div>
-          <div className="tagline">{profile.tagline}</div>
+    <>
+      <div className="profile-card">
+        <div className="profile-banner" 
+          style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}>
+          <img className="avatar" src={avatarUrl} alt={`${profile.name} 아바타`} />
         </div>
-      </div>
 
-      <div className="stats">
-        <div className="stat">
-          <div className="num">{stats.activities ?? 0}</div>
-          <div className="label">경험</div>
+        <div className="profile-main">
+          <div className="identity">
+            <div className="name">{profile.name}</div>
+            <div className="title">{profile.title}</div>
+            <div className="tagline">{profile.tagline}</div>
+          </div>
         </div>
-        <div className="stat">
-          <div className="num">{stats.followers ?? 0}</div>
-          <div className="label">스펙</div>
-        </div>
-        <div className="stat">
-          <div className="num">{stats.scraps ?? 0}</div>
-          <div className="label">포트폴리오</div>
-        </div>
-      </div>
 
-      <div className="socials">
-        {links.map((s) => <a key={s.href} className="social" href={s.href} target="_blank" rel="noreferrer">
-            {s.icon ? <img src={s.icon} alt={s.name} /> : <span className="pill">{s.name}</span>}
-          </a>
-        )}
+        <div className="stats">
+          <div className="stat">
+            <div className="num">{stats.activities ?? 0}</div>
+            <div className="label">경험</div>
+          </div>
+          <div className="stat">
+            <div className="num">{stats.followers ?? 0}</div>
+            <div className="label">스펙</div>
+          </div>
+          <div className="stat">
+            <div className="num">{stats.scraps ?? 0}</div>
+            <div className="label">포트폴리오</div>
+          </div>
+        </div>
 
-      <div className="add-wrapper">
-          <button className="social add" onClick={() => setShowPicker(v => !v)} title="소셜 링크 추가">+</button>
-          {showPicker && (
-              <div className="add-menu" role="menu">
-                  <button className="add-item" onClick={()=>{handleAdd('github'); setShowPicker(false);}}>GitHub</button>
-                  <button className="add-item" onClick={()=>{handleAdd('linkedin'); setShowPicker(false);}}>LinkedIn</button>
-                  <button className="add-item" onClick={()=>{handleAdd('dribbble'); setShowPicker(false);}}>Dribbble</button>
-              </div>
+        <div className="socials">
+          {links.map((s) => <a key={s.href} className="social" href={s.href} target="_blank" rel="noreferrer">
+              {s.icon ? <img src={s.icon} alt={s.name} /> : <span className="pill">{s.name}</span>}
+            </a>
           )}
-      </div>
-      </div>
 
-      {/* 프로필 수정 버튼 - 클릭 시 MainPage에 알림 */}
-      <button className="edit-btn" onClick={() => {
-        setEditing(true);
-        onSettingsOpenChange?.(true); // 설정창 열림 알림!
-      }}>프로필 수정</button>
-    
-      {editing && (
-        <ProfileEditer
-          isPanelCollapsed={isPanelCollapsed}  // 전달
-          initial={profile}
-          onClose={() => {
-            setEditing(false);
-            onSettingsOpenChange?.(false); // 설정창 닫힘 알림!
+        <div className="add-wrapper">
+            <button className="social add" onClick={() => setShowPicker(v => !v)} title="소셜 링크 추가">+</button>
+            {showPicker && (
+                <div className="add-menu" role="menu">
+                    <button className="add-item" onClick={()=>{handleAdd('github'); setShowPicker(false);}}>GitHub</button>
+                    <button className="add-item" onClick={()=>{handleAdd('linkedin'); setShowPicker(false);}}>LinkedIn</button>
+                    <button className="add-item" onClick={()=>{handleAdd('dribbble'); setShowPicker(false);}}>Dribbble</button>
+                </div>
+            )}
+        </div>
+        </div>
+
+        {/* 프로필 수정 버튼 */}
+        <button className="edit-btn" onClick={() => {
+          setEditing(true);
+          onSettingsOpenChange?.(true);
+        }}>프로필 수정</button>
+      
+        {editing && (
+          <ProfileEditer
+            isPanelCollapsed={isPanelCollapsed}
+            initial={profile}
+            onClose={() => {
+              setEditing(false);
+              onSettingsOpenChange?.(false);
+            }}
+            onSave={async (data) => {
+              try {
+                  const payload = {
+                      display_name: data.name,
+                      bio: data.tagline,
+                  };
+                  const matchedRoleId = roleIdFromTitle(data.title);
+                      if (matchedRoleId) {
+                          payload.job_role_id = matchedRoleId;
+                      } else if (data.title && data.title !== profile.title) {
+                          alert("알 수 없는 직무명이에요. 직무 목록 중 하나를 입력하면 서버에 반영돼요.");
+                      }   
+
+                  const updated = await updateMyProfileJson(payload);
+                      setProfile({
+                      name: updated.display_name || data.name,
+                      title: updated.job_role_name || data.title || profile.title,
+                      tagline: updated.bio || data.tagline,
+                      });
+                      onEdit?.("profile:update", payload);
+                      
+                      // 🍞 저장 성공 시 토스트 표시!
+                      setShowToast(true);
+                      
+                      // 2.5초 후 토스트 숨기기
+                      setTimeout(() => {
+                        setShowToast(false);
+                      }, 2500);
+                  } catch (e) {
+                    alert(e.message || "프로필 저장 실패");
+                  } finally {
+                    setEditing(false);
+                    onSettingsOpenChange?.(false);
+                  }
           }}
-          onSave={async (data) => {
-            try {
-                const payload = {
-                    display_name: data.name,
-                    bio: data.tagline,
-                };
-                const matchedRoleId = roleIdFromTitle(data.title);
-                    if (matchedRoleId) {
-                        payload.job_role_id = matchedRoleId;
-                    } else if (data.title && data.title !== profile.title) {
-                        alert("알 수 없는 직무명이에요. 직무 목록 중 하나를 입력하면 서버에 반영돼요.");
-                    }   
+          />
+        )}
+      </div>
 
-                const updated = await updateMyProfileJson(payload);
-                    setProfile({
-                    name: updated.display_name || data.name,
-                    title: updated.job_role_name || data.title || profile.title,
-                    tagline: updated.bio || data.tagline,
-                    });
-                    onEdit?.("profile:update", payload);
-                } catch (e) {
-                  alert(e.message || "프로필 저장 실패");
-                } finally {
-                  setEditing(false);
-                  onSettingsOpenChange?.(false); // 저장 후에도 닫힘 알림!
-                }
-        }}
+      {/* 🍞 토스트 메시지 - ProfileCard에서 관리 */}
+      {showToast && (
+        <ToastMessage
+          message="변경사항이 저장되었어요"
+          onClose={() => setShowToast(false)}
         />
       )}
-    </div>
+    </>
   );
 }

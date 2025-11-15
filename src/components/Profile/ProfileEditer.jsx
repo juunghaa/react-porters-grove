@@ -4,7 +4,6 @@ import "./ProfileEditer.css";
 import defaultAvatar from "../../assets/icons/avatar.png";
 import ConfirmExitPopup from "./ConfirmExitPopup";
 import ConfirmSavePopup from "./ConfirmSavePopup";
-import ToastMessage from "./ToastMessage";
 
 export default function ProfileEditer({ initial, onSave, onClose, isPanelCollapsed = false }) {
   const [form, setForm] = useState({
@@ -32,7 +31,6 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
   // 팝업 표시 상태
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [showSavePopup, setShowSavePopup] = useState(false);
-  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     setForm({
@@ -111,28 +109,21 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
   // 저장 팝업에서 "저장" 클릭
   const handleConfirmSave = async () => {
     console.log("저장 시작");
+    setShowSavePopup(false);
     setSaving(true);
-    setShowSavePopup(false); // 저장 팝업 먼저 닫기
     
     try {
       if (onSave) {
         await onSave(form);
       }
+      console.log("저장 완료");
       
-      console.log("저장 완료, 토스트 표시");
-      // 저장 성공 후 토스트 표시
-      setShowToast(true);
-      
-      // 토스트가 완전히 사라진 후(2초 + 여유 0.5초)에 에디터 닫기
-      setTimeout(() => {
-        console.log("에디터 닫기");
-        if (onClose) {
-          onClose();
-        }
-      }, 2500);
+      // 저장 성공하면 바로 에디터 닫기 (토스트는 부모에서 관리)
+      if (onClose) {
+        onClose();
+      }
     } catch (error) {
       console.error("저장 실패:", error);
-      setShowToast(false);
       setSaving(false);
     }
   };
@@ -669,14 +660,6 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
           onCancel={handleSaveCancel}
           onConfirmSave={handleConfirmSave}
           onClose={handleSavePopupClose}
-        />
-      )}
-
-      {/* 토스트 메시지 */}
-      {showToast && (
-        <ToastMessage
-          message="변경사항이 저장되었어요"
-          onClose={() => setShowToast(false)}
         />
       )}
     </>
