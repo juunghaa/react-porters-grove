@@ -199,29 +199,30 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     }
   };
 
-  return createPortal(
+  return (
     <>
-      <div 
-        className={`profile-editor-backdrop ${isPanelCollapsed ? 'panel-collapsed' : ''}`}
-        onClick={handleCancelClick}
-      >
-        <div className="profile-editor" onClick={(e) => e.stopPropagation()}>
-          {/* 취소 버튼 - 왼쪽 상단 고정 */}
-          <img 
-            src="/cancelButton.png" 
-            className="cancel-button" 
-            onClick={handleCancelClick}
-            alt="취소"
-          />
-          
-          {/* 저장 버튼 - 오른쪽 상단 고정 */}
-          <img 
-            src="/saveButton.png" 
-            className="save-button" 
-            onClick={handleSaveClick} 
-            disabled={saving}
-            alt="저장"
-          />
+      {createPortal(
+        <div 
+          className={`profile-editor-backdrop ${isPanelCollapsed ? 'panel-collapsed' : ''}`}
+          onClick={handleCancelClick}
+        >
+          <div className="profile-editor" onClick={(e) => e.stopPropagation()}>
+            {/* 취소 버튼 - 왼쪽 상단 고정 */}
+            <img 
+              src="/cancelButton.png" 
+              className="cancel-button" 
+              onClick={handleCancelClick}
+              alt="취소"
+            />
+            
+            {/* 저장 버튼 - 오른쪽 상단 고정 */}
+            <img 
+              src="/saveButton.png" 
+              className="save-button" 
+              onClick={handleSaveClick} 
+              disabled={saving}
+              alt="저장"
+            />
 
           {/* 스크롤 가능한 영역 */}
           <div className="profile-editor-scroll">
@@ -649,7 +650,9 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
           </div>
         </div>
         </div>
-      </div>
+      </div>,
+      document.body
+      )}
 
       {/* 확인 팝업 */}
       {showConfirmPopup && (
@@ -676,7 +679,6 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
           onClose={() => setShowToast(false)}
         />
       )}
-    </>,
-    document.body
+    </>
   );
 }
