@@ -10,7 +10,7 @@
     border-radius: 58px;
     background: #FFF;
     box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.08);
-    z-index: 3000; /* 팝업보다도 위에 */
+    z-index: 9999; /* 최상위 레이어 */
     animation: slideIn 0.3s ease-out, slideOut 0.3s ease-in 1.7s forwards;
   }
   

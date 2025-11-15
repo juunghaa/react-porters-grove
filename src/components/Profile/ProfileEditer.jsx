@@ -111,19 +111,27 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
   // 저장 팝업에서 "저장" 클릭
   const handleConfirmSave = async () => {
     setSaving(true);
+    setShowSavePopup(false); // 저장 팝업 먼저 닫기
+    
     try {
       if (onSave) {
         await onSave(form);
       }
-      setShowSavePopup(false);
-      setShowToast(true); // 토스트 메시지 표시
       
-      // 토스트가 표시된 후 2초 뒤에 에디터 닫기
+      // 저장 성공 후 토스트 표시
+      setShowToast(true);
+      
+      // 토스트가 표시된 후 2.5초 뒤에 에디터 닫기
       setTimeout(() => {
+        setShowToast(false);
         if (onClose) {
           onClose();
         }
-      }, 2000);
+      }, 2500);
+    } catch (error) {
+      console.error("저장 실패:", error);
+      // 저장 실패 시 토스트 숨기고 에디터는 유지
+      setShowToast(false);
     } finally {
       setSaving(false);
     }
