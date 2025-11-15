@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import "./ProfileEditer.css";
 import defaultAvatar from "../../assets/icons/avatar.png";
@@ -16,10 +16,15 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     admissionDate: initial?.admissionDate || "",
     graduationDate: initial?.graduationDate || "",
     graduationStatus: initial?.graduationStatus || "",
-    majors: initial?.majors || [{ majorType: "", majorName: "" }], // 전공 배열로 관리
+    majors: initial?.majors || [{ majorType: "", majorName: "" }],
     gpa: initial?.gpa || "",
     gpaTotal: initial?.gpaTotal || "",
   });
+
+  // 날짜 input에 대한 ref
+  const birthdayInputRef = useRef(null);
+  const admissionInputRef = useRef(null);
+  const graduationInputRef = useRef(null);
 
   useEffect(() => {
     setForm({
@@ -97,6 +102,25 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     const newMajors = [...form.majors];
     newMajors[index][field] = value;
     setForm(f => ({ ...f, majors: newMajors }));
+  };
+
+  // 날짜 포맷 변환 함수 (YYYY-MM-DD -> YYYY.MM.DD)
+  const formatDateToDisplay = (dateString) => {
+    if (!dateString) return "";
+    return dateString.replace(/-/g, ".");
+  };
+
+  // 날짜 포맷 변환 함수 (YYYY.MM.DD -> YYYY-MM-DD)
+  const formatDateToInput = (dateString) => {
+    if (!dateString) return "";
+    return dateString.replace(/\./g, "-");
+  };
+
+  // 캘린더 아이콘 클릭 핸들러
+  const handleCalendarClick = (inputRef) => {
+    if (inputRef.current) {
+      inputRef.current.showPicker(); // 날짜 선택기 열기
+    }
   };
 
   return createPortal(
@@ -196,13 +220,53 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
               <div className="form-row">
                 <div className="form-group">
                   <label>생년월일</label>
-                  <div className="form-group-inner">
-                  <input
-                    type="text"
-                    value={form.birthday}
-                    onChange={(e) => setForm(f => ({ ...f, birthday: e.target.value }))}
-                    placeholder="YYYY.MM.DD"
-                  />
+                  <div className="form-group-inner" style={{ position: 'relative' }}>
+                    <input
+                      ref={birthdayInputRef}
+                      type="text"
+                      value={form.birthday}
+                      onChange={(e) => setForm(f => ({ ...f, birthday: e.target.value }))}
+                      placeholder="YYYY.MM.DD"
+                      onFocus={(e) => {
+                        e.target.type = 'date';
+                        e.target.value = formatDateToInput(form.birthday);
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value) {
+                          setForm(f => ({ ...f, birthday: formatDateToDisplay(e.target.value) }));
+                        }
+                        e.target.type = 'text';
+                      }}
+                      style={{ 
+                        paddingRight: '40px'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        birthdayInputRef.current.type = 'date';
+                        birthdayInputRef.current.value = formatDateToInput(form.birthday);
+                        birthdayInputRef.current.focus();
+                        setTimeout(() => birthdayInputRef.current.showPicker(), 0);
+                      }}
+                      style={{
+                        position: 'absolute',
+                        right: '20px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                        <path d="M6.70227 2.17969C6.24227 2.17969 5.86894 2.55302 5.86894 3.01302C4.02644 3.01302 2.50977 4.50719 2.50977 6.34635V8.01302L2.5356 14.6797C2.5356 16.518 4.0281 18.013 5.86894 18.013H14.2023C16.0431 18.013 17.5356 16.5205 17.5356 14.6797L17.5098 8.01302V6.34635C17.5098 4.50385 16.0414 3.01302 14.2023 3.01302C14.2023 2.55302 13.8298 2.17969 13.3689 2.17969C12.9089 2.17969 12.5356 2.55302 12.5356 3.01302H7.5356C7.5356 2.55302 7.1631 2.17969 6.70227 2.17969ZM5.86894 4.67969C5.86894 5.13969 6.24227 5.51302 6.70227 5.51302C7.1631 5.51302 7.5356 5.13969 7.5356 4.67969H12.5356C12.5356 5.13969 12.9089 5.51302 13.3689 5.51302C13.8298 5.51302 14.2023 5.13969 14.2023 4.67969C15.1164 4.67969 15.8431 5.41969 15.8431 6.34635V7.17969C14.2398 7.17969 5.77977 7.17969 4.17643 7.17969V6.34635C4.17643 5.43219 4.94227 4.67969 5.86894 4.67969ZM4.17643 8.84635C5.77977 8.84635 14.2398 8.84635 15.8431 8.84635L15.8689 14.6797C15.8689 15.5972 15.1231 16.3464 14.2023 16.3464H5.86894C4.94894 16.3464 4.20227 15.6005 4.20227 14.6797L4.17643 8.84635Z" fill="#9F9F9F"/>
+                      </svg>
+                    </button>
                   </div>
                 </div>
                 <div className="form-group">
@@ -289,24 +353,104 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                 <div className="date-row">
                   <div className="form-group">
                     <label>입학년도</label>
-                    <div className="form-group-inner">
-                    <input
-                      type="text"
-                      value={form.admissionDate}
-                      onChange={(e) => setForm(f => ({ ...f, admissionDate: e.target.value }))}
-                      placeholder="YYYY.MM"
-                    />
+                    <div className="form-group-inner" style={{ position: 'relative' }}>
+                      <input
+                        ref={admissionInputRef}
+                        type="text"
+                        value={form.admissionDate}
+                        onChange={(e) => setForm(f => ({ ...f, admissionDate: e.target.value }))}
+                        placeholder="YYYY.MM"
+                        onFocus={(e) => {
+                          e.target.type = 'month';
+                          e.target.value = formatDateToInput(form.admissionDate);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value) {
+                            setForm(f => ({ ...f, admissionDate: formatDateToDisplay(e.target.value) }));
+                          }
+                          e.target.type = 'text';
+                        }}
+                        style={{ 
+                          paddingRight: '40px'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          admissionInputRef.current.type = 'month';
+                          admissionInputRef.current.value = formatDateToInput(form.admissionDate);
+                          admissionInputRef.current.focus();
+                          setTimeout(() => admissionInputRef.current.showPicker(), 0);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '20px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                          <path d="M6.70227 2.17969C6.24227 2.17969 5.86894 2.55302 5.86894 3.01302C4.02644 3.01302 2.50977 4.50719 2.50977 6.34635V8.01302L2.5356 14.6797C2.5356 16.518 4.0281 18.013 5.86894 18.013H14.2023C16.0431 18.013 17.5356 16.5205 17.5356 14.6797L17.5098 8.01302V6.34635C17.5098 4.50385 16.0414 3.01302 14.2023 3.01302C14.2023 2.55302 13.8298 2.17969 13.3689 2.17969C12.9089 2.17969 12.5356 2.55302 12.5356 3.01302H7.5356C7.5356 2.55302 7.1631 2.17969 6.70227 2.17969ZM5.86894 4.67969C5.86894 5.13969 6.24227 5.51302 6.70227 5.51302C7.1631 5.51302 7.5356 5.13969 7.5356 4.67969H12.5356C12.5356 5.13969 12.9089 5.51302 13.3689 5.51302C13.8298 5.51302 14.2023 5.13969 14.2023 4.67969C15.1164 4.67969 15.8431 5.41969 15.8431 6.34635V7.17969C14.2398 7.17969 5.77977 7.17969 4.17643 7.17969V6.34635C4.17643 5.43219 4.94227 4.67969 5.86894 4.67969ZM4.17643 8.84635C5.77977 8.84635 14.2398 8.84635 15.8431 8.84635L15.8689 14.6797C15.8689 15.5972 15.1231 16.3464 14.2023 16.3464H5.86894C4.94894 16.3464 4.20227 15.6005 4.20227 14.6797L4.17643 8.84635Z" fill="#9F9F9F"/>
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   <div className="form-group">
                     <label>졸업년도</label>
-                    <div className="form-group-inner">
-                    <input
-                      type="text"
-                      value={form.graduationDate}
-                      onChange={(e) => setForm(f => ({ ...f, graduationDate: e.target.value }))}
-                      placeholder="YYYY.MM"
-                    />
+                    <div className="form-group-inner" style={{ position: 'relative' }}>
+                      <input
+                        ref={graduationInputRef}
+                        type="text"
+                        value={form.graduationDate}
+                        onChange={(e) => setForm(f => ({ ...f, graduationDate: e.target.value }))}
+                        placeholder="YYYY.MM"
+                        onFocus={(e) => {
+                          e.target.type = 'month';
+                          e.target.value = formatDateToInput(form.graduationDate);
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value) {
+                            setForm(f => ({ ...f, graduationDate: formatDateToDisplay(e.target.value) }));
+                          }
+                          e.target.type = 'text';
+                        }}
+                        style={{ 
+                          paddingRight: '40px'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          graduationInputRef.current.type = 'month';
+                          graduationInputRef.current.value = formatDateToInput(form.graduationDate);
+                          graduationInputRef.current.focus();
+                          setTimeout(() => graduationInputRef.current.showPicker(), 0);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '20px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                          <path d="M6.70227 2.17969C6.24227 2.17969 5.86894 2.55302 5.86894 3.01302C4.02644 3.01302 2.50977 4.50719 2.50977 6.34635V8.01302L2.5356 14.6797C2.5356 16.518 4.0281 18.013 5.86894 18.013H14.2023C16.0431 18.013 17.5356 16.5205 17.5356 14.6797L17.5098 8.01302V6.34635C17.5098 4.50385 16.0414 3.01302 14.2023 3.01302C14.2023 2.55302 13.8298 2.17969 13.3689 2.17969C12.9089 2.17969 12.5356 2.55302 12.5356 3.01302H7.5356C7.5356 2.55302 7.1631 2.17969 6.70227 2.17969ZM5.86894 4.67969C5.86894 5.13969 6.24227 5.51302 6.70227 5.51302C7.1631 5.51302 7.5356 5.13969 7.5356 4.67969H12.5356C12.5356 5.13969 12.9089 5.51302 13.3689 5.51302C13.8298 5.51302 14.2023 5.13969 14.2023 4.67969C15.1164 4.67969 15.8431 5.41969 15.8431 6.34635V7.17969C14.2398 7.17969 5.77977 7.17969 4.17643 7.17969V6.34635C4.17643 5.43219 4.94227 4.67969 5.86894 4.67969ZM4.17643 8.84635C5.77977 8.84635 14.2398 8.84635 15.8431 8.84635L15.8689 14.6797C15.8689 15.5972 15.1231 16.3464 14.2023 16.3464H5.86894C4.94894 16.3464 4.20227 15.6005 4.20227 14.6797L4.17643 8.84635Z" fill="#9F9F9F"/>
+                        </svg>
+                      </button>
                     </div>
                   </div>
 
