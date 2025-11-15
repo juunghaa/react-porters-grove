@@ -1,0 +1,70 @@
+/* 토스트 메시지 */
+.toast-message {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    display: inline-flex;
+    padding: 12px;
+    align-items: center;
+    gap: 12px;
+    border-radius: 58px;
+    background: #FFF;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.08);
+    z-index: 3000; /* 팝업보다도 위에 */
+    animation: slideIn 0.3s ease-out, slideOut 0.3s ease-in 1.7s forwards;
+  }
+  
+  /* 토스트 메시지 텍스트 */
+  .toast-message-text {
+    color: #000;
+    font-family: "SUIT Variable";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 160%; /* 32px */
+    letter-spacing: -0.2px;
+    padding-right: 8px;
+  }
+  
+  /* 슬라이드 인 애니메이션 */
+  @keyframes slideIn {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* 슬라이드 아웃 애니메이션 */
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .toast-message {
+      bottom: 20px;
+      right: 20px;
+      padding: 10px;
+      gap: 10px;
+    }
+  
+    .toast-message svg {
+      width: 28px;
+      height: 28px;
+    }
+  
+    .toast-message-text {
+      font-size: 16px;
+    }
+  }
