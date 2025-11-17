@@ -98,7 +98,7 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
         </div>
 
         {/* 페이지네이션 */}
-        {totalPages > 1 && (
+        {/* {totalPages >= 1 && ( */}
           <div className="pagination">
             {/* 처음으로 (<<) */}
             <button 
@@ -161,7 +161,7 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
               </svg>
             </button>
           </div>
-        )}
+        {/* )} */}
       </div>
 
       {/* 다음 단계로 버튼 */}
