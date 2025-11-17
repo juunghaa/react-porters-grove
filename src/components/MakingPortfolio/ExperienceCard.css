@@ -1,0 +1,127 @@
+.experience-card-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* 경험 카드 */
+  .exp-card {
+    position: relative;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    border-radius: 18px;
+    background: #FFF;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 120px;
+  }
+  
+  .exp-card:hover {
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+  
+  /* 태그와 역할 */
+  .exp-card-tag-role {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .exp-card-tag {
+    display: flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    background: rgba(18, 100, 49, 0.08);
+    color: #126431;
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .exp-card-role {
+    color: rgba(0, 0, 0, 0.60);
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  /* 타이틀 섹션 */
+  .exp-card-title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: stretch;
+  }
+  
+  .exp-card-title {
+    color: #303030;
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+  }
+  
+  .exp-card-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(0, 0, 0, 0.50);
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .exp-card-subtitle .dot {
+    color: rgba(0, 0, 0, 0.30);
+  }
+  
+  /* 구분선 */
+  .exp-card-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 4px 0;
+  }
+  
+  /* 날짜 */
+  .exp-card-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(0, 0, 0, 0.50);
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .exp-card-date svg {
+    width: 17px;
+    height: 18px;
+  }
+  
+  /* 메뉴 버튼 */
+  .exp-card-menu-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.40);
+    transition: color 0.2s;
+  }
+  
+  .exp-card-menu-btn:hover {
+    color: rgba(0, 0, 0, 0.70);
+  }
