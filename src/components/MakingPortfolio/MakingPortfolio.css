@@ -161,3 +161,30 @@
   .cancel-button:hover {
     opacity: 0.8;
   }
+
+  /* 선택 개수 표시 */
+.selected-count {
+    width: 100%;
+    padding-left: 30px;
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  
+  .selected-count-number {
+    color: var(--Grove-Green, #126431);
+    font-family: "SUIT Variable";
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.18px;
+  }
+  
+  .selected-count-text {
+    color: #494949;
+    font-family: "SUIT Variable";
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.18px;
+  }
+  

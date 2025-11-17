@@ -6,6 +6,7 @@ import guideImage from '../../assets/image/guide.png'; // 안내문구 이미지
 const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // 4열 x 2행 = 8개
+  const [checkedCount, setCheckedCount] = useState(0);
 
   // 임시 데이터 (나중에 실제 API에서 가져올 데이터)
   const [portfolioItems, setPortfolioItems] = useState([
@@ -84,16 +85,25 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
 
       {/* 포트폴리오 그리드 영역 */}
       <div className="portfolio-grid">
+         {/* 🔥 선택 개수 표시 */}
+        <div className="selected-count">
+            <span className="selected-count-number">{checkedCount}</span>
+            <span className="selected-count-text">개 선택됨</span>
+        </div>
+
         {/* FullBox 그리드 */}
         <div className="portfolio-items-grid">
           {currentItems.map((item, index) => (
             <ExperienceCard
-              key={index}
-              isPanelCollapsed={false}
-              config={boxConfig}
-              experienceData={item}
-              onMenuClick={() => console.log('메뉴 클릭', index)}
-            />
+                key={index}
+                isPanelCollapsed={false}
+                config={boxConfig}
+                experienceData={item}
+                onMenuClick={() => console.log('메뉴 클릭', index)}
+                onCheckChange={(checked) => {
+                    setCheckedCount(prev => checked ? prev + 1 : prev - 1);
+                }}
+            />        
           ))}
         </div>
 
