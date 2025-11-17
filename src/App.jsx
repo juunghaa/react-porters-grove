@@ -9,11 +9,16 @@ import OAuthCallback from "./pages/OAuthCallback";
 import MainPage from "./pages/MainPage";
 import LeftPanel from "./components/LeftPanel/LeftPanel";
 import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 // import GoogleLoginButton from "./components/GoogleLoginButton"; // ✅ 필요 시 홈 테스트용
-import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
-import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
+import ContestPage from "./components/Experience/ContestPage"; //공모전
+import ChooseOption from "./components/ChooseOption/ChooseOption";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -29,12 +34,11 @@ export default function App() {
     setIsLoggedIn(!!access);
   }, []);
 
-
   // 로그인/회원가입 공통 성공 처리
   const handleAuthSuccess = (data) => {
     const access = data?.tokens?.access ?? data?.access;
     const refresh = data?.tokens?.refresh ?? data?.refresh;
-    
+
     if (access) localStorage.setItem("access", access);
     if (refresh) localStorage.setItem("refresh", refresh);
     // if (data?.user) localStorage.setItem("user", JSON.stringify(data.user));
@@ -42,6 +46,7 @@ export default function App() {
     setIsLoggedIn(true);
   };
 
+  // 로그아웃 처리
   const handleLogout = async () => {
     if (loggingOut) return; // 중복 클릭 방지
     setLoggingOut(true);
@@ -62,7 +67,7 @@ export default function App() {
       </div>
     );
   }
-  
+
   return (
     <Router>
       <Routes>
@@ -71,8 +76,13 @@ export default function App() {
           path="/api/v1/auth/google/callback"
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
         /> */}
-        <Route path="/google/callback/" element={<GoogleCallback 
-        onLoginSuccess={handleAuthSuccess}/>} />
+        <Route path="/google/callback" element={<GoogleCallback />} />
+
+        {/* ✅ ChooseOption 페이지 */}
+        <Route path="/choose" element={<ChooseOption />} />
+
+        {/* ✅ 공모전 페이지 */}
+        <Route path="/contest" element={<ContestPage />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
@@ -82,7 +92,7 @@ export default function App() {
               {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
                     <GithubGrass username="octocat" year="last" />
                     <h1>포트폴리오 사이트</h1> */}
-              {/* <MainPage onLogout={handleLogout}/>  */}
+              {<MainPage onLogout={handleLogout} />}
 
               {isLoggedIn ? (
                 <>
@@ -90,10 +100,20 @@ export default function App() {
                 </>
               ) : (
                 <>
-                  {view === "login" && <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
-                  {view === "signup" && <SignupPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />}
+                  {view === "login" && (
+                    <LoginPage
+                      onLoginSuccess={handleAuthSuccess}
+                      onChangeView={setView}
+                    />
+                  )}
+                  {view === "signup" && (
+                    <SignupPage
+                      onLoginSuccess={handleAuthSuccess}
+                      onChangeView={setView}
+                    />
+                  )}
                   {/* {view === "reset" && <ResetPasswordPage onChangeView={setView} />} */}
-                  
+
                   {/* 
                   {view === "login" ? (
                     <LoginPage onLoginSuccess={handleAuthSuccess} onChangeView={setView} />
@@ -106,48 +126,7 @@ export default function App() {
             </div>
           }
         />
-
-        {/* ✅ 3️⃣ ChooseOption 페이지 라우트 추가 */}
-        <Route 
-          path="/choose" 
-          element={<ChooseOptionWrapper />} 
-        />
-
-        {/* ✅ 4️⃣ MakingPortfolio 페이지 라우트 추가 */}
-        <Route 
-          path="/making-portfolio" 
-          element={<MakingPortfolio />} 
-        />
       </Routes>
     </Router>
-  );
-}
-
-// ✅ ChooseOption에서 navigate 사용하기 위한 래퍼 컴포넌트
-function ChooseOptionWrapper() {
-  const navigate = useNavigate();
-
-  const handleGoToPortfolio = (tags) => {
-    console.log('🎯 handleGoToPortfolio 호출됨!', tags);
-    console.log('🚀 navigate to /making-portfolio');
-    navigate('/making-portfolio', { state: { selectedTags: tags } });
-  };
-
-  const handleGoToExperience = (tags) => {
-    console.log('경험 페이지로 이동:', tags);
-    // navigate('/experience', { state: { selectedTags: tags } }); // 추후 구현
-  };
-
-  const handleGoToSpec = (tags) => {
-    console.log('스펙 페이지로 이동:', tags);
-    // navigate('/spec', { state: { selectedTags: tags } }); // 추후 구현
-  };
-
-  return (
-    <ChooseOption 
-      onGoToExperience={handleGoToExperience}
-      onGoToSpec={handleGoToSpec}
-      onGoToPortfolio={handleGoToPortfolio}
-    />
   );
 }
