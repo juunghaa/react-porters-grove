@@ -12,12 +12,13 @@
     align-items: flex-start;
     gap: 12px;
     align-self: stretch;
-    border-radius: 18px;
+    border-radius: 20px;
     background: #FFF;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.08);
     cursor: pointer;
     transition: all 0.2s ease;
     min-height: 120px;
+    border: 1px solid transparent;
   }
   
   .exp-card:hover {
@@ -25,11 +26,43 @@
     transform: translateY(-2px);
   }
   
+  /* 체크된 상태의 카드 */
+  .exp-card.checked {
+    border-radius: 20px;
+    border: 1px solid var(--Grove-Green, #126431);
+    background: #FFF;
+  }
+  
+  /* 체크박스 버튼 */
+  .exp-card-checkbox {
+    /* position: flex; */
+    /* right: -104px; */
+    margin-left: auto;
+    top: -4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+  }
+  
+  .exp-card-checkbox:hover {
+    opacity: 0.8;
+  }
+  
+  .exp-card-checkbox svg {
+    display: block;
+  }
+  
   /* 태그와 역할 */
   .exp-card-tag-role {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 100%;
   }
   
   .exp-card-tag {
