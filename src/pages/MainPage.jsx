@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import LeftPanel from "./../components/LeftPanel/LeftPanel";
 import MainHome from "./../components/MainHome/MainHome";
 import ChooseOption from "./../components/ChooseOption/ChooseOption";
+import MakingPortfolio from "./../components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 import "./../App.css";
 import ProfileCard from "../components/Profile/ProfileCard";
 import banner from "../assets/icons/banner.png";
 import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
 import Newsletter from "./../components/Newsletter/Newsletter";
-import { useNavigate } from "react-router-dom"; // ✅ 추가
+import { useNavigate } from "react-router-dom";
 
 // 로고 이미지 import
 import saraminLogo from "../assets/logos/saramin.png";
@@ -30,7 +31,8 @@ export default function MainPage({ onLogout }) {
   const [currentPage, setCurrentPage] = useState("home");
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
   const [triggerProfileEdit, setTriggerProfileEdit] = useState(false);
-  const navigate = useNavigate(); // ✅ 추가
+  const [selectedTags, setSelectedTags] = useState([]); // ✅ 선택된 태그 저장
+  const navigate = useNavigate();
 
   // ChooseOption 페이지로 이동하는 함수
   const handleGoToChooseOption = () => {
@@ -57,6 +59,27 @@ export default function MainPage({ onLogout }) {
     setTriggerProfileEdit(true);
   };
 
+  // ✅ 포트폴리오 페이지로 이동 (MainPage 내부)
+  const handleGoToPortfolio = (tags) => {
+    console.log('🎯 MainPage - 포트폴리오로 이동:', tags);
+    setSelectedTags(tags);
+    setCurrentPage("makingPortfolio");
+  };
+
+  // ✅ 경험 페이지로 이동 (추후 구현)
+  const handleGoToExperience = (tags) => {
+    console.log('경험 페이지로 이동:', tags);
+    setSelectedTags(tags);
+    // setCurrentPage("experience");
+  };
+
+  // ✅ 스펙 페이지로 이동 (추후 구현)
+  const handleGoToSpec = (tags) => {
+    console.log('스펙 페이지로 이동:', tags);
+    setSelectedTags(tags);
+    // setCurrentPage("spec");
+  };
+
   useEffect(() => {
     if (isProfileSettingsOpen) {
       setIsPanelCollapsed(true);
@@ -68,7 +91,21 @@ export default function MainPage({ onLogout }) {
       return <MainHome isPanelCollapsed={isPanelCollapsed} 
       onGoToChooseOption={handleGoToChooseOption}/>;
     } else if (currentPage === "chooseOption") {
-      return <ChooseOption onGoToActivity={handleGoToActivity} />;
+      return (
+        <ChooseOption 
+          onGoToActivity={handleGoToActivity}
+          onGoToPortfolio={handleGoToPortfolio}  // ✅ 추가
+          onGoToExperience={handleGoToExperience}  // ✅ 추가
+          onGoToSpec={handleGoToSpec}  // ✅ 추가
+        />
+      );
+    } else if (currentPage === "makingPortfolio") {
+      return (
+        <MakingPortfolio 
+          selectedTags={selectedTags}
+          onCancel={() => setCurrentPage("chooseOption")}  // ✅ 취소 시 ChooseOption으로
+        />
+      );
     } else if (currentPage === "Activity") {
       return <Activity />;
     }

@@ -1,0 +1,84 @@
+.making-portfolio-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #F7F7F7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  
+  /* 안내문구 이미지 */
+  .guide-image-wrapper {
+    margin-bottom: 30px;
+  }
+  
+  .guide-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* 포트폴리오 그리드 영역 */
+  .portfolio-grid {
+    display: flex;
+    padding: 14px 10px 10px 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    align-self: stretch;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.03);
+    max-width: 1200px;
+    width: 100%;
+    margin-bottom: 30px;
+    min-height: 400px;
+  }
+  
+  /* 다음 단계로 버튼 */
+  .next-button {
+    display: flex;
+    width: 360px;
+    height: 58px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 18px;
+    background: var(--Grove-Green, #126431);
+    border: none;
+    cursor: pointer;
+    margin-bottom: 16px;
+    
+    color: #FFF;
+    text-align: center;
+    font-family: "SUIT Variable", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.2px;
+  }
+  
+  .next-button:hover {
+    opacity: 0.9;
+  }
+  
+  /* 취소 버튼 */
+  .cancel-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+    color: #FFF;
+    text-align: center;
+    font-family: "SUIT Variable", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.2px;
+  }
+  
+  .cancel-button:hover {
+    opacity: 0.8;
+  }

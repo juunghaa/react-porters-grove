@@ -9,10 +9,11 @@ import OAuthCallback from "./pages/OAuthCallback";
 import MainPage from "./pages/MainPage";
 import LeftPanel from "./components/LeftPanel/LeftPanel";
 import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 // import GoogleLoginButton from "./components/GoogleLoginButton"; // ✅ 필요 시 홈 테스트용
 import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
+import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -105,7 +106,48 @@ export default function App() {
             </div>
           }
         />
+
+        {/* ✅ 3️⃣ ChooseOption 페이지 라우트 추가 */}
+        <Route 
+          path="/choose" 
+          element={<ChooseOptionWrapper />} 
+        />
+
+        {/* ✅ 4️⃣ MakingPortfolio 페이지 라우트 추가 */}
+        <Route 
+          path="/making-portfolio" 
+          element={<MakingPortfolio />} 
+        />
       </Routes>
     </Router>
+  );
+}
+
+// ✅ ChooseOption에서 navigate 사용하기 위한 래퍼 컴포넌트
+function ChooseOptionWrapper() {
+  const navigate = useNavigate();
+
+  const handleGoToPortfolio = (tags) => {
+    console.log('🎯 handleGoToPortfolio 호출됨!', tags);
+    console.log('🚀 navigate to /making-portfolio');
+    navigate('/making-portfolio', { state: { selectedTags: tags } });
+  };
+
+  const handleGoToExperience = (tags) => {
+    console.log('경험 페이지로 이동:', tags);
+    // navigate('/experience', { state: { selectedTags: tags } }); // 추후 구현
+  };
+
+  const handleGoToSpec = (tags) => {
+    console.log('스펙 페이지로 이동:', tags);
+    // navigate('/spec', { state: { selectedTags: tags } }); // 추후 구현
+  };
+
+  return (
+    <ChooseOption 
+      onGoToExperience={handleGoToExperience}
+      onGoToSpec={handleGoToSpec}
+      onGoToPortfolio={handleGoToPortfolio}
+    />
   );
 }

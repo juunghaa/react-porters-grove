@@ -36,11 +36,17 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
 
   // 태그 클릭 시 바로 페이지 이동
   const handleTagClick = (cardType, tagId) => {
+    console.log('✨ handleTagClick 호출됨:', cardType, tagId);
+    console.log('Props:', { onGoToExperience, onGoToSpec, onGoToPortfolio });
+    
     if (cardType === 'experience' && onGoToExperience) {
+      console.log('👉 경험 페이지로 이동');
       onGoToExperience([tagId]);
     } else if (cardType === 'spec' && onGoToSpec) {
+      console.log('👉 스펙 페이지로 이동');
       onGoToSpec([tagId]);
     } else if (cardType === 'portfolio' && onGoToPortfolio) {
+      console.log('👉 포트폴리오 페이지로 이동');
       onGoToPortfolio([tagId]);
     }
   };
