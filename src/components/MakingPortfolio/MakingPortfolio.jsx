@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './MakingPortfolio.css';
+import guideImage from '../../assets/image/guide.png';
 
 const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
   useEffect(() => {
@@ -24,7 +25,7 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
       {/* 안내문구 이미지 */}
       <div className="guide-image-wrapper">
         <img 
-          src="./images/guide.png" 
+          src={guideImage} 
           alt="포트폴리오에 담을 경험을 선택해주세요" 
           className="guide-image"
         />
