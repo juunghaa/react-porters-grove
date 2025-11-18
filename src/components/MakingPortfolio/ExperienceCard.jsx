@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ExperienceCard.css';
 
-const ExperienceCard = ({ experienceData, onMenuClick, onCheckChange }) => {
+const ExperienceCard = ({ experienceData, onMenuClick, onCheckChange, isChecked: externalChecked }) => {
   const [isChecked, setIsChecked] = useState(false);
+
+  // 외부에서 제어되는 경우 isChecked 동기화
+  useEffect(() => {
+    if (externalChecked !== undefined) {
+      setIsChecked(externalChecked);
+    }
+  }, [externalChecked]);
 
   if (!experienceData) return null;
 

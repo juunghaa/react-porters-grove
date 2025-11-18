@@ -7,10 +7,12 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // 4열 x 2행 = 8개
   const [checkedCount, setCheckedCount] = useState(0);
+  const [checkedItems, setCheckedItems] = useState(new Set());
 
   // 임시 데이터 (나중에 실제 API에서 가져올 데이터)
   const [portfolioItems, setPortfolioItems] = useState([
     {
+      id: 1,
       tag: '해커톤',
       role: '구름톤14기',
       title: '제주 프라이빗 스팟 앱 개발',
@@ -20,6 +22,7 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
       startDate: '2025.06'
     },
     {
+      id: 2,
       tag: '프로젝트',
       role: '캡스톤디자인',
       title: 'AI 기반 학습 플랫폼 개발',
@@ -41,6 +44,20 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = portfolioItems.slice(startIndex, endIndex);
+
+  // 전체 선택/해제 핸들러
+  const handleSelectAll = () => {
+    if (checkedItems.size === portfolioItems.length) {
+      // 전체 해제
+      setCheckedItems(new Set());
+      setCheckedCount(0);
+    } else {
+      // 전체 선택
+      const allIds = new Set(portfolioItems.map((_, index) => index));
+      setCheckedItems(allIds);
+      setCheckedCount(portfolioItems.length);
+    }
+  };
 
   const handleNext = () => {
     console.log('다음 단계로 이동');
@@ -85,26 +102,47 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
 
       {/* 포트폴리오 그리드 영역 */}
       <div className="portfolio-grid">
-         {/* 🔥 선택 개수 표시 */}
-        <div className="selected-count">
+        {/* 상단 바: 선택 개수 + 전체 선택 */}
+        <div className="portfolio-grid-header">
+          {/* 🔥 선택 개수 표시 */}
+          <div className="selected-count">
             <span className="selected-count-number">{checkedCount}</span>
             <span className="selected-count-text">개 선택됨</span>
+          </div>
+
+          {/* 🔥 전체 선택 버튼 */}
+          <button className="select-all-btn" onClick={handleSelectAll}>
+            {checkedItems.size === portfolioItems.length ? '전체 해제' : '전체 선택'}
+          </button>
         </div>
 
         {/* FullBox 그리드 */}
         <div className="portfolio-items-grid">
-          {currentItems.map((item, index) => (
-            <ExperienceCard
-                key={index}
+          {currentItems.map((item, index) => {
+            const globalIndex = startIndex + index;
+            return (
+              <ExperienceCard
+                key={globalIndex}
                 isPanelCollapsed={false}
                 config={boxConfig}
                 experienceData={item}
+                isChecked={checkedItems.has(globalIndex)}
                 onMenuClick={() => console.log('메뉴 클릭', index)}
                 onCheckChange={(checked) => {
-                    setCheckedCount(prev => checked ? prev + 1 : prev - 1);
+                  setCheckedItems(prev => {
+                    const newSet = new Set(prev);
+                    if (checked) {
+                      newSet.add(globalIndex);
+                    } else {
+                      newSet.delete(globalIndex);
+                    }
+                    return newSet;
+                  });
+                  setCheckedCount(prev => checked ? prev + 1 : prev - 1);
                 }}
-            />        
-          ))}
+              />
+            );
+          })}
         </div>
 
         {/* 페이지네이션 */}
@@ -180,7 +218,7 @@ const MakingPortfolio = ({ selectedTags = [], onCancel }) => {
       </button>
 
       {/* 취소 버튼 */}
-      <button className="cancel-button" onClick={handleCancel}>
+      <button className="cancel-button-text" onClick={handleCancel}>
         취소
       </button>
     </div>
