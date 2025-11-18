@@ -4,7 +4,7 @@ import "./ChooseOption.css";
 import grayFlag from "../../assets/icons/flag.png";
 import blackFlag from "../../assets/icons/flag2.png";
 
-const ChooseOption = () => {
+const ChooseOption = ({ onGotoExperience, onGotoSpec, onGotoPortfolio }) => {
   const navigate = useNavigate(); // ✅ 추가
   const [expandedCard, setExpandedCard] = useState(null);
   const [hoveredTag, setHoveredTag] = useState(null);
