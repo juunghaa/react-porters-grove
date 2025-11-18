@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ 추가
 import "./ChooseOption.css";
-import grayFlag from '../../assets/icons/flag.png'; 
-import blackFlag from '../../assets/icons/flag2.png'; 
+import grayFlag from "../../assets/icons/flag.png";
+import blackFlag from "../../assets/icons/flag2.png";
 
-const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
+const ChooseOption = () => {
+  const navigate = useNavigate(); // ✅ 추가
   const [expandedCard, setExpandedCard] = useState(null);
   const [hoveredTag, setHoveredTag] = useState(null);
 
@@ -22,16 +24,16 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
       { id: 'etc', label: '기타' }
     ],
     spec: [
-      { id: 'certificate', label: '자격증' },
-      { id: 'award', label: '수상' },
-      { id: 'career', label: '경력' },
-      { id: 'intern', label: '인턴' },
-      { id: 'overseas', label: '해외경험' }
+      { id: "certificate", label: "자격증" },
+      { id: "award", label: "수상" },
+      { id: "career", label: "경력" },
+      { id: "intern", label: "인턴" },
+      { id: "overseas", label: "해외경험" },
     ],
     portfolio: [
-      { id: 'resume', label: '이력서' },
-      { id: 'portfolio', label: '포트폴리오' }
-    ]
+      { id: "resume", label: "이력서" },
+      { id: "portfolio", label: "포트폴리오" },
+    ],
   };
 
   // 태그 클릭 시 바로 페이지 이동
@@ -39,7 +41,9 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
     console.log('✨ handleTagClick 호출됨:', cardType, tagId);
     console.log('Props:', { onGoToExperience, onGoToSpec, onGoToPortfolio });
     
-    if (cardType === 'experience' && onGoToExperience) {
+    if (cardType === 'experience' && tagId === 'contest') {
+      navigate("/contest", { state: { selectedTag: tagId } });
+    } else if (cardType === 'experience' && onGoToExperience) {
       console.log('👉 경험 페이지로 이동');
       onGoToExperience([tagId]);
     } else if (cardType === 'spec' && onGoToSpec) {
@@ -58,30 +62,40 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
           <img src="./images/logomark.png" alt="로고" />
         </div>
         <h1 className="choose-title">무엇을 정리할까요?</h1>
-        <p className="choose-subtitle">지금까지의 활동을 정리해 기록으로 남겨요</p>
+        <p className="choose-subtitle">
+          지금까지의 활동을 정리해 기록으로 남겨요
+        </p>
       </div>
 
       <div className="option-container">
         {/* 경험 카드 */}
-        <div 
-          className={`option-card ${expandedCard === 'experience' ? 'expanded experience-card' : ''}`}
-          onMouseEnter={() => setExpandedCard('experience')}
+        <div
+          className={`option-card ${
+            expandedCard === "experience" ? "expanded experience-card" : ""
+          }`}
+          onMouseEnter={() => setExpandedCard("experience")}
           onMouseLeave={() => setExpandedCard(null)}
         >
-          {expandedCard === 'experience' ? (
+          {expandedCard === "experience" ? (
             <div className="card-expanded-content">
               <div className="tag-container experience-tags">
-                {tagOptions.experience.map(tag => (
+                {tagOptions.experience.map((tag) => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${hoveredTag === `experience-${tag.id}` ? 'hovered' : ''}`}
-                    onClick={() => handleTagClick('experience', tag.id)}
+                    className={`tag-chip ${
+                      hoveredTag === `experience-${tag.id}` ? "hovered" : ""
+                    }`}
+                    onClick={() => handleTagClick("experience", tag.id)}
                     onMouseEnter={() => setHoveredTag(`experience-${tag.id}`)}
                     onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <img 
-                      src={hoveredTag === `experience-${tag.id}` ? blackFlag : grayFlag} 
-                      alt="flag" 
+                    <img
+                      src={
+                        hoveredTag === `experience-${tag.id}`
+                          ? blackFlag
+                          : grayFlag
+                      }
+                      alt="flag"
                       className="tag-icon"
                     />
                     <span className="tag-label">{tag.label}</span>
@@ -90,33 +104,39 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
               </div>
             </div>
           ) : (
-            <img 
-              src="./images/Card_Experience.png" 
-              alt="경험 - 프로젝트, 동아리, 공모전 등 나의 경험을 기록해요" 
+            <img
+              src="./images/Card_Experience.png"
+              alt="경험 - 프로젝트, 동아리, 공모전 등 나의 경험을 기록해요"
             />
           )}
         </div>
 
         {/* 스펙 카드 */}
-        <div 
-          className={`option-card ${expandedCard === 'spec' ? 'expanded spec-card' : ''}`}
-          onMouseEnter={() => setExpandedCard('spec')}
+        <div
+          className={`option-card ${
+            expandedCard === "spec" ? "expanded spec-card" : ""
+          }`}
+          onMouseEnter={() => setExpandedCard("spec")}
           onMouseLeave={() => setExpandedCard(null)}
         >
-          {expandedCard === 'spec' ? (
+          {expandedCard === "spec" ? (
             <div className="card-expanded-content">
               <div className="tag-container spec-tags">
-                {tagOptions.spec.map(tag => (
+                {tagOptions.spec.map((tag) => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${hoveredTag === `spec-${tag.id}` ? 'hovered' : ''}`}
-                    onClick={() => handleTagClick('spec', tag.id)}
+                    className={`tag-chip ${
+                      hoveredTag === `spec-${tag.id}` ? "hovered" : ""
+                    }`}
+                    onClick={() => handleTagClick("spec", tag.id)}
                     onMouseEnter={() => setHoveredTag(`spec-${tag.id}`)}
                     onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <img 
-                      src={hoveredTag === `spec-${tag.id}` ? blackFlag : grayFlag} 
-                      alt="flag" 
+                    <img
+                      src={
+                        hoveredTag === `spec-${tag.id}` ? blackFlag : grayFlag
+                      }
+                      alt="flag"
                       className="tag-icon"
                     />
                     <span className="tag-label">{tag.label}</span>
@@ -125,33 +145,41 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
               </div>
             </div>
           ) : (
-            <img 
-              src="./images/Card_Spec.png" 
-              alt="스펙 - 자격증, 수상, 어학 등 나의 역량을 정리해요" 
+            <img
+              src="./images/Card_Spec.png"
+              alt="스펙 - 자격증, 수상, 어학 등 나의 역량을 정리해요"
             />
           )}
         </div>
 
         {/* 포트폴리오 카드 */}
-        <div 
-          className={`option-card ${expandedCard === 'portfolio' ? 'expanded portfolio-card' : ''}`}
-          onMouseEnter={() => setExpandedCard('portfolio')}
+        <div
+          className={`option-card ${
+            expandedCard === "portfolio" ? "expanded portfolio-card" : ""
+          }`}
+          onMouseEnter={() => setExpandedCard("portfolio")}
           onMouseLeave={() => setExpandedCard(null)}
         >
-          {expandedCard === 'portfolio' ? (
+          {expandedCard === "portfolio" ? (
             <div className="card-expanded-content">
               <div className="tag-container portfolio-tags">
-                {tagOptions.portfolio.map(tag => (
+                {tagOptions.portfolio.map((tag) => (
                   <button
                     key={tag.id}
-                    className={`tag-chip ${hoveredTag === `portfolio-${tag.id}` ? 'hovered' : ''}`}
-                    onClick={() => handleTagClick('portfolio', tag.id)}
+                    className={`tag-chip ${
+                      hoveredTag === `portfolio-${tag.id}` ? "hovered" : ""
+                    }`}
+                    onClick={() => handleTagClick("portfolio", tag.id)}
                     onMouseEnter={() => setHoveredTag(`portfolio-${tag.id}`)}
                     onMouseLeave={() => setHoveredTag(null)}
                   >
-                    <img 
-                      src={hoveredTag === `portfolio-${tag.id}` ? blackFlag : grayFlag} 
-                      alt="flag" 
+                    <img
+                      src={
+                        hoveredTag === `portfolio-${tag.id}`
+                          ? blackFlag
+                          : grayFlag
+                      }
+                      alt="flag"
                       className="tag-icon"
                     />
                     <span className="tag-label">{tag.label}</span>
@@ -160,9 +188,9 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
               </div>
             </div>
           ) : (
-            <img 
-              src="./images/Card_Portfolio.png" 
-              alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요" 
+            <img
+              src="./images/Card_Portfolio.png"
+              alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요"
             />
           )}
         </div>
