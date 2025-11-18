@@ -15,7 +15,6 @@ import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
 import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 import ContestPage from "./components/Experience/ContestPage"; //공모전
-import ChooseOption from "./components/ChooseOption/ChooseOption";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠

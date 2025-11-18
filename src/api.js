@@ -47,7 +47,7 @@ export const register = async (email, password1, password2, name) => {
 };
 
 export const exchangeGoogleCode = async (code, redirectUri) => {
-  const res = await fetch("https://grove.beer/api/v1/auth/google/", {
+  const res = await fetch("/api/v1/auth/google/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, redirect_uri: redirectUri }),
