@@ -10,6 +10,7 @@ import avatar from "../assets/icons/avatar.png";
 import Activity from "./../components/Activity/Activity";
 import Newsletter from "./../components/Newsletter/Newsletter";
 import { useNavigate } from "react-router-dom";
+import MakingPortfolioNext from "./../components/MakingPortfolio/MakingPortfolioNext";
 
 // 로고 이미지 import
 import saraminLogo from "../assets/logos/saramin.png";
@@ -33,6 +34,7 @@ export default function MainPage({ onLogout }) {
   const [triggerProfileEdit, setTriggerProfileEdit] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]); // ✅ 선택된 태그 저장
   const navigate = useNavigate();
+  const [selectedPortfolioItems, setSelectedPortfolioItems] = useState([]);
 
   // ChooseOption 페이지로 이동하는 함수
   const handleGoToChooseOption = () => {
@@ -80,6 +82,20 @@ export default function MainPage({ onLogout }) {
     // setCurrentPage("spec");
   };
 
+  const handleGoToPortfolioStep2 = (selectedItems) => {
+    setSelectedPortfolioItems(selectedItems);
+    setCurrentPage("makingPortfolioNext");
+  };
+  
+  const handleBackToPortfolioStep1 = () => {
+    setCurrentPage("makingPortfolio");
+  };
+  
+  const handleCompletePortfolio = (portfolioData) => {
+    alert(`포트폴리오 "${portfolioData.title}"가 생성되었습니다!`);
+    setCurrentPage("home");
+  };
+
   useEffect(() => {
     if (isProfileSettingsOpen) {
       setIsPanelCollapsed(true);
@@ -97,6 +113,7 @@ export default function MainPage({ onLogout }) {
           onGoToPortfolio={handleGoToPortfolio}  // ✅ 추가
           onGoToExperience={handleGoToExperience}  // ✅ 추가
           onGoToSpec={handleGoToSpec}  // ✅ 추가
+
         />
       );
     } else if (currentPage === "makingPortfolio") {
@@ -104,10 +121,20 @@ export default function MainPage({ onLogout }) {
         <MakingPortfolio 
           selectedTags={selectedTags}
           onCancel={() => setCurrentPage("chooseOption")}  // ✅ 취소 시 ChooseOption으로
+          onNext={handleGoToPortfolioStep2}  // ✅ 다음 단계로
         />
       );
     } else if (currentPage === "Activity") {
       return <Activity />;
+    }
+    else if (currentPage === "makingPortfolioNext") {
+      return (
+        <MakingPortfolioNext 
+          selectedItems={selectedPortfolioItems}
+          onBack={handleBackToPortfolioStep1}
+          onComplete={handleCompletePortfolio}
+        />
+      );
     }
     return null;
   };

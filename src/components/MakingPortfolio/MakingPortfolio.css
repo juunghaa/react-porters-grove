@@ -1,214 +1,494 @@
-.making-portfolio-container {
-    width: 100%;
-    min-height: 100vh;
-    background: #F7F7F7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
-  }
-  
-  /* 안내문구 이미지 */
-  .guide-image-wrapper {
-    margin-bottom: 30px;
-    text-align: center;
-    width: 100%;
-  }
-  
-  .guide-image {
-    max-width: 30%;
-    height: auto;
-  }
-  
-  /* 포트폴리오 그리드 영역 */
-  .portfolio-grid {
-    display: flex;
-    padding: 14px 10px 10px 10px;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    align-self: stretch;
-    border-radius: 30px;
-    background: rgba(0, 0, 0, 0.03);
-    max-width: 1200px;
-    width: 100%;
-    margin-bottom: 30px;
-    min-height: 300px;
-  }
-  
-  /* 상단 바: 선택 개수 + 전체 선택 */
-  .portfolio-grid-header {
-    width: 97%;
-    padding: 10px 30px 0 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+/* ===================================
+   공통 컨테이너 스타일
+   =================================== */
+   .making-portfolio-container,
+   .making-portfolio-next-container {
+     width: 100%;
+     min-height: 100vh;
+     background: #F7F7F7;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     padding: 40px 20px;
+   }
+   
+   /* ===================================
+      안내 영역 스타일
+      =================================== */
+   
+   /* 안내문구 이미지 (Step 1) */
+   .guide-image-wrapper {
+     margin-bottom: 30px;
+     text-align: center;
+     width: 100%;
+   }
+   
+   .guide-image {
+     max-width: 30%;
+     height: auto;
+   }
+   
+   /* 안내 텍스트 (Step 2) */
+   .guide-text-wrapper {
+     margin-bottom: 30px;
+     text-align: center;
+     width: 100%;
+   }
+   
+   .guide-title {
+     color: #1A1A1A;
+     font-family: "SUIT Variable";
+     font-size: 28px;
+     font-weight: 700;
+     letter-spacing: -0.5px;
+     margin: 0 0 12px 0;
+   }
+   
+   .guide-subtitle {
+     color: #626262;
+     font-family: "SUIT Variable";
+     font-size: 16px;
+     font-weight: 500;
+     letter-spacing: -0.2px;
+     margin: 0;
+   }
+   
+   
+   /* ===================================
+      포트폴리오 그리드 영역
+      =================================== */
+   .portfolio-grid {
+     display: flex;
+     padding: 14px 10px 10px 10px;
+     flex-direction: column;
+     align-items: center;
+     gap: 14px;
+     align-self: stretch;
+     border-radius: 30px;
+     background: rgba(0, 0, 0, 0.03);
+     max-width: 1200px;
+     width: 100%;
+     margin-bottom: 30px;
+     min-height: 300px;
+   }
+   
+   /* 상단 바: 선택 개수 + 전체 선택 */
+   .portfolio-grid-header {
+     width: 97%;
+     padding: 10px 30px 0 30px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+   }
+   
+   /* 선택 개수 표시 */
+   .selected-count {
+     display: flex;
+     align-items: center;
+     gap: 2px;
+   }
+   
+   .selected-count-number {
+     color: var(--Grove-Green, #126431);
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-weight: 600;
+     letter-spacing: -0.18px;
+   }
+   
+   .selected-count-text {
+     color: #494949;
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-weight: 600;
+     letter-spacing: -0.18px;
+   }
+   
+   /* 전체 선택 버튼 */
+   .select-all-btn {
+     background: none;
+     border: none;
+     cursor: pointer;
+     padding: 0;
+     
+     color: #494949;
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-weight: 600;
+     letter-spacing: -0.18px;
+     transition: color 0.2s;
+   }
+   
+   .select-all-btn:hover {
+     color: var(--Grove-Green, #126431);
+   }
+   
+   /* FullBox 그리드 (4열) */
+   .portfolio-items-grid {
+     display: grid;
+     grid-template-columns: repeat(4, 1fr);
+     gap: 16px;
+     width: 100%;
+     padding: 20px;
+   }
+   
+   /* ===================================
+      태그 컨테이너 및 태그 칩 스타일 (5열 구조)
+      =================================== */
+   
+   /* 태그 컨테이너 - 5열 구조 */
+   .tags-container {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     gap: 12px;
+     width: 100%;
+     padding: 30px 40px;
+   }
+   
+   /* 태그 행 */
+   .tag-row {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 12px;
+     flex-wrap: wrap;
+   }
+   
+   /* 태그 칩 - 기본 (선택되지 않음) */
+   .tag-chip {
+     display: flex;
+     height: 37px;
+     padding: 2px 20px;
+     justify-content: center;
+     align-items: center;
+     gap: 10px;
+     border-radius: 999px;
+     background: #F5F5F5;
+     border: none;
+     cursor: pointer;
+     /* transition: all 0.1s ease; */
+     transition: background-color 0.15s ease;  /* all 대신 background-color만 */
 
-  /* 선택 개수 표시 */
-  .selected-count {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-  }
-  
-  .selected-count-number {
-    color: var(--Grove-Green, #126431);
-    font-family: "SUIT Variable";
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.18px;
-  }
-  
-  .selected-count-text {
-    color: #494949;
-    font-family: "SUIT Variable";
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.18px;
-  }
-
-  /* 전체 선택 버튼 */
-  .select-all-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    
-    color: #494949;
-    font-family: "SUIT Variable";
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.18px;
-    transition: color 0.2s;
-  }
-
-  .select-all-btn:hover {
-    color: var(--Grove-Green, #126431);
-  }
-  
-  /* ✅ FullBox 그리드 (4열 2행) */
-  .portfolio-items-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    width: 100%;
-    padding: 20px;
-  }
-  
-  /* ✅ 페이지네이션 */
-  .pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: auto;
-    padding: 20px 0;
-  }
-  
-  .pagination-arrow {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transition: opacity 0.2s;
-  }
-  
-  .pagination-arrow:hover:not(:disabled) {
-    opacity: 0.7;
-  }
-  
-  .pagination-arrow:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  
-  .pagination-numbers {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin: 0 8px;
-  }
-  
-  /* 페이지 번호 - 기본 스타일 */
-  .page-number {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    
-    color: rgba(0, 0, 0, 0.50);
-    font-family: "SUIT Variable";
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.18px;
-    transition: all 0.2s;
-  }
-  
-  .page-number:hover {
-    color: rgba(0, 0, 0, 0.75);
-  }
-  
-  /* 페이지 번호 - 선택됨 */
-  .page-number.active {
-    color: var(--Grove-Green, #126431);
-    text-decoration: underline;
-    text-decoration-style: solid;
-    text-decoration-skip-ink: auto;
-    text-underline-position: from-font;
-  }
-  
-  /* 다음 단계로 버튼 */
-  .next-button {
-    display: flex;
-    width: 360px;
-    height: 58px;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 18px;
-    background: var(--Grove-Green, #126431);
-    border: none;
-    cursor: pointer;
-    margin-bottom: 16px;
-    
-    color: #FFF;
-    text-align: center;
-    font-family: "SUIT Variable", sans-serif;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.2px;
-  }
-  
-  .next-button:hover {
-    opacity: 0.9;
-  }
-  
-  /* 취소 버튼 */
-  .cancel-button-text {
-    background: none;
-    border: none;
-    cursor: pointer;
-    
-    color: #808080;
-    text-align: center;
-    font-family: "SUIT Variable", sans-serif;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.2px;
-  }
-  
-  .cancel-button:hover {
-    opacity: 0.8;
-  }
+     color: #1A1A1A;
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-weight: 500;
+     letter-spacing: -0.18px;
+   }
+   
+   /* 태그 칩 - 호버 (선택되지 않은 경우) */
+   .tag-chip.hovered {
+     display: inline-flex;
+     padding: 2px 10px 2px 20px;
+     background: #F5F5F5;
+   }
+   
+   /* 태그 칩 - 선택됨 */
+   .tag-chip.selected {
+     display: inline-flex;
+     padding: 2px 10px 2px 20px;
+     background: var(--Grove-Green, #126431);
+     color: #FFF;
+   }
+   
+   /* 태그 레이블 */
+   .tag-label {
+     white-space: nowrap;
+   }
+   
+   /* 태그 아이콘 공통 */
+   .tag-icon {
+     width: 32.667px;
+     height: 32.667px;
+     flex-shrink: 0;
+     transition: all 0.2s ease;
+   }
+   
+   /* + 아이콘 */
+   .tag-icon-plus {
+     fill: #126431;
+   }
+   
+   /* X 아이콘 */
+   .tag-icon-remove {
+     fill: #8ED8AA;
+     transform-origin: center;
+     transform: rotate(45deg);
+     cursor: pointer;
+   }
+   
+   .tag-icon-remove:hover {
+     opacity: 0.8;
+   }
+   
+   
+   /* ===================================
+      페이지네이션
+      =================================== */
+   .pagination {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     margin-top: auto;
+     padding: 20px 0;
+   }
+   
+   .pagination-arrow {
+     background: none;
+     border: none;
+     cursor: pointer;
+     padding: 4px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     opacity: 1;
+     transition: opacity 0.2s;
+   }
+   
+   .pagination-arrow:hover:not(:disabled) {
+     opacity: 0.7;
+   }
+   
+   .pagination-arrow:disabled {
+     opacity: 0.3;
+     cursor: not-allowed;
+   }
+   
+   .pagination-numbers {
+     display: flex;
+     gap: 12px;
+     align-items: center;
+     margin: 0 8px;
+   }
+   
+   /* 페이지 번호 - 기본 스타일 */
+   .page-number {
+     background: none;
+     border: none;
+     cursor: pointer;
+     padding: 4px 8px;
+     
+     color: rgba(0, 0, 0, 0.50);
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.18px;
+     transition: all 0.2s;
+   }
+   
+   .page-number:hover {
+     color: rgba(0, 0, 0, 0.75);
+   }
+   
+   /* 페이지 번호 - 선택됨 */
+   .page-number.active {
+     color: var(--Grove-Green, #126431);
+     text-decoration: underline;
+     text-decoration-style: solid;
+     text-decoration-skip-ink: auto;
+     text-underline-position: from-font;
+   }
+   
+   /* ===================================
+      버튼 스타일
+      =================================== */
+   
+   /* 버튼 그룹 (Step 2) */
+   .button-group {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 16px;
+     width: 100%;
+   }
+   
+   /* 다음 단계로 버튼 (Step 1) */
+   .next-button {
+     display: flex;
+     width: 360px;
+     height: 58px;
+     padding: 10px;
+     justify-content: center;
+     align-items: center;
+     gap: 10px;
+     border-radius: 18px;
+     background: var(--Grove-Green, #126431);
+     border: none;
+     cursor: pointer;
+     margin-bottom: 16px;
+     
+     color: #FFF;
+     text-align: center;
+     font-family: "SUIT Variable", sans-serif;
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.2px;
+     
+     transition: all 0.2s;
+   }
+   
+   .next-button:hover {
+     opacity: 0.9;
+   }
+   
+   .next-button:disabled {
+     opacity: 0.5;
+     cursor: not-allowed;
+   }
+   
+   /* 포트폴리오 생성하기 버튼 (Step 2) */
+   .complete-button {
+     display: flex;
+     width: 360px;
+     height: 58px;
+     padding: 10px;
+     justify-content: center;
+     align-items: center;
+     gap: 10px;
+     border-radius: 18px;
+     background: var(--Grove-Green, #126431);
+     border: none;
+     cursor: pointer;
+     
+     color: #FFF;
+     text-align: center;
+     font-family: "SUIT Variable", sans-serif;
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.2px;
+     
+     transition: all 0.2s;
+   }
+   
+   .complete-button:hover {
+     background: #0f5228;
+     transform: translateY(-1px);
+     box-shadow: 0 4px 12px rgba(18, 100, 49, 0.3);
+   }
+   
+   .complete-button:active {
+     transform: translateY(0);
+   }
+   
+   /* 취소 버튼 (Step 1) */
+   .cancel-button-text {
+     background: none;
+     border: none;
+     cursor: pointer;
+     
+     color: #808080;
+     text-align: center;
+     font-family: "SUIT Variable", sans-serif;
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.2px;
+     
+     transition: color 0.2s;
+   }
+   
+   .cancel-button-text:hover {
+     color: #626262;
+   }
+   
+   /* 이전으로 버튼 (Step 2) */
+   .back-button-text {
+     background: none;
+     border: none;
+     cursor: pointer;
+     
+     color: #808080;
+     text-align: center;
+     font-family: "SUIT Variable", sans-serif;
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.2px;
+     
+     transition: color 0.2s;
+   }
+   
+   .back-button-text:hover {
+     color: #626262;
+   }
+   
+   /* ===================================
+      반응형 디자인
+      =================================== */
+   @media (max-width: 1024px) {
+     .portfolio-items-grid {
+       grid-template-columns: repeat(3, 1fr);
+     }
+     
+     .tags-container {
+       padding: 20px 30px;
+     }
+   }
+   
+   @media (max-width: 768px) {
+     .portfolio-items-grid {
+       grid-template-columns: repeat(2, 1fr);
+     }
+     
+     .next-button,
+     .complete-button {
+       width: 100%;
+       max-width: 360px;
+     }
+     
+     .portfolio-info-section {
+       padding: 20px;
+     }
+   
+     .guide-image {
+       max-width: 50%;
+     }
+     
+     .tags-container {
+       padding: 20px;
+       gap: 10px;
+     }
+   }
+   
+   @media (max-width: 480px) {
+     .portfolio-items-grid {
+       grid-template-columns: 1fr;
+     }
+     
+     .guide-title {
+       font-size: 24px;
+     }
+     
+     .guide-subtitle {
+       font-size: 14px;
+     }
+   
+     .guide-image {
+       max-width: 70%;
+     }
+     
+     .portfolio-grid-header {
+       padding: 10px 20px 0 20px;
+     }
+     
+     .tags-container {
+       padding: 15px;
+       gap: 8px;
+     }
+     
+     .tag-chip {
+       font-size: 14px;
+       height: 35px;
+     }
+   }
