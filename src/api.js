@@ -27,6 +27,7 @@ export const register = async (email, password1, password2, name) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+          username: name,
           email,
           password1,
           password2,
