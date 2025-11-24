@@ -216,16 +216,32 @@ export default function ProfileCard({
             }}
             onSave={async (data) => {
               try {
-                  const payload = {
-                      display_name: data.name,
-                      bio: data.tagline,
-                  };
-                  const matchedRoleId = roleIdFromTitle(data.title);
-                      if (matchedRoleId) {
-                          payload.job_role_id = matchedRoleId;
-                      } else if (data.title && data.title !== profile.title) {
-                          alert("알 수 없는 직무명이에요. 직무 목록 중 하나를 입력하면 서버에 반영돼요.");
-                      }   
+                const payload = {
+                  full_name: data.name,  // ✅ display_name → full_name
+                  bio: data.tagline,
+                  birth_date: data.birthday,
+                  phone_number: data.phone,
+                  contact_email: data.email,
+                  school_name: data.schoolName,  // ✅ schoolEmail → schoolName
+                  admission_date: data.admissionDate,
+                  graduation_date: data.graduationDate,
+                };
+                
+                const matchedRoleId = roleIdFromTitle(data.jobRole);  // ✅ 직무 ID
+                if (matchedRoleId) {
+                  payload.job_role_id = matchedRoleId;
+                }
+                
+                // ✅ 링크 형식 변환
+                if (data.links && data.links.length > 0) {
+                  payload.link_items = data.links
+                    .filter(link => link.trim())  // 빈 링크 제거
+                    .map((link, index) => ({
+                      label: new URL(link).hostname.replace('www.', ''),  // 도메인을 label로
+                      url: link,
+                      order: index
+                    }));
+                }
 
                   const updated = await updateMyProfileJson(payload);
                       setProfile({

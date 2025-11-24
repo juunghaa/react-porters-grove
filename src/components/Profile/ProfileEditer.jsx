@@ -21,6 +21,8 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     majors: initial?.majors || [{ majorType: "", majorName: "" }],
     gpa: initial?.gpa || "",
     gpaTotal: initial?.gpaTotal || "",
+    jobRole: initial?.jobRole || "",  // ✅ 추가
+    schoolName: initial?.schoolName || "",  // ✅ schoolEmail → schoolName
   });
 
   // 날짜 input에 대한 ref
@@ -48,6 +50,8 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
       majors: initial?.majors || [{ majorType: "", majorName: "" }],
       gpa: initial?.gpa || "",
       gpaTotal: initial?.gpaTotal || "",
+      jobRole: initial?.jobRole || "",  // ✅ 추가
+      schoolName: initial?.schoolName || "",  // ✅ 변경
     });
   }, [initial]);
 
@@ -276,9 +280,15 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                 <div className="form-group">
                   <label>직무</label>
                   <div className="form-group-inner">
-                  <input
+                  {/* <input
                     value={form.tagline}
                     onChange={(e) => setForm(f => ({ ...f, tagline: e.target.value }))}
+                    placeholder="지금 하고 있거나 희망하는 직무를 입력하세요"
+                    rows={3}
+                  /> */}
+                  <input
+                    value={form.jobRole}  // ✅ tagline → jobRole
+                    onChange={(e) => setForm(f => ({ ...f, jobRole: e.target.value }))}  // ✅
                     placeholder="지금 하고 있거나 희망하는 직무를 입력하세요"
                     rows={3}
                   />
@@ -409,10 +419,16 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                   <div className="form-group">
                     <label>학교명</label>
                     <div className="form-group-inner">
-                    <input
+                    {/* <input
                       type="text"
                       value={form.schoolEmail}
                       onChange={(e) => setForm(f => ({ ...f, schoolEmail: e.target.value }))}
+                      placeholder="학교 이름을 입력하세요"
+                    /> */}
+                    <input
+                      type="text"
+                      value={form.schoolName}  // ✅ schoolEmail → schoolName
+                      onChange={(e) => setForm(f => ({ ...f, schoolName: e.target.value }))}
                       placeholder="학교 이름을 입력하세요"
                     />
                     </div>
