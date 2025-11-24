@@ -576,10 +576,10 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                             <option value="" disabled>
                               전공 구분을 선택하세요
                             </option>
-                            <option value="주전공">주전공</option>
-                            <option value="부전공">부전공</option>
-                            <option value="이중전공">이중전공</option>
-                            <option value="복수전공">복수전공</option>
+                            <option value="major">주전공</option>
+                            <option value="double">복수전공</option>
+                            <option value="minor">부전공</option>
+                            <option value="other">기타</option>
                           </select>
                           </div>
                         </div>
@@ -637,18 +637,12 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                     <div className="form-group">
                       <label>총점</label>
                       <div className="form-group-inner">
-                      <select
+                      <input
+                        type="text"
                         value={form.gpaTotal}
                         onChange={(e) => setForm(f => ({ ...f, gpaTotal: e.target.value }))}
-                      >
-                        <option value="" disabled>
-                          총점을 선택하세요
-                        </option>
-                        <option value="4.5">4.5</option>
-                        <option value="4.3">4.3</option>
-                        <option value="4.0">4.0</option>
-                        <option value="100">100</option>
-                      </select>
+                        placeholder="총점을 입력하세요"
+                      />
                       </div>
                     </div>
                   </div>

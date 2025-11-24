@@ -36,7 +36,7 @@ export default function ProfileCard({
         const u = new URL(url);
         if (u.pathname === "/") u.pathname = "";
         return u.toString();
-    }
+    }ㄴ
     
     async function handleAdd(type) {
         const meta = SOCIALS[type];
@@ -128,10 +128,15 @@ export default function ProfileCard({
           
           // 화면 표시용 프로필 (기존)
           setProfile({
-            name: me.display_name || me.full_name || name,
-            title: me.job_role_name || me.job_role?.name || title,
-            tagline: me.bio || tagline,
-          });
+            name: me.display_name,
+            title: me.job_role?.name,
+            tagline: me.bio,
+          });          
+          // setProfile({
+          //   name: me.display_name || me.full_name || name,
+          //   title: me.job_role_name || me.job_role?.name || title,
+          //   tagline: me.bio || tagline,
+          // });
           
           // ✅ 에디터용 전체 프로필 데이터 (날짜 형식 변환: YYYY-MM-DD → YYYY.MM.DD)
           const formatDate = (dateStr) => {
@@ -141,8 +146,10 @@ export default function ProfileCard({
           
           setFullProfile({
             avatar: me.avatar || null,
-            name: me.display_name || me.full_name || "",
-            tagline: me.bio || "",
+            name: me.display_name,
+            // name: me.display_name || me.full_name || "",
+            // tagline: me.bio || "",
+            tagline: me.bio,
             birthday: formatDate(me.birth_date) || "",
             phone: me.phone_number || "",
             email: me.contact_email || "",
@@ -156,7 +163,8 @@ export default function ProfileCard({
               : [{ majorType: "", majorName: "" }],
             gpa: me.gpa?.toString() || "",
             gpaTotal: me.gpa_total?.toString() || "",
-            jobRole: me.job_role_name || "",
+            // jobRole: me.job_role_name || "",
+            jobRole: me.job_role?.name || "",
           });
           
           const initial = [];
@@ -251,7 +259,7 @@ export default function ProfileCard({
                 const payload = {
                   full_name: data.name,
                   bio: data.tagline,
-                  birth_date: data.birthday || "",  // 빈값은 ""로
+                  birth_date: data.birthday,  
                   phone_number: data.phone,
                   contact_email: data.email,
                   school_name: data.schoolName,
