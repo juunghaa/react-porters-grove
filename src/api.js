@@ -27,7 +27,6 @@ export const register = async (email, password1, password2, name) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-          username: name,   // ← name을 username으로 사용
           email,
           password1,
           password2,

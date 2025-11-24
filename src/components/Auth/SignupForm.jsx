@@ -148,11 +148,21 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       // 회원가입 API 호출
       // const data = await register(email, pw1, pw2); // { access, refresh, user } 기대
       // handleSubmit 함수의 API 호출 부분을
-      const data = await register(email, pw1, pw2, name); // name 파라미터 추가
+      const data = await register(email, pw1, pw2); // name 파라미터 추가
       // 필요하면 토큰 저장
-      // localStorage.setItem('access', data.access);
-      // localStorage.setItem('refresh', data.refresh);
+      localStorage.setItem('access', data.access);
+      localStorage.setItem('refresh', data.refresh);
 
+      // 2. 프로필에 이름 업데이트
+      if (name.trim()) {
+        try {
+          await updateMyProfileJson({ name: name.trim() });
+        } catch (profileErr) {
+          console.error('프로필 업데이트 실패:', profileErr);
+          // 이름 업데이트 실패해도 회원가입은 성공으로 처리
+        }
+      }
+      
       setSubmitState('success');
       setSignupSuccess('⚠️ 회원가입에 성공하였습니다');
       onSignupSuccess?.(data);
