@@ -5,7 +5,7 @@ import ToastMessage from "./ToastMessage";
 import linkGithubIcon from "../../assets/icons/linkGithub.png";
 import linkLinkedinIcon from "../../assets/icons/linkLinkedin.png";
 import linkDribbbleIcon from "../../assets/icons/linkDribbble.png";
-import { fetchMyProfile, updateMyProfileJson, fetchJobRoles } from "../../api.js";
+import { fetchMyProfile, updateMyProfileJson } from "../../api.js";
 
 export default function ProfileCard({
   bannerUrl,
@@ -98,45 +98,18 @@ export default function ProfileCard({
     // ✅ 전체 프로필 데이터 저장 (날짜 정보 포함)
     const [fullProfile, setFullProfile] = useState(null);
 
-    const [roles, setRoles] = useState([]);
-
-    function roleIdFromTitle(t) {
-        if (!t) return null;
-        const q = t.trim().toLowerCase();
-    
-        const exact = roles.find(r => r.name.toLowerCase() === q);
-        if (exact) return exact.id;
-    
-        const contains = roles.filter(r => r.name.toLowerCase().includes(q));
-        if (contains.length === 1) return contains[0].id;
-    
-        return null;
-    }
-    
-
-    useEffect(() => {
-      fetchJobRoles()
-        .then(setRoles)
-        .catch((e) => console.warn("직무 목록 조회 실패:", e));
-    }, []);
-
 
     useEffect(() => {
       (async () => {
         try {
           const me = await fetchMyProfile();
           
-          // 화면 표시용 프로필 (기존)
+          // ✅ 화면 표시용 프로필 - 최신 명세 기준
           setProfile({
-            name: me.display_name,
-            title: me.job_role?.name,
-            tagline: me.bio,
-          });          
-          // setProfile({
-          //   name: me.display_name || me.full_name || name,
-          //   title: me.job_role_name || me.job_role?.name || title,
-          //   tagline: me.bio || tagline,
-          // });
+            name: me.full_name || name,
+            title: me.job_role_name || title,
+            tagline: me.bio || tagline,
+          });
           
           // ✅ 에디터용 전체 프로필 데이터 (날짜 형식 변환: YYYY-MM-DD → YYYY.MM.DD)
           const formatDate = (dateStr) => {
@@ -146,14 +119,12 @@ export default function ProfileCard({
           
           setFullProfile({
             avatar: me.avatar || null,
-            name: me.display_name,
-            // name: me.display_name || me.full_name || "",
-            // tagline: me.bio || "",
-            tagline: me.bio,
+            name: me.full_name || "",
+            tagline: me.bio || "",
             birthday: formatDate(me.birth_date) || "",
             phone: me.phone_number || "",
             email: me.contact_email || "",
-            links: me.link_items?.map(item => item.url) || [""],
+            links: me.links?.map(item => item.url) || [""],
             schoolName: me.school_name || "",
             admissionDate: formatDate(me.admission_date) || "",
             graduationDate: formatDate(me.graduation_date) || "",
@@ -163,8 +134,7 @@ export default function ProfileCard({
               : [{ majorType: "", majorName: "" }],
             gpa: me.gpa?.toString() || "",
             gpaTotal: me.gpa_total?.toString() || "",
-            // jobRole: me.job_role_name || "",
-            jobRole: me.job_role?.name || "",
+            jobRole: me.job_role_name || "",
           });
           
           const initial = [];
@@ -249,13 +219,14 @@ export default function ProfileCard({
         {editing && fullProfile && (  // ✅ fullProfile이 있을 때만 표시
           <ProfileEditer
             isPanelCollapsed={isPanelCollapsed}
-            initial={fullProfile}  // ✅ profile → fullProfile
+            initial={fullProfile}
             onClose={() => {
               setEditing(false);
               onSettingsOpenChange?.(false);
             }}
             onSave={async (data) => {
               try {
+                // ✅ 최신 명세에 맞춘 payload 구조
                 const payload = {
                   full_name: data.name,
                   bio: data.tagline,
@@ -266,21 +237,16 @@ export default function ProfileCard({
                   admission_date: data.admissionDate || "",
                   graduation_date: data.graduationDate || "",
                   graduation_status: data.graduationStatus,
-                  gpa: data.gpa ? data.gpa : "",  // ✅ 빈값은 ""로
-                  gpa_total: data.gpaTotal ? data.gpaTotal : "",  // ✅ 빈값은 ""로
+                  gpa: data.gpa ? data.gpa : "",
+                  gpa_total: data.gpaTotal ? data.gpaTotal : "",
+                  job_role_name: data.jobRole,  // ✅ 텍스트 그대로 저장
                 };
                 
-                // ✅ 직무 ID 매칭
-                const matchedRoleId = roleIdFromTitle(data.jobRole);
-                if (matchedRoleId) {
-                  payload.job_role_id = matchedRoleId;
-                }
-                
-                // ✅ 전공 정보 추가 (필드명 수정: majors → major_items)
+                // ✅ 전공 정보 추가
                 if (data.majors && data.majors.length > 0) {
-                  payload.major_items = data.majors  // ✅ 이름 수정!
+                  payload.major_items = data.majors
                     .filter(m => m.majorType && m.majorName)
-                    .map((m, index) => ({  // ✅ order 추가
+                    .map((m, index) => ({
                       major_type: m.majorType,
                       major_name: m.majorName,
                       order: index
@@ -309,12 +275,13 @@ export default function ProfileCard({
                     });
                 }
             
-                // 일반 JSON으로 전송
+                // ✅ JSON으로 전송
                 const updated = await updateMyProfileJson(payload);
                 
+                // ✅ 최신 명세 기준으로 프로필 업데이트
                 setProfile({
-                  name: updated.full_name || updated.display_name || data.name,
-                  title: updated.job_role_name || updated.job_role?.name || data.jobRole,
+                  name: updated.full_name || data.name,
+                  title: updated.job_role_name || data.jobRole,
                   tagline: updated.bio || data.tagline,
                 });
                 

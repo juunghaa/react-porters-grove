@@ -1,6 +1,3 @@
-// const BASE = "https://grove.beer";
-// const BASE_URL = process.env.REACT_APP_API_URL;
-
 // ============================================
 // 🔐 AUTH (회원/인증)
 // ============================================
@@ -114,7 +111,7 @@ export const apiLogout = async () => {
 };
 
 // ============================================
-// 👤 PROFILE
+// 👤 PROFILE (백엔드 명세 기준)
 // ============================================
 
 // Authorization 헤더 생성 헬퍼 함수
@@ -139,7 +136,17 @@ async function tryFetch(factory) {
   return res;
 }
 
-// 내 프로필 조회 - GET /api/profiles/me/
+// ✅ 내 프로필 조회 - GET /api/profiles/me/
+// 응답 예시:
+// {
+//   "id": 3,
+//   "display_name": "강승",
+//   "bio": "소개글",
+//   "job_role": {
+//     "id": 5,
+//     "name": "백엔드 개발자"
+//   }
+// }
 export async function fetchMyProfile() {
   const res = await tryFetch(() =>
     fetch(`/api/profiles/me/`, {
@@ -155,7 +162,14 @@ export async function fetchMyProfile() {
   return res.json();
 }
 
-// 내 프로필 수정 - PATCH /api/profiles/me/
+// ✅ 내 프로필 수정 - PUT/PATCH /api/profiles/me/
+// 요청 예시:
+// {
+//   "display_name": "강승",
+//   "bio": "소개글",
+//   "level": "newgrad",
+//   "job_role_id": 5
+// }
 // JSON 또는 FormData 지원
 export async function updateMyProfileJson(payload) {
   const isFormData = payload instanceof FormData;
@@ -184,7 +198,8 @@ export async function updateMyProfileJson(payload) {
   return res.json();
 }
 
-// 레벨 목록 조회 - GET /api/profiles/options/levels/
+// ✅ 레벨 목록 조회 - GET /api/profiles/options/levels/
+// 응답 예시: [ { "value": "student", "label": "학생" } ]
 export async function fetchLevels() {
   const res = await fetch(`/api/profiles/options/levels/`);
   
@@ -195,7 +210,20 @@ export async function fetchLevels() {
   return res.json();
 }
 
-// 직무 목록 조회 - GET /api/profiles/options/job-roles/
+// ✅ 직무 카테고리 목록 조회 - GET /api/profiles/options/job-categories/
+// 응답 예시: [ { "id": 1, "name": "개발" } ]
+export async function fetchJobCategories() {
+  const res = await fetch(`/api/profiles/options/job-categories/`);
+  
+  if (!res.ok) {
+    throw new Error("직무 카테고리 조회 실패");
+  }
+  
+  return res.json();
+}
+
+// ✅ 직무 목록 조회 - GET /api/profiles/options/job-roles/?group=dev
+// 응답 예시: [ { "id": 5, "name": "백엔드 개발자", "group": "dev" } ]
 export async function fetchJobRoles(group) {
   const url = group
     ? `/api/profiles/options/job-roles/?group=${encodeURIComponent(group)}`
@@ -205,6 +233,79 @@ export async function fetchJobRoles(group) {
   
   if (!res.ok) {
     throw new Error("직무 목록 조회 실패");
+  }
+  
+  return res.json();
+}
+
+// ✅ 하드스킬 검색 - GET /api/profiles/options/hard-skills/?q=django
+// 응답 예시: [ { "id": 10, "name": "Django", "code": "django" } ]
+export async function searchHardSkills(query) {
+  const url = `/api/profiles/options/hard-skills/?q=${encodeURIComponent(query)}`;
+  
+  const res = await fetch(url);
+  
+  if (!res.ok) {
+    throw new Error("하드스킬 검색 실패");
+  }
+  
+  return res.json();
+}
+
+// ✅ 소프트스킬 검색 - GET /api/profiles/options/soft-skills/?q=lead
+// 응답 예시: [ { "id": 2, "name": "리더십" } ]
+export async function searchSoftSkills(query) {
+  const url = `/api/profiles/options/soft-skills/?q=${encodeURIComponent(query)}`;
+  
+  const res = await fetch(url);
+  
+  if (!res.ok) {
+    throw new Error("소프트스킬 검색 실패");
+  }
+  
+  return res.json();
+}
+
+// ✅ 직무별 스킬 매핑 조회 - GET /api/profiles/job-roles/{id}/skills/
+// 응답 예시:
+// {
+//   "hard_skills": [ {"id":1,"name":"Python"} ],
+//   "soft_skills": [ {"id":2,"name":"Communication"} ]
+// }
+export async function fetchJobRoleSkills(jobRoleId) {
+  const res = await tryFetch(() =>
+    fetch(`/api/profiles/job-roles/${jobRoleId}/skills/`, {
+      method: "GET",
+      headers: { ...authHeaders() },
+    })
+  );
+  
+  if (!res.ok) {
+    throw new Error(`직무 스킬 조회 실패 (${res.status})`);
+  }
+  
+  return res.json();
+}
+
+// ✅ 직무별 스킬 매핑 저장 - POST /api/profiles/job-roles/{id}/skills/
+// 요청 예시: { "hard_ids": [1,2], "soft_ids": [3,4] }
+export async function saveJobRoleSkills(jobRoleId, hardIds, softIds) {
+  const res = await tryFetch(() =>
+    fetch(`/api/profiles/job-roles/${jobRoleId}/skills/`, {
+      method: "POST",
+      headers: {
+        ...authHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        hard_ids: hardIds,
+        soft_ids: softIds,
+      }),
+    })
+  );
+  
+  if (!res.ok) {
+    throw new Error(`직무 스킬 저장 실패 (${res.status})`);
   }
   
   return res.json();
