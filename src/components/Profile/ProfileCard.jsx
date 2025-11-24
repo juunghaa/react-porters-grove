@@ -248,19 +248,18 @@ export default function ProfileCard({
             }}
             onSave={async (data) => {
               try {
-                // ProfileEditer에서 이미 날짜를 YYYY-MM-DD 형식으로 변환해서 전달함
                 const payload = {
                   full_name: data.name,
                   bio: data.tagline,
-                  birth_date: data.birthday,  // 이미 YYYY-MM-DD 형식
+                  birth_date: data.birthday || "",  // 빈값은 ""로
                   phone_number: data.phone,
                   contact_email: data.email,
                   school_name: data.schoolName,
-                  admission_date: data.admissionDate,  // 이미 YYYY-MM 형식
-                  graduation_date: data.graduationDate,  // 이미 YYYY-MM 형식
-                  graduation_status: data.graduationStatus,  // ✅ 추가
-                  gpa: data.gpa ? parseFloat(data.gpa) : null,  // ✅ 추가
-                  gpa_total: data.gpaTotal ? parseFloat(data.gpaTotal) : null,  // ✅ 추가
+                  admission_date: data.admissionDate || "",
+                  graduation_date: data.graduationDate || "",
+                  graduation_status: data.graduationStatus,
+                  gpa: data.gpa ? data.gpa : "",  // ✅ 빈값은 ""로
+                  gpa_total: data.gpaTotal ? data.gpaTotal : "",  // ✅ 빈값은 ""로
                 };
                 
                 // ✅ 직무 ID 매칭
@@ -269,97 +268,60 @@ export default function ProfileCard({
                   payload.job_role_id = matchedRoleId;
                 }
                 
-                // ✅ 전공 정보 추가
+                // ✅ 전공 정보 추가 (필드명 수정: majors → major_items)
                 if (data.majors && data.majors.length > 0) {
-                  payload.majors = data.majors
-                    .filter(m => m.majorType && m.majorName)  // 빈 전공 제외
-                    .map(m => ({
+                  payload.major_items = data.majors  // ✅ 이름 수정!
+                    .filter(m => m.majorType && m.majorName)
+                    .map((m, index) => ({  // ✅ order 추가
                       major_type: m.majorType,
-                      major_name: m.majorName
+                      major_name: m.majorName,
+                      order: index
                     }));
                 }
                 
                 // ✅ 링크 형식 변환
                 if (data.links && data.links.length > 0) {
                   payload.link_items = data.links
-                    .filter(link => link.trim())  // 빈 링크 제거
+                    .filter(link => link.trim())
                     .map((link, index) => {
                       try {
+                        const url = new URL(link);
                         return {
-                          label: new URL(link).hostname.replace('www.', ''),  // 도메인을 label로
+                          label: url.hostname.replace('www.', ''),
                           url: link,
                           order: index
                         };
                       } catch {
                         return {
-                          label: '링크',
+                          label: 'Link',
                           url: link,
                           order: index
                         };
                       }
                     });
                 }
-
-                // ✅ 프로필 사진 처리
-                // avatar가 File 객체인 경우 FormData 사용
-                if (data.avatar && data.avatar instanceof File) {
-                  const formData = new FormData();
-                  
-                  // 모든 필드를 FormData에 추가
-                  Object.keys(payload).forEach(key => {
-                    if (payload[key] !== null && payload[key] !== undefined) {
-                      if (key === 'majors' || key === 'link_items') {
-                        // 배열/객체는 JSON 문자열로 변환
-                        formData.append(key, JSON.stringify(payload[key]));
-                      } else {
-                        formData.append(key, payload[key]);
-                      }
-                    }
-                  });
-                  
-                  // 프로필 사진 추가
-                  formData.append('avatar', data.avatar);
-                  
-                  // FormData로 전송 (api.js에서 multipart/form-data 처리 필요)
-                  const updated = await updateMyProfileJson(formData);
-                  
-                  setProfile({
-                    name: updated.display_name || data.name,
-                    title: updated.job_role_name || data.title || profile.title,
-                    tagline: updated.bio || data.tagline,
-                  });
-                  
-                  // ✅ fullProfile도 업데이트
-                  setFullProfile({
-                    ...fullProfile,
-                    ...data,
-                  });
-                } else {
-                  // 일반 JSON으로 전송
-                  const updated = await updateMyProfileJson(payload);
-                  
-                  setProfile({
-                    name: updated.display_name || data.name,
-                    title: updated.job_role_name || data.title || profile.title,
-                    tagline: updated.bio || data.tagline,
-                  });
-                  
-                  // ✅ fullProfile도 업데이트
-                  setFullProfile({
-                    ...fullProfile,
-                    ...data,
-                  });
-                }
+            
+                // 일반 JSON으로 전송
+                const updated = await updateMyProfileJson(payload);
+                
+                setProfile({
+                  name: updated.full_name || updated.display_name || data.name,
+                  title: updated.job_role_name || updated.job_role?.name || data.jobRole,
+                  tagline: updated.bio || data.tagline,
+                });
+                
+                // ✅ fullProfile도 업데이트
+                setFullProfile({
+                  ...fullProfile,
+                  ...data,
+                });
                 
                 onEdit?.("profile:update", payload);
                 
                 // 🍞 저장 성공 시 토스트 표시
                 setShowToast(true);
+                setTimeout(() => setShowToast(false), 2500);
                 
-                // 2.5초 후 토스트 숨기기
-                setTimeout(() => {
-                  setShowToast(false);
-                }, 2500);
               } catch (e) {
                 console.error("프로필 저장 실패:", e);
                 alert(e.message || "프로필 저장 실패");
