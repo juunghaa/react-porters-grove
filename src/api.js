@@ -27,11 +27,10 @@ export const register = async (email, password1, password2, name) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-          username: email,  // ← 추가: username을 email과 동일하게
+          username: name,   // ← name을 username으로 사용
           email,
           password1,
           password2,
-          // name은 추가 정보라면 필요시 포함
       }),
   });
   const data = await res.json();
