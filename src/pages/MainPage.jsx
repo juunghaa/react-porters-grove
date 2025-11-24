@@ -4,7 +4,8 @@ import MainHome from "./../components/MainHome/MainHome";
 import ChooseOption from "./../components/ChooseOption/ChooseOption";
 import MakingPortfolio from "./../components/MakingPortfolio/MakingPortfolio";
 import MakingPortfolioNext from "./../components/MakingPortfolio/MakingPortfolioNext";
-import MakingPortfolioFinal from "./../components/MakingPortfolio/MakingPortfolioFinal"; // ⭐ Step 3 추가!
+import MakingPortfolioFinal from "./../components/MakingPortfolio/MakingPortfolioFinal";
+import MakingPortfolioComplete from "./../components/MakingPortfolio/MakingPortfolioComplete"; // ⭐ Step 4 추가!
 import "./../App.css";
 import ProfileCard from "../components/Profile/ProfileCard";
 import banner from "../assets/icons/banner.png";
@@ -83,7 +84,7 @@ export default function MainPage({ onLogout }) {
     // setCurrentPage("spec");
   };
 
-  // ===== 포트폴리오 3단계 플로우 =====
+  // ===== 포트폴리오 4단계 플로우 =====
   
   // Step 1 -> Step 2
   const handleGoToPortfolioStep2 = (selectedItems) => {
@@ -98,12 +99,12 @@ export default function MainPage({ onLogout }) {
     setCurrentPage("makingPortfolio");
   };
   
-  // Step 2 -> Step 3 (⭐ 여기가 중요!)
+  // Step 2 -> Step 3
   const handleGoToPortfolioStep3 = (data) => {
     console.log('✅ Step 2 완료 - Step 3으로 이동');
     console.log('선택된 태그:', data.tags);
     setSelectedTags(data.tags);
-    setCurrentPage("makingPortfolioFinal");  // ⭐ Step 3으로!
+    setCurrentPage("makingPortfolioFinal");
   };
 
   // Step 3 -> Step 2
@@ -112,15 +113,21 @@ export default function MainPage({ onLogout }) {
     setCurrentPage("makingPortfolioNext");
   };
   
-  // Step 3 최종 완료
+  // Step 3 -> Step 4 (완료 페이지) ⭐ 수정!
   const handleCompletePortfolio = (portfolioData) => {
-    console.log('🎉 포트폴리오 생성 최종 완료!');
+    console.log('🎉 포트폴리오 생성 완료!');
     console.log('전체 데이터:', portfolioData);
     
     // TODO: API 호출
     // await savePortfolio(portfolioData);
     
-    alert('포트폴리오가 성공적으로 생성되었습니다!');
+    // alert 대신 완료 페이지로 이동!
+    setCurrentPage("portfolioComplete");
+  };
+
+  // Step 4 완료 페이지에서 홈으로
+  const handleGoHomeFromComplete = () => {
+    console.log('홈으로 돌아가기');
     setCurrentPage("home");
   };
 
@@ -161,18 +168,26 @@ export default function MainPage({ onLogout }) {
         <MakingPortfolioNext 
           selectedItems={selectedPortfolioItems}
           onBack={handleBackToPortfolioStep1}
-          onComplete={handleGoToPortfolioStep3}  // ⭐ Step 3으로 가는 함수!
+          onComplete={handleGoToPortfolioStep3}
         />
       );
     }
-    // ===== Step 3: 자기소개 작성 ===== (⭐ 새로 추가!)
+    // ===== Step 3: 자기소개 작성 =====
     else if (currentPage === "makingPortfolioFinal") {
       return (
         <MakingPortfolioFinal 
           selectedItems={selectedPortfolioItems}
           selectedTags={selectedTags}
           onBack={handleBackToPortfolioStep2}
-          onComplete={handleCompletePortfolio}  // ⭐ 최종 완료 함수!
+          onComplete={handleCompletePortfolio}
+        />
+      );
+    }
+    // ===== Step 4: 완료 페이지 ===== ⭐ 새로 추가!
+    else if (currentPage === "portfolioComplete") {
+      return (
+        <MakingPortfolioComplete 
+          onGoHome={handleGoHomeFromComplete}
         />
       );
     }
@@ -220,12 +235,20 @@ export default function MainPage({ onLogout }) {
           style={{
             display: "flex",
             gap: "24px",
-            marginLeft: "14px",
+            margin: "0 auto",  // ⭐ 가운데 정렬!
             paddingTop: "24px",
             flex: "1 1 auto",
+            width: "100%",  // ⭐ 추가!
+            justifyContent: "center",  // ⭐ 추가!
           }}
         >
-          <div style={{ flex: "1 1 auto", minWidth: 0, display: "flex" }}>
+          <div style={{ 
+            flex: "1 1 auto", 
+            minWidth: 0, 
+            display: "flex",
+            justifyContent: "center",  // ⭐ 가운데 정렬!
+            width: "100%",  // ⭐ 추가!
+          }}>
             {renderMainContent()}
           </div>
 
