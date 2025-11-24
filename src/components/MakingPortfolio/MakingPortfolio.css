@@ -68,7 +68,7 @@
      background: rgba(0, 0, 0, 0.03);
      max-width: 1200px;
      width: 100%;
-     margin-bottom: 30px;
+     margin: 0 auto 30px auto;  /* ⭐ 가운데 정렬 추가! */
      min-height: 300px;
    }
    
@@ -320,7 +320,7 @@
      background: var(--Grove-Green, #126431);
      border: none;
      cursor: pointer;
-     margin-bottom: 16px;
+     margin: 0 auto 16px auto;  /* ⭐ 가운데 정렬! */
      
      color: #FFF;
      text-align: center;
@@ -384,6 +384,8 @@
      background: none;
      border: none;
      cursor: pointer;
+     display: block;  /* ⭐ 추가 */
+     margin: 0 auto;  /* ⭐ 가운데 정렬 */
      
      color: #808080;
      text-align: center;
@@ -424,6 +426,95 @@
    }
    
    /* ===================================
+      자기소개 입력 섹션 (MakingPortfolioFinal)
+      =================================== */
+   
+   /* 입력 섹션 컨테이너 */
+   .input-section {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 12px;
+     width: 100%;
+     padding: 5px 30px;
+   }
+   
+   /* 질문 헤더 (질문 + 글자수 제한) */
+   .question-header {
+     display: flex;
+     width: 100%;
+     justify-content: space-between;
+     align-items: center;
+   }
+   
+   /* 질문 텍스트 */
+   .question-text {
+     color: #494949;
+     font-family: "SUIT Variable";
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.18px;
+     padding-left: 15px;
+   }
+   
+   /* 글자수 제한 표시 */
+   .char-limit {
+     display: flex;
+     align-items: flex-start;
+     gap: 10px;
+     color: #126431;
+     font-family: "SUIT Variable";
+     font-size: 15px;
+     font-style: normal;
+     font-weight: 700;
+     line-height: normal;
+     letter-spacing: -0.18px;
+     padding-right: 15px;
+   }
+   
+   /* 입력창 (textarea) */
+   .portfolio-textarea {
+     display: flex;
+     width: 100%;
+     max-width: 1150px;
+     height: 131px;
+     padding: 20px 25px;
+     align-items: flex-start;
+     gap: 10px;
+     border-radius: 16px;
+     background: #FFF;
+     border: none;
+     outline: none;
+     resize: none;
+     
+     color: #1A1A1A;
+     font-family: "SUIT Variable";
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: 1.5;
+     letter-spacing: -0.18px;
+   }
+   
+   /* Placeholder 스타일 */
+   .portfolio-textarea::placeholder {
+     color: rgba(0, 0, 0, 0.30);
+     text-align: left;
+     font-family: "SUIT Variable";
+     font-size: 18px;
+     font-style: normal;
+     font-weight: 600;
+     line-height: normal;
+     letter-spacing: -0.18px;
+   }
+   
+   .portfolio-textarea:focus {
+     box-shadow: 0 0 0 2px rgba(18, 100, 49, 0.2);
+   }
+   
+   /* ===================================
       반응형 디자인
       =================================== */
    @media (max-width: 1024px) {
@@ -433,6 +524,14 @@
      
      .tags-container {
        padding: 20px 30px;
+     }
+     
+     .portfolio-textarea {
+       min-width: 800px;
+     }
+     
+     .input-section {
+       padding: 20px;
      }
    }
    
@@ -458,6 +557,25 @@
      .tags-container {
        padding: 20px;
        gap: 10px;
+     }
+     
+     .portfolio-textarea {
+       min-width: 100%;
+       font-size: 16px;
+       height: 120px;
+       padding: 15px 20px;
+     }
+     
+     .question-text {
+       font-size: 16px;
+     }
+     
+     .char-limit {
+       font-size: 14px;
+     }
+     
+     .input-section {
+       padding: 15px 20px;
      }
    }
    
@@ -490,5 +608,34 @@
      .tag-chip {
        font-size: 14px;
        height: 35px;
+     }
+     
+     .portfolio-textarea {
+       font-size: 15px;
+       height: 100px;
+       padding: 12px 15px;
+     }
+     
+     .portfolio-textarea::placeholder {
+       font-size: 15px;
+     }
+     
+     .question-text {
+       font-size: 15px;
+     }
+     
+     .char-limit {
+       font-size: 13px;
+     }
+     
+     .input-section {
+       padding: 15px;
+       gap: 10px;
+     }
+     
+     .question-header {
+       flex-direction: column;
+       align-items: flex-start;
+       gap: 8px;
      }
    }

@@ -2,20 +2,20 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export default function ToastMessage({ message, onClose, duration = 2000 }) {
-  console.log("🍞 ToastMessage 렌더링됨:", message);
-  console.log("🍞 현재 document.body:", document.body);
+  // console.log("🍞 ToastMessage 렌더링됨:", message);
+  // console.log("🍞 현재 document.body:", document.body);
   
   useEffect(() => {
-    console.log("🍞 ToastMessage mounted");
-    console.log("🍞 Toast element should be visible now!");
+    // console.log("🍞 ToastMessage mounted");
+    // console.log("🍞 Toast element should be visible now!");
     
     // duration 후에 자동으로 사라지는 애니메이션 시작
     const timer = setTimeout(() => {
-      console.log("🍞 ToastMessage 애니메이션 완료");
+      // console.log("🍞 ToastMessage 애니메이션 완료");
     }, duration);
 
     return () => {
-      console.log("🍞 ToastMessage unmounted");
+      // console.log("🍞 ToastMessage unmounted");
       clearTimeout(timer);
     };
   }, [duration]);
