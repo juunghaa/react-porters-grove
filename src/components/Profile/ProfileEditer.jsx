@@ -4,6 +4,7 @@ import "./ProfileEditer.css";
 import defaultAvatar from "../../assets/icons/avatar.png";
 import ConfirmExitPopup from "./ConfirmExitPopup";
 import ConfirmSavePopup from "./ConfirmSavePopup";
+import cancelButtonIcon from "../../assets/icons/cancelButton.png";
 
 export default function ProfileEditer({ initial, onSave, onClose, isPanelCollapsed = false }) {
   const [form, setForm] = useState({
@@ -216,7 +217,7 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
           <div className="profile-editor" onClick={(e) => e.stopPropagation()}>
             {/* 취소 버튼 - 왼쪽 상단 고정 */}
             <img 
-              src="/cancelButton.png" 
+              src={cancelButtonIcon} 
               className="cancel-button" 
               onClick={handleCancelClick}
               alt="취소"
