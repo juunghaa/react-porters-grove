@@ -95,6 +95,9 @@ export default function ProfileCard({
         tagline,
       });
 
+    // ✅ 전체 프로필 데이터 저장 (날짜 정보 포함)
+    const [fullProfile, setFullProfile] = useState(null);
+
     const [roles, setRoles] = useState([]);
 
     function roleIdFromTitle(t) {
@@ -122,11 +125,40 @@ export default function ProfileCard({
       (async () => {
         try {
           const me = await fetchMyProfile();
+          
+          // 화면 표시용 프로필 (기존)
           setProfile({
             name: me.display_name || me.full_name || name,
             title: me.job_role_name || me.job_role?.name || title,
             tagline: me.bio || tagline,
           });
+          
+          // ✅ 에디터용 전체 프로필 데이터 (날짜 형식 변환: YYYY-MM-DD → YYYY.MM.DD)
+          const formatDate = (dateStr) => {
+            if (!dateStr) return "";
+            return dateStr.replace(/-/g, ".");
+          };
+          
+          setFullProfile({
+            avatar: me.avatar || null,
+            name: me.display_name || me.full_name || "",
+            tagline: me.bio || "",
+            birthday: formatDate(me.birth_date) || "",
+            phone: me.phone_number || "",
+            email: me.contact_email || "",
+            links: me.link_items?.map(item => item.url) || [""],
+            schoolName: me.school_name || "",
+            admissionDate: formatDate(me.admission_date) || "",
+            graduationDate: formatDate(me.graduation_date) || "",
+            graduationStatus: me.graduation_status || "",
+            majors: me.majors?.length > 0 
+              ? me.majors.map(m => ({ majorType: m.major_type, majorName: m.major_name }))
+              : [{ majorType: "", majorName: "" }],
+            gpa: me.gpa?.toString() || "",
+            gpaTotal: me.gpa_total?.toString() || "",
+            jobRole: me.job_role_name || "",
+          });
+          
           const initial = [];
           if (me.website) {
             let host = "";
@@ -206,10 +238,10 @@ export default function ProfileCard({
           onSettingsOpenChange?.(true);
         }}>프로필 수정</button>
       
-        {editing && (
+        {editing && fullProfile && (  // ✅ fullProfile이 있을 때만 표시
           <ProfileEditer
             isPanelCollapsed={isPanelCollapsed}
-            initial={profile}
+            initial={fullProfile}  // ✅ profile → fullProfile
             onClose={() => {
               setEditing(false);
               onSettingsOpenChange?.(false);
@@ -296,6 +328,12 @@ export default function ProfileCard({
                     title: updated.job_role_name || data.title || profile.title,
                     tagline: updated.bio || data.tagline,
                   });
+                  
+                  // ✅ fullProfile도 업데이트
+                  setFullProfile({
+                    ...fullProfile,
+                    ...data,
+                  });
                 } else {
                   // 일반 JSON으로 전송
                   const updated = await updateMyProfileJson(payload);
@@ -304,6 +342,12 @@ export default function ProfileCard({
                     name: updated.display_name || data.name,
                     title: updated.job_role_name || data.title || profile.title,
                     tagline: updated.bio || data.tagline,
+                  });
+                  
+                  // ✅ fullProfile도 업데이트
+                  setFullProfile({
+                    ...fullProfile,
+                    ...data,
                   });
                 }
                 
