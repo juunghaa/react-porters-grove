@@ -36,7 +36,7 @@ export default function ProfileCard({
         const u = new URL(url);
         if (u.pathname === "/") u.pathname = "";
         return u.toString();
-    }ㄴ
+    }
     
     async function handleAdd(type) {
         const meta = SOCIALS[type];
