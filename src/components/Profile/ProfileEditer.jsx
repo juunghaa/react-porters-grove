@@ -21,8 +21,8 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     majors: initial?.majors || [{ majorType: "", majorName: "" }],
     gpa: initial?.gpa || "",
     gpaTotal: initial?.gpaTotal || "",
-    jobRole: initial?.jobRole || "",  // ✅ 추가
-    schoolName: initial?.schoolName || "",  // ✅ schoolEmail → schoolName
+    jobRole: initial?.jobRole || "",
+    schoolName: initial?.schoolName || "",
   });
 
   // 날짜 input에 대한 ref
@@ -50,8 +50,8 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
       majors: initial?.majors || [{ majorType: "", majorName: "" }],
       gpa: initial?.gpa || "",
       gpaTotal: initial?.gpaTotal || "",
-      jobRole: initial?.jobRole || "",  // ✅ 추가
-      schoolName: initial?.schoolName || "",  // ✅ 변경
+      jobRole: initial?.jobRole || "",
+      schoolName: initial?.schoolName || "",
     });
   }, [initial]);
 
@@ -79,12 +79,35 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     setShowConfirmPopup(false);
   };
 
+  // 날짜 포맷 변환 함수 (YYYY-MM-DD -> YYYY.MM.DD)
+  const formatDateToDisplay = (dateString) => {
+    if (!dateString) return "";
+    return dateString.replace(/-/g, ".");
+  };
+
+  // 날짜 포맷 변환 함수 (YYYY.MM.DD -> YYYY-MM-DD)
+  const formatDateToInput = (dateString) => {
+    if (!dateString) return "";
+    return dateString.replace(/\./g, "-");
+  };
+
+  // 서버로 보내기 위한 데이터 준비 (날짜를 YYYY-MM-DD 형식으로 변환)
+  const prepareFormDataForServer = (formData) => {
+    return {
+      ...formData,
+      birthday: formatDateToInput(formData.birthday),
+      admissionDate: formatDateToInput(formData.admissionDate),
+      graduationDate: formatDateToInput(formData.graduationDate),
+    };
+  };
+
   // 팝업에서 "저장하고 나가기" 클릭
   const handleSaveAndExit = async () => {
     setSaving(true);
     try {
       if (onSave) {
-        await onSave(form);
+        const serverData = prepareFormDataForServer(form);
+        await onSave(serverData);
       }
       setShowConfirmPopup(false);
       if (onClose) {
@@ -118,7 +141,8 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     
     try {
       if (onSave) {
-        await onSave(form);
+        const serverData = prepareFormDataForServer(form);
+        await onSave(serverData);
       }
       console.log("저장 완료");
       
@@ -173,18 +197,6 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
     const newMajors = [...form.majors];
     newMajors[index][field] = value;
     setForm(f => ({ ...f, majors: newMajors }));
-  };
-
-  // 날짜 포맷 변환 함수 (YYYY-MM-DD -> YYYY.MM.DD)
-  const formatDateToDisplay = (dateString) => {
-    if (!dateString) return "";
-    return dateString.replace(/-/g, ".");
-  };
-
-  // 날짜 포맷 변환 함수 (YYYY.MM.DD -> YYYY-MM-DD)
-  const formatDateToInput = (dateString) => {
-    if (!dateString) return "";
-    return dateString.replace(/\./g, "-");
   };
 
   // 캘린더 아이콘 클릭 핸들러
@@ -280,15 +292,9 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                 <div className="form-group">
                   <label>직무</label>
                   <div className="form-group-inner">
-                  {/* <input
-                    value={form.tagline}
-                    onChange={(e) => setForm(f => ({ ...f, tagline: e.target.value }))}
-                    placeholder="지금 하고 있거나 희망하는 직무를 입력하세요"
-                    rows={3}
-                  /> */}
                   <input
-                    value={form.jobRole}  // ✅ tagline → jobRole
-                    onChange={(e) => setForm(f => ({ ...f, jobRole: e.target.value }))}  // ✅
+                    value={form.jobRole}
+                    onChange={(e) => setForm(f => ({ ...f, jobRole: e.target.value }))}
                     placeholder="지금 하고 있거나 희망하는 직무를 입력하세요"
                     rows={3}
                   />
@@ -419,15 +425,9 @@ export default function ProfileEditer({ initial, onSave, onClose, isPanelCollaps
                   <div className="form-group">
                     <label>학교명</label>
                     <div className="form-group-inner">
-                    {/* <input
-                      type="text"
-                      value={form.schoolEmail}
-                      onChange={(e) => setForm(f => ({ ...f, schoolEmail: e.target.value }))}
-                      placeholder="학교 이름을 입력하세요"
-                    /> */}
                     <input
                       type="text"
-                      value={form.schoolName}  // ✅ schoolEmail → schoolName
+                      value={form.schoolName}
                       onChange={(e) => setForm(f => ({ ...f, schoolName: e.target.value }))}
                       placeholder="학교 이름을 입력하세요"
                     />
