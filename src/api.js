@@ -128,20 +128,26 @@ export async function fetchMyProfile() {
   return res.json();
 }
 
+// ✅ 수정: FormData와 JSON 모두 지원
 export async function updateMyProfileJson(payload) {
-//   const res = await fetch(`/api/profiles/me/`, {
-//     method: "PATCH",
-//     headers: { ...authHeaders(), "Content-Type": "application/json" },
-//     body: JSON.stringify(payload),
-//   });
-     const res = await tryFetch(() =>
-       fetch(`/api/profiles/me/`, {
-         method: "PATCH",
-        //  method: "PUT",
-         headers: { ...authHeaders(), "Content-Type": "application/json" },
-         body: JSON.stringify(payload),
-       })
-     );
+  // FormData인지 확인
+  const isFormData = payload instanceof FormData;
+  
+  const headers = {
+    ...authHeaders(),
+    // FormData일 경우 Content-Type을 설정하지 않음 (브라우저가 자동으로 boundary 설정)
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
+  };
+
+  const body = isFormData ? payload : JSON.stringify(payload);
+
+  const res = await tryFetch(() =>
+    fetch(`/api/profiles/me/`, {
+      method: "PATCH",
+      headers: headers,
+      body: body,
+    })
+  );
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
