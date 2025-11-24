@@ -1,7 +1,13 @@
 // const BASE = "https://grove.beer";
 // const BASE_URL = process.env.REACT_APP_API_URL;
 
-// 로그인
+// ============================================
+// 🔐 AUTH (회원/인증)
+// ============================================
+
+// 로그인 - POST /api/auth/login/
+// 요청: { email, password }
+// 응답: { access, refresh, user: { pk, username, email } }
 export const login = async (email, password) => {
   const res = await fetch(`/api/auth/login/`, {
     method: 'POST',
@@ -13,124 +19,145 @@ export const login = async (email, password) => {
 
   const data = await res.json();
   console.log('로그인 백엔드 응답:', data);
+  
   if (!res.ok) {
     throw new Error(data.detail || '로그인 실패');
   }
 
-  // 토큰 및 사용자 정보 반환
-  return data; // { access, refresh, user }
+  return data; // { access, refresh, user: { pk, username, email } }
 };
 
-// 회원가입 
+// 회원가입 - POST /api/auth/registration/
+// 요청: { email, username, password1, password2 }
+// 응답: { access, refresh, user: { pk, username, email } }
 export const register = async (email, password1, password2, name) => {
   const res = await fetch(`/api/auth/registration/`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-          username: name,
-          email,
-          password1,
-          password2,
-      }),
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email,
+      username: name,
+      password1,
+      password2,
+    }),
   });
+  
   const data = await res.json();
   console.log('회원가입 백엔드 응답:', data);
   
   if (!res.ok) {
-      const errorMessages = Object.values(data)
+    const errorMessages = Object.values(data)
       .flat()
       .join(' ');
-      throw new Error(errorMessages || '회원가입 실패');
+    throw new Error(errorMessages || '회원가입 실패');
   }
-  return data;
+  
+  return data; // { access, refresh, user: { pk, username, email } }
 };
 
+// Google OAuth 코드 교환 - POST /api/v1/auth/google/
+// 요청: { code, redirect_uri }
+// 응답: { access, refresh, user }
 export const exchangeGoogleCode = async (code, redirectUri) => {
   const res = await fetch("/api/v1/auth/google/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code, redirect_uri: redirectUri }),
   });
+  
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
+  
+  if (!res.ok) {
+    throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
+  }
+  
   return data;
 };
 
-// 구글 code → JWT 교환
-// export const exchangeGoogleCode = async (code, redirectUri) => {
-//   const res = await fetch(`${BASE}/api/v1/auth/google/`, {
-//     method: "POST",  // ✅ POST 방식
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ code, redirect_uri: redirectUri }),
-//   });
-//   const data = await res.json().catch(() => ({}));
-//   if (!res.ok) throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
-//   return data;
-// };
-
-// 토큰 갱신 (옵션: 401일 때 한 번만 시도)
+// 토큰 갱신 - POST /api/auth/token/refresh/
+// 요청: { refresh }
+// 응답: { access }
 export const refreshAccess = async () => {
-    const refresh = localStorage.getItem('refresh');
-    if (!refresh) throw new Error('no refresh token');
-    const res = await fetch('/api/auth/token/refresh/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.access) throw new Error(data.detail || data.message || '토큰 갱신 실패');
-    localStorage.setItem('access', data.access);
-    return data.access;
+  const refresh = localStorage.getItem('refresh');
+  
+  if (!refresh) {
+    throw new Error('no refresh token');
+  }
+  
+  const res = await fetch('/api/auth/token/refresh/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh }),
+  });
+  
+  const data = await res.json().catch(() => ({}));
+  
+  if (!res.ok || !data.access) {
+    throw new Error(data.detail || data.message || '토큰 갱신 실패');
+  }
+  
+  localStorage.setItem('access', data.access);
+  return data.access;
 };
 
-// 로그아웃
+// 로그아웃 - POST /api/auth/logout/
 export const apiLogout = async () => {
-    const access = localStorage.getItem('access');
-    const res = await fetch('/api/auth/logout/', {
-        method: 'POST',
-        headers: access ? { Authorization: `Bearer ${access}` } : {},
-    });
-    const data = await res.json().catch(() => ({}));
-    return { ok: res.ok, status: res.status, data };
+  const access = localStorage.getItem('access');
+  
+  const res = await fetch('/api/auth/logout/', {
+    method: 'POST',
+    headers: access ? { Authorization: `Bearer ${access}` } : {},
+  });
+  
+  const data = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, data };
 };
 
-// 내 프로필 조회
-// export const getMyProfile = async (token) => {
-//   const res = await fetch(`/api/profiles/me/`, {
-//     headers: {
-//       'Authorization': `Bearer ${token}`,
-//     },
-//   });
-//   return await res.json();
-// };
+// ============================================
+// 👤 PROFILE
+// ============================================
 
-// src/api/profile.js
-// const BASE = process.env.REACT_APP_API_BASE || ""; // 예: "https://api.yourhost.com"
-
+// Authorization 헤더 생성 헬퍼 함수
 function authHeaders() {
   const access = localStorage.getItem("access");
   return access ? { Authorization: `Bearer ${access}` } : {};
 }
 
+// 401 에러 시 토큰 갱신 후 재시도하는 헬퍼 함수
+async function tryFetch(factory) {
+  let res = await factory();
+  
+  if (res.status === 401) {
+    try {
+      await refreshAccess();
+      res = await factory(); // 토큰 갱신 후 재시도
+    } catch (_) {
+      return res;
+    }
+  }
+  
+  return res;
+}
+
+// 내 프로필 조회 - GET /api/profiles/me/
 export async function fetchMyProfile() {
-//   const res = await fetch(`/api/profiles/me/`, {
-//     method: "GET",
-//     headers: { ...authHeaders() },
-//   });
-    const res = await tryFetch(() =>
-      fetch(`/api/profiles/me/`, {
-        method: "GET",
-        headers: { ...authHeaders() },
-      })
-    );
-    
-  if (!res.ok) throw new Error(`프로필 조회 실패 (${res.status})`);
+  const res = await tryFetch(() =>
+    fetch(`/api/profiles/me/`, {
+      method: "GET",
+      headers: { ...authHeaders() },
+    })
+  );
+  
+  if (!res.ok) {
+    throw new Error(`프로필 조회 실패 (${res.status})`);
+  }
+  
   return res.json();
 }
 
-// ✅ 수정: FormData와 JSON 모두 지원
+// 내 프로필 수정 - PATCH /api/profiles/me/
+// JSON 또는 FormData 지원
 export async function updateMyProfileJson(payload) {
-  // FormData인지 확인
   const isFormData = payload instanceof FormData;
   
   const headers = {
@@ -153,90 +180,81 @@ export async function updateMyProfileJson(payload) {
     const text = await res.text().catch(() => "");
     throw new Error(text || `프로필 수정 실패 (${res.status})`);
   }
+  
   return res.json();
 }
 
-// (선택) 아바타 업로드: multipart/form-data
-// export async function updateMyProfileAvatar(file, extra = {}) {
-//   const fd = new FormData();
-//   fd.append("avatar", file);
-//   Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
-//   const res = await fetch(`${BASE}/api/profiles/me/`, {
-//     method: "PATCH",
-//     headers: { ...authHeaders() }, // form-data는 Content-Type 설정 X (브라우저가 boundary 설정)
-//     body: fd,
-//   });
-//   if (!res.ok) throw new Error(`아바타 업로드 실패 (${res.status})`);
-//   return res.json();
-// }
-
+// 레벨 목록 조회 - GET /api/profiles/options/levels/
 export async function fetchLevels() {
   const res = await fetch(`/api/profiles/options/levels/`);
-  if (!res.ok) throw new Error("레벨 목록 조회 실패");
+  
+  if (!res.ok) {
+    throw new Error("레벨 목록 조회 실패");
+  }
+  
   return res.json();
 }
 
+// 직무 목록 조회 - GET /api/profiles/options/job-roles/
 export async function fetchJobRoles(group) {
   const url = group
     ? `/api/profiles/options/job-roles/?group=${encodeURIComponent(group)}`
     : `/api/profiles/options/job-roles/`;
+  
   const res = await fetch(url);
-  if (!res.ok) throw new Error("직무 목록 조회 실패");
+  
+  if (!res.ok) {
+    throw new Error("직무 목록 조회 실패");
+  }
+  
   return res.json();
 }
 
-// 401나면 한 번만 토큰 갱신 후 재요청
-async function tryFetch(factory) {
-  let res = await factory();
-  if (res.status === 401) {
-    try { await refreshAccess(); } catch (_) { return res; }
-    res = await factory();
+// ============================================
+// 🔑 PASSWORD RESET
+// ============================================
+
+// 비밀번호 재설정 요청 - POST /api/password_reset/
+export async function requestPasswordReset(email) {
+  const res = await fetch("/api/password_reset/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  
+  if (!res.ok) {
+    throw new Error("비밀번호 재설정 요청 실패");
   }
-  return res;
+  
+  return res.json();
 }
 
-// export async function requestPasswordReset(email) {
-//     const res = await fetch("/api/auth/password/reset/", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ email }),
-//     });
+// 토큰 유효성 검증 - POST /api/password_reset/validate_token/
+export async function validateResetToken(token) {
+  const res = await fetch("/api/password_reset/validate_token/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token }),
+  });
   
-//     if (!res.ok) {
-//       throw new Error("비밀번호 재설정 요청 실패");
-//     }
-//     return res.json();
-//   }
+  if (!res.ok) {
+    throw new Error("유효하지 않은 토큰");
+  }
   
-  //비밀번호 재설정 관련 api
-  // api.js
-  export async function requestPasswordReset(email) {
-    const res = await fetch("/api/password_reset/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (!res.ok) throw new Error("비밀번호 재설정 요청 실패");
-    return res.json();
-  }
+  return res.json();
+}
 
-  export async function validateResetToken(token) {
-    const res = await fetch("/api/password_reset/validate_token/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-    });
-    if (!res.ok) throw new Error("유효하지 않은 토큰");
-    return res.json();
+// 비밀번호 재설정 확인 - POST /api/password_reset/confirm/
+export async function confirmPasswordReset(token, password) {
+  const res = await fetch("/api/password_reset/confirm/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password }),
+  });
+  
+  if (!res.ok) {
+    throw new Error("비밀번호 변경 실패");
   }
-
-  export async function confirmPasswordReset(token, password) {
-    const res = await fetch("/api/password_reset/confirm/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, password }),
-    });
-    if (!res.ok) throw new Error("비밀번호 변경 실패");
-    return res.json();
-  }
-  ///////////////////////////////////
+  
+  return res.json();
+}

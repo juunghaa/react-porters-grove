@@ -1,54 +1,61 @@
 import React, { useState } from 'react';
 import SignupForm from '../components/Auth/SignupForm';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '../firebase';
-import { register } from '../api';
 
-export default function SignupPage({ onRegisterSuccess, onChangeView }) {
-  const [signupError, setSignupError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password1, setPassword1] = useState('');
-  const [password2, setPassword2] = useState('');
+export default function SignupPage({ onLoginSuccess, onChangeView }) {
+  // ✅ SignupForm이 직접 API를 호출하므로, 
+  // SignupPage는 성공/실패 처리만 담당
   
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setSignupError('');
+  const handleSignupSuccess = (data) => {
+    // ✅ SignupForm에서 이미 API 호출 및 토큰 저장 완료
+    // 부모(App.js)에게 성공 알림
+    console.log('회원가입 성공:', data);
+    
+    // ✅ App.js의 handleAuthSuccess로 전달
+    onLoginSuccess?.(data);
+  };
+
+  return (
+    <SignupForm 
+      onSignupSuccess={handleSignupSuccess}
+      onChangeView={onChangeView}
+    />
+  );
+}
+
+// import React, { useState } from 'react';
+// import SignupForm from '../components/Auth/SignupForm';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+// // import { auth } from '../firebase';
+// import { register } from '../api';
+
+// export default function SignupPage({ onRegisterSuccess, onChangeView }) {
+//   const [signupError, setSignupError] = useState('');
+//   const [email, setEmail] = useState('');
+//   const [password1, setPassword1] = useState('');
+//   const [password2, setPassword2] = useState('');
   
-    if (password1 !== password2) {
-        setSignupError('비밀번호가 일치하지 않아요.');
-        return;
-    }
+//   const handleRegister = async (e) => {
+//     e.preventDefault();
+//     setSignupError('');
   
-    try {
-        const res = await register(email, password1, password2);
-        localStorage.setItem('access', res.access);
-        localStorage.setItem('refresh', res.refresh);
-        onRegisterSuccess(); // 회원가입 성공 후 이동
-    } catch (err) {
-        setSignupError(err.message);
-    }
-};
-  
-    return (
-      <SignupForm onSubmit={handleRegister} signupError={signupError} 
-      onChangeView={onChangeView}/>
-    //<SignupForm onSuccess={() => navigate('/welcome')} /> 나중에 페이지 이동
-    );
-  }
-  
-//   const handleSignup = async ({ email, password, name }) => {
-//     try {
-//       await createUserWithEmailAndPassword(auth, email, password);
-//       alert('회원가입이 완료되었습니다!');
-//         // 회원가입 이후 처리 (ex: 로그인 상태 전환 등)
-//       onLoginSuccess(); // 로그인 상태 전환
-//     } catch (err) {
-//       console.error(err);
-//       setSignupError('회원가입에 실패했습니다. 다시 시도해주세요.');
+//     if (password1 !== password2) {
+//         setSignupError('비밀번호가 일치하지 않아요.');
+//         return;
 //     }
-//   };
-
-//   return (
-//     <SignupForm onSubmit={handleSignup} signupError={signupError} />
-//   );
-//}
+  
+//     try {
+//         const res = await register(email, password1, password2);
+//         localStorage.setItem('access', res.access);
+//         localStorage.setItem('refresh', res.refresh);
+//         onRegisterSuccess(); // 회원가입 성공 후 이동
+//     } catch (err) {
+//         setSignupError(err.message);
+//     }
+// };
+  
+//     return (
+//       <SignupForm onSubmit={handleRegister} signupError={signupError} 
+//       onChangeView={onChangeView}/>
+//     //<SignupForm onSuccess={() => navigate('/welcome')} /> 나중에 페이지 이동
+//     );
+//   }

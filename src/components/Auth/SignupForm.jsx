@@ -8,8 +8,8 @@ const TERMS_TITLE = {
     select: '마케팅 정보 수신 동의',
   };
 
-  const TERMS_TEXT = {
-    tos: `**제1조 (목적)**
+const TERMS_TEXT = {
+  tos: `**제1조 (목적)**
 
 본 약관은 PORTME(이하 "회사")가 제공하는 포트폴리오 제작·관리 플랫폼 서비스(이하 "서비스")의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
 
@@ -59,7 +59,7 @@ const TERMS_TITLE = {
 **제7조 (면책조항)**
 
 회사는 천재지변, 불가항력, 회원의 귀책사유로 인한 서비스 이용 장애에 대해 책임을 지지 않습니다.`,
-    privacy: `**1. 수집하는 개인정보 항목**
+  privacy: `**1. 수집하는 개인정보 항목**
 
 - 필수: 이름, 이메일, 비밀번호, 학년/전공, 활동 기록 데이터
 - 선택: 연락처, 프로필 이미지, SNS 계정
@@ -93,12 +93,12 @@ const TERMS_TITLE = {
 
 - Poters
 - 이메일: porters.official@gmail.com`,
-    copyright: `1. 회원이 작성·업로드한 모든 콘텐츠의 저작권은 원칙적으로 해당 회원에게 귀속됩니다.
+  copyright: `1. 회원이 작성·업로드한 모든 콘텐츠의 저작권은 원칙적으로 해당 회원에게 귀속됩니다.
 2. 회원은 회사가 서비스 운영 및 홍보를 위해 비상업적 목적으로 해당 콘텐츠를 활용하는 것에 동의합니다.
 3. 회원은 자신이 업로드하는 콘텐츠가 제3자의 권리를 침해하지 않음을 보증합니다.`,
-    select: `1. 회사는 이메일, 문자, 앱 푸시 등을 통해 이벤트·신규 기능·소식 등을 안내할 수 있습니다.
+  select: `1. 회사는 이메일, 문자, 앱 푸시 등을 통해 이벤트·신규 기능·소식 등을 안내할 수 있습니다.
 2. 회원은 언제든 수신 동의를 철회할 수 있습니다.`,
-  };
+};
 
 export default function SignupForm({ onSignupSuccess, onChangeView }) {
   const [email, setEmail] = useState('');
@@ -121,7 +121,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
   const [nameError, setNameError] = useState('');
   const [agreeError, setAgreeError] = useState('');
   const [signupError, setSignupError] = useState('');
-  const [submitState, setSubmitState] = useState('idle'); // state 이름 정정
+  const [submitState, setSubmitState] = useState('idle');
   const [signupSuccess, setSignupSuccess] = useState('');
 
   const handleSubmit = async (e) => {
@@ -145,16 +145,22 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
     try {
       setSubmitState('loading');
 
-      // 회원가입 API 호출
-      // const data = await register(email, pw1, pw2); // { access, refresh, user } 기대
-      // handleSubmit 함수의 API 호출 부분을
-      const data = await register(email, pw1, pw2, name); // name 파라미터 추가
-      // 필요하면 토큰 저장
-      // localStorage.setItem('access', data.access);
-      // localStorage.setItem('refresh', data.refresh);
+      // ✅ 회원가입 API 호출 - 명세서에 맞게 파라미터 전달
+      const data = await register(email, pw1, pw2, name);
+      
+      // ✅ 토큰 저장 (명세서 응답: { access, refresh, user })
+      localStorage.setItem('access', data.access);
+      localStorage.setItem('refresh', data.refresh);
+      
+      // ✅ user 정보도 저장 (선택사항)
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
 
       setSubmitState('success');
-      setSignupSuccess('⚠️ 회원가입에 성공하였습니다');
+      setSignupSuccess('회원가입에 성공하였습니다! 🎉');
+      
+      // ✅ 부모에게 성공 알림 (데이터 전달)
       onSignupSuccess?.(data);
 
     } catch (err) {
@@ -162,6 +168,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       setSignupError(err.message || '회원가입 실패');
     }
   };
+
   const agreeFromModal = () => {
     if (termsOpen === 'tos') setAgreeTos(true);
     if (termsOpen === 'privacy') setAgreePrivacy(true);
@@ -185,6 +192,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
           type="text" id="signup-email"
           value={email} onChange={(e) => setEmail(e.target.value)}
           className={emailError ? 'input-error' : ''}
+          disabled={submitState === 'loading'}
         />
         {emailError && <p className="error-text">{emailError}</p>}
       </div>
@@ -195,6 +203,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
           type="password" id="signup-pw1"
           value={pw1} onChange={(e) => setPw1(e.target.value)}
           className={pw1Error ? 'input-error' : ''}
+          disabled={submitState === 'loading'}
         />
         {pw1Error && <p className="error-text">{pw1Error}</p>}
       </div>
@@ -205,6 +214,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
           type="password" id="signup-pw2"
           value={pw2} onChange={(e) => setPw2(e.target.value)}
           className={pw2Error ? 'input-error' : ''}
+          disabled={submitState === 'loading'}
         />
         {pw2Error && <p className="error-text">{pw2Error}</p>}
       </div>
@@ -215,6 +225,7 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
           type="text" id="signup-name"
           value={name} onChange={(e) => setName(e.target.value)}
           className={nameError ? 'input-error' : ''}
+          disabled={submitState === 'loading'}
         />
         {nameError && <p className="error-text">{nameError}</p>}
       </div>
@@ -255,9 +266,9 @@ export default function SignupForm({ onSignupSuccess, onChangeView }) {
       </button>
 
       <div className="login-options">
-      <span className="divider-vertical"></span>
+        <span className="divider-vertical"></span>
         <a href="#" onClick={() => onChangeView?.("login")}>로그인 하러가기</a>
-      <span className="divider-vertical"></span>
+        <span className="divider-vertical"></span>
       </div>
     </form>
 
