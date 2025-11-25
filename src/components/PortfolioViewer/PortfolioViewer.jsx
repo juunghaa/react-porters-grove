@@ -8,7 +8,10 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
-  const totalPages = 3;
+  
+  // ⭐ totalPages를 동적으로 계산
+  const selectedItemsCount = portfolioData?.selectedItems?.length || 0;
+  const totalPages = 1 + selectedItemsCount; // 1페이지(자기소개) + 경험 개수
 
   const handleShare = () => {
     console.log('공유 버튼 클릭');
@@ -169,7 +172,10 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
 
             {/* 포트폴리오 렌더링 영역 ⭐ 실제 컴포넌트! */}
             <div className="portfolio-render-area">
-              <PortfolioPage portfolioData={portfolioData} />
+              <PortfolioPage 
+                portfolioData={portfolioData} 
+                currentPage={currentPage}  // ⭐ 현재 페이지 전달
+              />
             </div>
 
             {/* 다음 페이지 버튼 */}

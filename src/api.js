@@ -359,3 +359,22 @@ export async function confirmPasswordReset(token, password) {
   
   return res.json();
 }
+
+// ============================================
+// 📋 ACTIVITIES (경험/활동)
+// ============================================
+
+export async function fetchActivityDetail(activityId) {
+  const res = await tryFetch(() =>
+    fetch(`/api/activities/${activityId}/`, {
+      method: "GET",
+      headers: { ...authHeaders() },
+    })
+  );
+  
+  if (!res.ok) {
+    throw new Error(`경험 상세 조회 실패 (${res.status})`);
+  }
+  
+  return res.json();
+}
