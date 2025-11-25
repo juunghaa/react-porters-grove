@@ -5,7 +5,8 @@ import ChooseOption from "./../components/ChooseOption/ChooseOption";
 import MakingPortfolio from "./../components/MakingPortfolio/MakingPortfolio";
 import MakingPortfolioNext from "./../components/MakingPortfolio/MakingPortfolioNext";
 import MakingPortfolioFinal from "./../components/MakingPortfolio/MakingPortfolioFinal";
-import MakingPortfolioComplete from "./../components/MakingPortfolio/MakingPortfolioComplete"; // ⭐ Step 4 추가!
+import MakingPortfolioComplete from "./../components/MakingPortfolio/MakingPortfolioComplete";
+import PortfolioViewer from "./../components/PortfolioViewer/PortfolioViewer"; // ⭐ 뷰어 추가!
 import "./../App.css";
 import ProfileCard from "../components/Profile/ProfileCard";
 import banner from "../assets/icons/banner.png";
@@ -37,6 +38,7 @@ export default function MainPage({ onLogout }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const navigate = useNavigate();
   const [selectedPortfolioItems, setSelectedPortfolioItems] = useState([]);
+  const [createdPortfolioData, setCreatedPortfolioData] = useState(null); // ⭐ 추가!
 
   // ChooseOption 페이지로 이동하는 함수
   const handleGoToChooseOption = () => {
@@ -84,7 +86,7 @@ export default function MainPage({ onLogout }) {
     // setCurrentPage("spec");
   };
 
-  // ===== 포트폴리오 4단계 플로우 =====
+  // ===== 포트폴리오 5단계 플로우 =====
   
   // Step 1 -> Step 2
   const handleGoToPortfolioStep2 = (selectedItems) => {
@@ -113,22 +115,35 @@ export default function MainPage({ onLogout }) {
     setCurrentPage("makingPortfolioNext");
   };
   
-  // Step 3 -> Step 4 (완료 페이지) ⭐ 수정!
+  // Step 3 -> Step 4 (완료 페이지)
   const handleCompletePortfolio = (portfolioData) => {
     console.log('🎉 포트폴리오 생성 완료!');
     console.log('전체 데이터:', portfolioData);
     
+    // ⭐ 포트폴리오 데이터 저장!
+    setCreatedPortfolioData(portfolioData);
+    
     // TODO: API 호출
     // await savePortfolio(portfolioData);
     
-    // alert 대신 완료 페이지로 이동!
+    // 완료 페이지로 이동
     setCurrentPage("portfolioComplete");
   };
 
-  // Step 4 완료 페이지에서 홈으로
-  const handleGoHomeFromComplete = () => {
-    console.log('홈으로 돌아가기');
+  // Step 4 -> Step 5 (뷰어로 자동 이동) ⭐ 수정!
+  const handleGoToPortfolioViewer = () => {
+    console.log('📋 포트폴리오 뷰어로 이동');
+    setCurrentPage("portfolioViewer");
+  };
+
+  // 뷰어 닫기 ⭐ 추가!
+  const handleClosePortfolioViewer = () => {
+    console.log('뷰어 닫기 - 홈으로 이동');
     setCurrentPage("home");
+    // 데이터 초기화
+    setCreatedPortfolioData(null);
+    setSelectedPortfolioItems([]);
+    setSelectedTags([]);
   };
 
   useEffect(() => {
@@ -136,6 +151,18 @@ export default function MainPage({ onLogout }) {
       setIsPanelCollapsed(true);
     }
   }, [isProfileSettingsOpen]);
+
+  // ⭐ Complete 페이지에서 자동으로 뷰어로 이동
+  useEffect(() => {
+    if (currentPage === "portfolioComplete") {
+      // 2초 후 자동으로 뷰어로 이동
+      const timer = setTimeout(() => {
+        handleGoToPortfolioViewer();
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentPage]);
 
   const renderMainContent = () => {
     if (currentPage === "home") {
@@ -183,11 +210,20 @@ export default function MainPage({ onLogout }) {
         />
       );
     }
-    // ===== Step 4: 완료 페이지 ===== ⭐ 새로 추가!
+    // ===== Step 4: 완료 페이지 (2초 후 자동 이동) =====
     else if (currentPage === "portfolioComplete") {
       return (
         <MakingPortfolioComplete 
-          onGoHome={handleGoHomeFromComplete}
+          onGoHome={handleGoToPortfolioViewer}
+        />
+      );
+    }
+    // ===== Step 5: 포트폴리오 뷰어 ===== ⭐ 새로 추가!
+    else if (currentPage === "portfolioViewer") {
+      return (
+        <PortfolioViewer 
+          portfolioData={createdPortfolioData}
+          onClose={handleClosePortfolioViewer}
         />
       );
     }
@@ -235,19 +271,19 @@ export default function MainPage({ onLogout }) {
           style={{
             display: "flex",
             gap: "24px",
-            margin: "0 auto",  // ⭐ 가운데 정렬!
+            margin: "0 auto",
             paddingTop: "24px",
             flex: "1 1 auto",
-            width: "100%",  // ⭐ 추가!
-            justifyContent: "center",  // ⭐ 추가!
+            width: "100%",
+            justifyContent: "center",
           }}
         >
           <div style={{ 
             flex: "1 1 auto", 
             minWidth: 0, 
             display: "flex",
-            justifyContent: "center",  // ⭐ 가운데 정렬!
-            width: "100%",  // ⭐ 추가!
+            justifyContent: "center",
+            width: "100%",
           }}>
             {renderMainContent()}
           </div>
