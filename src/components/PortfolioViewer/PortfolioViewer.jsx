@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import './PortfolioViewer.css';
 import portfolioTag from '../../assets/icons/portfolio-tag.png';
 import viewerIcon from '../../assets/icons/viewerComplete.png';
+import PortfolioPage from '../../components/PortfolioPage/PortfolioPage'; // ⭐ 추가!
 
 const PortfolioViewer = ({ portfolioData, onClose }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [isFullView, setIsFullView] = useState(false); // ⭐ 전체보기 모드
+  const [isFullView, setIsFullView] = useState(false);
   const totalPages = 3;
 
   const handleShare = () => {
@@ -50,16 +51,14 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
       <div className="portfolio-viewer-box">
         {/* 상단 헤더 */}
         <div className="portfolio-viewer-header">
-          {/* 왼쪽: 포트폴리오 태그 */}
           <img 
             src={portfolioTag} 
             alt="포트폴리오" 
             className="portfolio-tag-icon"
           />
 
-          {/* 오른쪽: 버튼들 */}
           <div className="portfolio-viewer-actions">
-            {/* 전체보기 버튼 ⭐ 새로 추가! */}
+            {/* 전체보기 버튼 */}
             <button 
               className="portfolio-action-btn"
               onClick={handleFullView}
@@ -67,12 +66,10 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               title={isFullView ? "기본 보기" : "전체보기"}
             >
               {isFullView ? (
-                // 전체보기 모드일 때 (축소 아이콘)
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                   <path d="M6 6H14V8H8V14H6V6ZM26 6V14H24V8H18V6H26ZM6 26V18H8V24H14V26H6ZM24 24V18H26V26H18V24H24Z" fill="black" fillOpacity="0.4"/>
                 </svg>
               ) : (
-                // 기본 모드일 때 (전체화면 아이콘)
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                   <path d="M6 6V14H8V8H14V6H6ZM26 6H18V8H24V14H26V6ZM8 24V18H6V26H14V24H8ZM24 24H18V26H26V18H24V24Z" fill="black" fillOpacity="0.4"/>
                 </svg>
@@ -121,10 +118,9 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
 
         {/* 컨텐츠 영역 */}
         <div className={`portfolio-viewer-content ${isFullView ? 'full-view-mode' : ''}`}>
-          {/* 기본 정보 영역 - 전체보기 모드에서 숨김 ⭐ */}
+          {/* 기본 정보 영역 - 전체보기 모드에서 숨김 */}
           {!isFullView && (
             <>
-              {/* 완성 아이콘 */}
               <div className="viewer-icon-wrapper">
                 <img 
                   src={viewerIcon} 
@@ -133,10 +129,8 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 />
               </div>
 
-              {/* 제목 */}
               <h1 className="portfolio-viewer-title">포트폴리오가 완성되었어요!</h1>
 
-              {/* 포트폴리오 이름 입력 */}
               <input
                 type="text"
                 className="portfolio-name-input"
@@ -145,7 +139,6 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 onChange={(e) => setPortfolioName(e.target.value)}
               />
 
-              {/* 구분선 */}
               <div 
                 style={{
                   width: "calc(100% - 32px)",
@@ -174,9 +167,9 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* 포트폴리오 렌더링 영역 */}
+            {/* 포트폴리오 렌더링 영역 ⭐ 실제 컴포넌트! */}
             <div className="portfolio-render-area">
-              <h2>포트폴리오가 렌더링 될 영역입니다</h2>
+              <PortfolioPage portfolioData={portfolioData} />
             </div>
 
             {/* 다음 페이지 버튼 */}
