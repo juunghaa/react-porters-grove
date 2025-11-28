@@ -1,23 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import './PortfolioPage.css';
-import { fetchMyProfile } from '../../api';
-
-// ⭐ TODO: api.js에 추가 필요
-// export async function fetchActivityDetail(activityId) {
-//   const res = await tryFetch(() =>
-//     fetch(`/api/activities/${activityId}/`, {
-//       method: "GET",
-//       headers: { ...authHeaders() },
-//     })
-//   );
-//   if (!res.ok) throw new Error(`경험 상세 조회 실패 (${res.status})`);
-//   return res.json();
-// }
+import { fetchMyProfile, fetchActivityDetail } from '../../api';  // ← fetchActivityDetail 추가
 
 const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [experienceDetails, setExperienceDetails] = useState({}); // ⭐ 경험 상세 정보
+  const [experienceDetails, setExperienceDetails] = useState({});
+
+  // 파일명 추출 함수
+  const getFileName = (fileUrl) => {
+    if (!fileUrl) return '파일';
+    // URL에서 파일명만 추출
+    const parts = fileUrl.split('/');
+    const filename = parts[parts.length - 1];
+    // URL 인코딩 디코딩
+    try {
+      return decodeURIComponent(filename);
+    } catch {
+      return filename;
+    }
+  };
+
+  // 파일 확장자 확인 함수
+  const getFileExtension = (fileUrl) => {
+    if (!fileUrl) return '';
+    const filename = getFileName(fileUrl);
+    const parts = filename.split('.');
+    return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+  };
+
+  // 썸네일 렌더링 함수
+  const renderThumbnail = (fileUrl) => {
+    const ext = getFileExtension(fileUrl);
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+    const videoExtensions = ['mp4', 'mov', 'avi', 'webm'];
+    const pdfExtension = 'pdf';
+
+    // 이미지 파일
+    if (imageExtensions.includes(ext)) {
+      return <img src={fileUrl} alt="첨부파일" className="thumbnail-image" />;
+    }
+
+    // 비디오 파일
+    if (videoExtensions.includes(ext)) {
+      return (
+        <div className="thumbnail-video">
+          <video src={fileUrl} className="thumbnail-image" />
+          <div className="video-play-icon">▶</div>
+        </div>
+      );
+    }
+
+    // PDF 파일
+    if (ext === pdfExtension) {
+      return (
+        <div className="thumbnail-pdf">
+          <span className="pdf-icon">PDF</span>
+        </div>
+      );
+    }
+
+    // 기타 파일
+    return (
+      <div className="thumbnail-default">
+        <span className="file-icon">📄</span>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -36,31 +85,26 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
 
   // ⭐ 경험 상세 정보 로딩
   useEffect(() => {
-    const loadExperienceDetail = async (experienceId) => {
-      try {
-        // TODO: fetchActivityDetail import 필요
-        // import { fetchActivityDetail } from '../../api';
-        
-        // const detail = await fetchActivityDetail(experienceId);
-        // setExperienceDetails(prev => ({
-        //   ...prev,
-        //   [experienceId]: detail
-        // }));
-        
-        // 임시: 이미 있는 데이터 사용
-        console.log('경험 ID:', experienceId, '상세 정보 로딩 필요');
-      } catch (error) {
-        console.error('경험 상세 로딩 실패:', error);
+    const loadExperienceDetails = async () => {
+      const selectedItems = portfolioData?.selectedItems || [];
+      
+      for (const item of selectedItems) {
+        if (item.id && !experienceDetails[item.id]) {
+          try {
+            const detail = await fetchActivityDetail(item.id);
+            setExperienceDetails(prev => ({
+              ...prev,
+              [item.id]: detail
+            }));
+          } catch (error) {
+            console.error('경험 상세 로딩 실패:', error);
+          }
+        }
       }
     };
 
-    const selectedItems = portfolioData?.selectedItems || [];
-    selectedItems.forEach(item => {
-      if (item.id && !experienceDetails[item.id]) {
-        loadExperienceDetail(item.id);
-      }
-    });
-  }, [portfolioData?.selectedItems, experienceDetails]);
+    loadExperienceDetails();
+  }, [portfolioData?.selectedItems]);
 
   if (loading) {
     return (
@@ -142,6 +186,15 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
   // 경험 상세 정보 (API에서 받아온 데이터 or 기본 데이터)
   const detail = experienceDetails[experience.id] || experience;
 
+  // ⭐ 프로젝트 상세 섹션 데이터
+  const projectDetailSections = [
+    { title: '프로젝트 배경', content: detail.situation },
+    { title: '목표 정의', content: detail.task_detail },
+    { title: '해결과정', content: detail.action_detail },
+    { title: '성과', content: detail.result_detail },
+    { title: '배운점', content: detail.takeaway },
+  ];
+
   return (
     <div className="portfolio-page">
       {/* 상단 가로줄 */}
@@ -158,9 +211,8 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
       {/* 주제 */}
       <p className="experience-detail-subject">{detail.subject}</p>
 
-      {/* ⭐ Mini Details */}
+      {/* Mini Details */}
       <div className="experience-mini-details">
-        {/* 주최 기관 */}
         {detail.organization && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">주최 기관</span>
@@ -168,7 +220,6 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
 
-        {/* 출품작명 */}
         {detail.work_title && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">출품작명</span>
@@ -176,7 +227,6 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
 
-        {/* 수상 여부 */}
         {detail.is_awarded !== undefined && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">수상 여부</span>
@@ -186,7 +236,6 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
 
-        {/* 참여 형태 */}
         {detail.participation_type && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">참여 형태</span>
@@ -196,7 +245,6 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
 
-        {/* 역할 */}
         {detail.role && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">역할</span>
@@ -204,7 +252,6 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
 
-        {/* 진행 기간 */}
         {(detail.period_start || detail.period_end) && (
           <div className="mini-detail-item">
             <span className="mini-detail-label">진행 기간</span>
@@ -214,6 +261,51 @@ const PortfolioPage = ({ portfolioData, currentPage = 1 }) => {
           </div>
         )}
       </div>
+
+      {/* ⭐ 프로젝트 상세 섹션 */}
+      <div className="project-detail-section">
+        <h3 className="project-detail-title">프로젝트 상세</h3>
+        <div className="project-detail-divider" />
+
+        {projectDetailSections.map((section, index) => (
+          <div key={index} className="project-detail-item">
+            <h4 className="project-detail-item-title">{section.title}</h4>
+            <p className="project-detail-item-content">
+              {section.content || '내용이 없습니다.'}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* ⭐ 첨부파일 섹션 */}
+      {detail.attachments && detail.attachments.length > 0 && (
+        <div className="attachments-section">
+          <div className="attachments-grid">
+            {detail.attachments.map((file, index) => (
+              <div key={index} className="attachment-item">
+                <div className="attachment-thumbnail">
+                  {renderThumbnail(file)}
+                </div>
+                <p className="attachment-filename">{getFileName(file)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 단일 attachment인 경우 */}
+      {detail.attachment && !detail.attachments && (
+        <div className="attachments-section">
+          <div className="attachments-grid">
+            <div className="attachment-item">
+              <div className="attachment-thumbnail">
+                {renderThumbnail(detail.attachment)}
+              </div>
+              <p className="attachment-filename">{getFileName(detail.attachment)}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

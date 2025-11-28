@@ -444,3 +444,262 @@
       gap: 12px;
     }
   }
+
+  /* ===================================
+   프로젝트 상세 섹션
+   =================================== */
+.project-detail-section {
+  margin-top: 48px;
+}
+
+/* 프로젝트 상세 제목 */
+.project-detail-title {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.2px;
+  margin: 0 0 16px 0;
+}
+
+/* 프로젝트 상세 구분선 */
+.project-detail-divider {
+  width: 419px;
+  max-width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.10);
+  margin-bottom: 32px;
+}
+
+/* 프로젝트 상세 아이템 */
+.project-detail-item {
+  margin-bottom: 32px;
+}
+
+/* 프로젝트 상세 아이템 제목 (프로젝트 배경, 목표 정의 등) */
+.project-detail-item-title {
+  color: var(--Grove-Green, #126431);
+  font-family: "SUIT Variable";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  margin: 0 0 12px 0;
+}
+
+/* 프로젝트 상세 아이템 내용 (답변) */
+.project-detail-item-content {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+  letter-spacing: -0.14px;
+  margin: 0;
+  white-space: pre-wrap;  /* 줄바꿈 유지 */
+}
+
+/* ===================================
+   반응형 - 프로젝트 상세
+   =================================== */
+@media (max-width: 768px) {
+  .project-detail-title {
+    font-size: 18px;
+  }
+
+  .project-detail-divider {
+    width: 100%;
+  }
+
+  .project-detail-item-title {
+    font-size: 14px;
+  }
+
+  .project-detail-item-content {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-detail-title {
+    font-size: 16px;
+  }
+
+  .project-detail-item-title {
+    font-size: 13px;
+  }
+
+  .project-detail-item-content {
+    font-size: 12px;
+  }
+
+  .project-detail-item {
+    margin-bottom: 24px;
+  }
+}
+
+/* ===================================
+   첨부파일 섹션
+   =================================== */
+   .attachments-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 첨부파일 그리드 */
+  .attachments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  
+  /* 첨부파일 아이템 */
+  .attachment-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* 썸네일 컨테이너 */
+  .attachment-thumbnail {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e0e0e0;
+  }
+  
+  /* 썸네일 이미지 */
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* 비디오 썸네일 */
+  .thumbnail-video {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+  
+  .thumbnail-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .video-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  /* PDF 썸네일 */
+  .thumbnail-pdf {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+  }
+  
+  .pdf-icon {
+    color: #fff;
+    font-family: "SUIT Variable";
+    font-size: 24px;
+    font-weight: 700;
+  }
+  
+  /* 기본 파일 썸네일 */
+  .thumbnail-default {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+  }
+  
+  .file-icon {
+    font-size: 48px;
+  }
+  
+  /* 파일명 */
+  .attachment-filename {
+    color: #000;
+    text-align: center;
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    margin: 0;
+    word-break: break-word;
+    max-width: 100%;
+  }
+  
+  /* ===================================
+     반응형 - 첨부파일
+     =================================== */
+  @media (max-width: 768px) {
+    .attachments-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+    }
+  
+    .attachment-filename {
+      font-size: 14px;
+    }
+  
+    .video-play-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .attachments-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  
+    .attachment-filename {
+      font-size: 12px;
+    }
+  
+    .pdf-icon {
+      font-size: 20px;
+    }
+  
+    .file-icon {
+      font-size: 36px;
+    }
+  }
