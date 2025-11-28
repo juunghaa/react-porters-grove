@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./MainHome.css";
 import Tracker from "../Tracker/Tracker";
 import AllActivities from "../ActivityCard/AllActivities";
@@ -7,13 +7,24 @@ import MyExperienceStatus from "../Status/MyExperienceStatus";
 import GoalStatus from "../Status/GoalStatus";
 import ActivityNote from "../Status/ActivityNote";
 import HomeTracker from "../HomeTracker/HomeTracker";
+import { fetchMyProfile } from "../../api.js";  
 
 const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
+  const [userName, setUserName] = useState("");  
+
+  useEffect(() => {
+    fetchMyProfile()
+      .then(data => setUserName(data.full_name || ""))
+      .catch(err => console.error("프로필 조회 실패:", err));
+  }, []);
+
   return (
     <div className="main-home">
       {/* 환영 메시지 */}
       <div className="welcome-section">
-        <h1 className="welcome-title">김포터님, 안녕하세요</h1>
+        <h1 className="welcome-title">
+          {userName ? `${userName}님, 안녕하세요` : "안녕하세요"}
+          </h1>
         <p className="welcome-subtitle">
           오늘 기록한 경험이, 내일의 포트폴리오가 돼요
         </p>
