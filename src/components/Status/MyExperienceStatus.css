@@ -1,203 +1,168 @@
 .experience-status {
-    flex: 1.65; /* 약 62% 차지 */
-    min-width: 300px; /* 최소 너비 보장 */
-    max-width: 580px; /* 최대 너비 제한 */
-    /* height: 190px; */
-    display: flex;
-    padding: 20px 10px 10px 10px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 13px;
-    border-radius: 30px;
-    background: #F7F7F7;
-    transition: all 0.3s ease;
-  }
-/* 
-.experience-status.expanded {
-    flex: 1; 
-    max-height: 200px;
-  } */
-/* MyExperienceStatus.css와 GoalStatus.css 각각에 추가 */
+  flex: 1.65;  /* 약 62% */
+  min-width: 0;  /* ⭐ 중요: flex item이 줄어들 수 있게 */
+  max-width: 580px;
+  display: flex;
+  padding: 20px 10px 10px 10px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 13px;
+  border-radius: 30px;
+  background: #F7F7F7;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
 
+.experience-header {
+  display: flex;
+  padding: 0 12px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.experience-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #000;
+  font-family: "SUIT Variable";
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.2px;
+}
+
+.experience-subtext {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.60);
+  margin-top: 4px;
+  font-weight: 600;
+  font-family: "SUIT Variable";
+  line-height: normal;
+  letter-spacing: -0.18px;
+}
+
+.highlight {
+  color: #126431;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "SUIT Variable";
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.18px;
+  font-style: normal;
+}
+
+.experience-grid {
+  width: 100%;
+  display: flex;
+  margin-top: auto;
+  min-height: 112px;
+  padding: 8px 20px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 20px;
+  background: #FFF;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.exp-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 45px;
+  max-width: 60px;
+}
+
+.exp-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exp-icon img {
+  width: 80%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.exp-item:nth-child(2) .exp-icon img {
+  opacity: 0.45;
+}
+
+.exp-label {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.60);
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: -0.18px;
+  font-weight: 700;
+  font-family: "SUIT Variable";
+}
+
+.exp-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #126431;
+  text-align: center;
+  font-family: "SUIT Variable";
+}
+
+/* 반응형 */
 @media (max-width: 1024px) {
-    .status-container {
-      flex-direction: column; /* 작은 화면에서는 세로로 */
-    }
-    
-    .experience-status,
-    .goal-status {
-      flex: none;
-      width: 100%;
-      max-width: none;
-      min-width: unset; /* 👈 추가: 작은 화면에서 min-width 제거 */
-    }
+  .experience-status {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    min-width: unset;
   }
-  /* 👇 추가: 작은 화면 대응 */
-  @media (max-width: 768px) {
-    .experience-grid {
-      padding: 12px 16px; /* 패딩 축소 */
-      gap: 12px; /* gap 증가로 여유 공간 확보 */
-      justify-content: space-around; /* space-between → space-around */
-    }
+}
 
-    .exp-item {
-      width: 48px; /* 52px → 48px로 살짝 축소 */
-    }
-
-    .exp-label {
-      font-size: 12px; /* 13px → 12px */
-    }
-  }
-
-    /* 👇 추가: 매우 작은 화면 대응 */
-    @media (max-width: 480px) {
-        .experience-grid {
-          gap: 8px;
-          justify-content: flex-start; /* 왼쪽 정렬 */
-        }
-    
-        .exp-item {
-          width: calc((100% - 48px) / 4); /* 한 줄에 4개씩 */
-          min-width: 45px;
-        }
-      }
-/* .experience-status {
-    width: 482px;
-    display: flex;
-    padding: 20px 10px 10px 10px;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 4px;
-    border-radius: 30px;
-    background: #F7F7F7;
-    transition: width 0.3s ease; 
-  } */
-    /* 패널이 닫혔을 때 (공간 넓음) - 더 넓게 */
-    /* .experience-status.expanded {
-        width: 580px; 
-    } */
-
-  .experience-header {
-    display: flex;
-    padding: 0 12px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 8px;
-    align-self: stretch;
-  }
-  
-  .experience-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    color: #000;
-    font-family: "SUIT Variable";
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.2px;
-  }
-  
-  .experience-subtext {
-    font-size: 14px;
-    /* color: #6b7280; */
-    color: rgba(0, 0, 0, 0.60);
-    margin-top: 4px;
-    font-weight: 600;
-    font-family: "SUIT Variable";
-    line-height: normal;
-    letter-spacing: -0.18px;
-
-  }
-  
-  .highlight {
-    color: #126431;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: "SUIT Variable";
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.18px;
-    font-style: normal;
-
-  }
+@media (max-width: 768px) {
   .experience-grid {
-    width: 100%; /* 고정 px 제거 */
-    /* max-width: 570px; */
-    display: flex;
-    margin-top: auto;
-    min-height: 112px;
-    padding: 8px 20px;
-    align-items: center;
-    gap: 8px;
-    border-radius: 20px;
-    background: #FFF;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    box-sizing: border-box;
-  }
-  /* .experience-grid {
-    width: 442px;
-    display: flex;
-    height: 112px;
-    padding: 8px 20px;
-    align-items: center;
-    gap: 8px;
-    border-radius: 20px;
-    background: #FFF;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    transition: width 0.3s ease;
-  }
-  .experience-status.expanded .experience-grid {
-    width: 540px; 
-  } */
-  .exp-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 52px;
-  }
-  
-  .exp-icon {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .exp-icon img {
-    width: 80%;
-    height: 100%;
-    object-fit: contain;
+    padding: 12px 16px;
+    gap: 12px;
+    justify-content: space-around;
   }
 
-  /* 포트폴리오 아이콘만 조정 */
-    .exp-item:nth-child(2) .exp-icon img {
-        opacity: 0.45; /* 투명도 조정 */
-    }
+  .exp-item {
+    min-width: 40px;
+    max-width: 50px;
+  }
 
   .exp-label {
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.60);
-    text-align: center;
-    white-space: nowrap;
-    letter-spacing: -0.18px;
-    font-weight: 700;
-    font-family: "SUIT Variable";
+    font-size: 11px;
+  }
+}
 
+@media (max-width: 480px) {
+  .experience-grid {
+    gap: 8px;
+    justify-content: center;
   }
-  
-  .exp-count {
-    font-size: 14px;
-    font-weight: 600;
-    color: #126431;
-    text-align: center;
-    font-family: "SUIT Variable";
+
+  .exp-item {
+    min-width: 38px;
+    max-width: 45px;
   }
+
+  .exp-label {
+    font-size: 10px;
+  }
+
+  .exp-icon {
+    width: 28px;
+    height: 28px;
+  }
+}

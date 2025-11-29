@@ -1,6 +1,9 @@
 .activityNote-status {
     flex: 1;
-    min-width: 600px;
+    /* min-width: 600px; */
+    min-width: 0;  
+    width: 100%;
+
     max-width: 100%;
     display: flex;
     padding: 20px 10px 10px 10px;
@@ -54,7 +57,7 @@
   .activityNote-content {
     width: 100%;
     /* max-width: 940px; */
-    max-width: none;
+    /* max-width: none; */
     min-height: 112px;
     display: flex;
     padding: 20px;
@@ -79,8 +82,11 @@
     position: relative; */
 
     display: flex;
-    width: 452px;
-    height: 30px;
+    /* width: 452px; */
+    width: 100%;
+    max-width: 452px;
+    box-sizing: border-box;
+    min-height: 30px;
     padding: 8px 14px;
     justify-content: space-between;
     align-items: flex-start;
@@ -99,6 +105,7 @@
   .dropdown-wrapper {
     flex: 1;
     position: relative;
+    min-width: 0;
   }
   
   .dropdown-button {
@@ -242,6 +249,7 @@
     outline: none;
     transition: background 0.2s ease;
     background-color: #FFF;
+    min-width: 0;  /* ⭐ input이 줄어들 수 있게 */
   }
   
   .activityNote-input::placeholder {
@@ -293,6 +301,7 @@
     position: absolute; 
     bottom: 20px; 
     right: 20px; 
+    min-width: 44px;
   }
   
   .check-button:hover:not(:disabled) {
@@ -338,3 +347,60 @@
       transform: translateY(0);
     }
   }
+
+  /* 반응형 */
+@media (max-width: 1024px) {
+  .activityNote-status {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .activityNote-title {
+    font-size: 18px;
+  }
+
+  .activityNote-subtext {
+    font-size: 13px;
+  }
+
+  .experience-selector {
+    max-width: 100%;
+  }
+
+  .activityNote-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activityNote-status {
+    padding: 16px 8px 8px 8px;
+  }
+
+  .activityNote-content {
+    padding: 14px;
+    min-height: 100px;
+  }
+
+  .experience-selector {
+    padding: 6px 12px;
+    height: auto;
+  }
+
+  .dropdown-button {
+    font-size: 13px;
+  }
+
+  .activityNote-input {
+    font-size: 13px;
+  }
+
+  .check-button2 {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    bottom: 14px;
+    right: 14px;
+  }
+}
