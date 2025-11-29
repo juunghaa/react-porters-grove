@@ -14,10 +14,10 @@ const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
 
   useEffect(() => {
     fetchMyProfile()
-      .then(data => setUserName(data.display_name || ""))  // ✅ 수정!
+      .then(data => setUserName(data.full_name || ""))  // ✅ 수정!
       .catch(err => console.error("프로필 조회 실패:", err));
   }, []);
-
+  
   return (
     <div className="main-home">
       {/* 환영 메시지 */}
