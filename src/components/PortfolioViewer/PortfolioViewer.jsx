@@ -1,24 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import './PortfolioViewer.css';
 import portfolioTag from '../../assets/icons/portfolio-tag.png';
 import viewerIcon from '../../assets/icons/viewerComplete.png';
-import PortfolioPage from '../../components/PortfolioPage/PortfolioPage'; // ⭐ 추가!
+import pdfDownloadButton from '../../assets/icons/pdfDownloadButton.png';  // ⭐ 추가!
+import PortfolioPage from '../../components/PortfolioPage/PortfolioPage';
 
 const PortfolioViewer = ({ portfolioData, onClose }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);  // ⭐ 더보기 메뉴 상태
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);  // ⭐ PDF 생성 중 상태
   
-  // ⭐ totalPages를 동적으로 계산
+  const portfolioRef = useRef(null);  // ⭐ PDF로 변환할 영역 ref
+  
   const selectedItemsCount = portfolioData?.selectedItems?.length || 0;
-  const totalPages = 1 + selectedItemsCount; // 1페이지(자기소개) + 경험 개수
+  const totalPages = 1 + selectedItemsCount;
 
   const handleShare = () => {
     console.log('공유 버튼 클릭');
   };
 
   const handleMoreOptions = () => {
-    console.log('더보기 버튼 클릭');
+    setShowMoreMenu(!showMoreMenu);  // ⭐ 토글
+  };
+
+  // ⭐ 메뉴 외부 클릭 시 닫기
+  const handleCloseMenu = () => {
+    setShowMoreMenu(false);
   };
 
   const handleClose = () => {
@@ -45,13 +56,65 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
     }
   };
 
+  // ⭐ PDF 다운로드 함수
+  const handleDownloadPdf = async () => {
+    if (!portfolioRef.current || isGeneratingPdf) return;
+    
+    setIsGeneratingPdf(true);
+    setShowMoreMenu(false);
+    
+    try {
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // 모든 페이지를 PDF로 변환
+      for (let page = 1; page <= totalPages; page++) {
+        // 페이지 변경
+        setCurrentPage(page);
+        
+        // 렌더링 대기
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // 캔버스로 변환
+        const canvas = await html2canvas(portfolioRef.current, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        // 첫 페이지가 아니면 새 페이지 추가
+        if (page > 1) {
+          pdf.addPage();
+        }
+        
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      }
+      
+      // PDF 저장
+      const fileName = portfolioName || '포트폴리오';
+      pdf.save(`${fileName}.pdf`);
+      
+    } catch (error) {
+      console.error('PDF 생성 실패:', error);
+      alert('PDF 생성에 실패했습니다.');
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   const hasPrevPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
 
   return (
-    <div className="portfolio-viewer-container">
+    <div className="portfolio-viewer-container" onClick={handleCloseMenu}>
       {/* 흰색 상자 */}
-      <div className="portfolio-viewer-box">
+      <div className="portfolio-viewer-box" onClick={(e) => e.stopPropagation()}>
         {/* 상단 헤더 */}
         <div className="portfolio-viewer-header">
           <img 
@@ -90,21 +153,40 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* 더보기 버튼 */}
-            <button 
-              className="portfolio-action-btn"
-              onClick={handleMoreOptions}
-              aria-label="더보기"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <mask id="mask0_3094_11744" style={{maskType: 'alpha'}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                  <rect width="24" height="24" fill="#D9D9D9"/>
-                </mask>
-                <g mask="url(#mask0_3094_11744)">
-                  <path d="M4.50391 15C3.81641 15 3.22786 14.7552 2.73828 14.2656C2.2487 13.776 2.00391 13.1875 2.00391 12.5C2.00391 11.8125 2.2487 11.224 2.73828 10.7344C3.22786 10.2448 3.81641 10 4.50391 10C5.19141 10 5.77995 10.2448 6.26953 10.7344C6.75911 11.224 7.00391 11.8125 7.00391 12.5C7.00391 13.1875 6.75911 13.776 6.26953 14.2656C5.77995 14.7552 5.19141 15 4.50391 15ZM12.0039 15C11.3164 15 10.7279 14.7552 10.2383 14.2656C9.7487 13.776 9.50391 13.1875 9.50391 12.5C9.50391 11.8125 9.7487 11.224 10.2383 10.7344C10.7279 10.2448 11.3164 10 12.0039 10C12.6914 10 13.2799 10.2448 13.7695 10.7344C14.2591 11.224 14.5039 11.8125 14.5039 12.5C14.5039 13.1875 14.2591 13.776 13.7695 14.2656C13.2799 14.7552 12.6914 15 12.0039 15ZM19.5039 15C18.8164 15 18.2279 14.7552 17.7383 14.2656C17.2487 13.776 17.0039 13.1875 17.0039 12.5C17.0039 11.8125 17.2487 11.224 17.7383 10.7344C18.2279 10.2448 18.8164 10 19.5039 10C20.1914 10 20.7799 10.2448 21.2695 10.7344C21.7591 11.224 22.0039 11.8125 22.0039 12.5C22.0039 13.1875 21.7591 13.776 21.2695 14.2656C20.7799 14.7552 20.1914 15 19.5039 15Z" fill="black" fillOpacity="0.4"/>
-                </g>
-              </svg>
-            </button>
+            {/* ⭐ 더보기 버튼 + 드롭다운 메뉴 */}
+            <div className="more-options-wrapper">
+              <button 
+                className="portfolio-action-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleMoreOptions();
+                }}
+                aria-label="더보기"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <mask id="mask0_3094_11744" style={{maskType: 'alpha'}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                    <rect width="24" height="24" fill="#D9D9D9"/>
+                  </mask>
+                  <g mask="url(#mask0_3094_11744)">
+                    <path d="M4.50391 15C3.81641 15 3.22786 14.7552 2.73828 14.2656C2.2487 13.776 2.00391 13.1875 2.00391 12.5C2.00391 11.8125 2.2487 11.224 2.73828 10.7344C3.22786 10.2448 3.81641 10 4.50391 10C5.19141 10 5.77995 10.2448 6.26953 10.7344C6.75911 11.224 7.00391 11.8125 7.00391 12.5C7.00391 13.1875 6.75911 13.776 6.26953 14.2656C5.77995 14.7552 5.19141 15 4.50391 15ZM12.0039 15C11.3164 15 10.7279 14.7552 10.2383 14.2656C9.7487 13.776 9.50391 13.1875 9.50391 12.5C9.50391 11.8125 9.7487 11.224 10.2383 10.7344C10.7279 10.2448 11.3164 10 12.0039 10C12.6914 10 13.2799 10.2448 13.7695 10.7344C14.2591 11.224 14.5039 11.8125 14.5039 12.5C14.5039 13.1875 14.2591 13.776 13.7695 14.2656C13.2799 14.7552 12.6914 15 12.0039 15ZM19.5039 15C18.8164 15 18.2279 14.7552 17.7383 14.2656C17.2487 13.776 17.0039 13.1875 17.0039 12.5C17.0039 11.8125 17.2487 11.224 17.7383 10.7344C18.2279 10.2448 18.8164 10 19.5039 10C20.1914 10 20.7799 10.2448 21.2695 10.7344C21.7591 11.224 22.0039 11.8125 22.0039 12.5C22.0039 13.1875 21.7591 13.776 21.2695 14.2656C20.7799 14.7552 20.1914 15 19.5039 15Z" fill="black" fillOpacity="0.4"/>
+                  </g>
+                </svg>
+              </button>
+
+              {/* ⭐ 드롭다운 메뉴 */}
+              {showMoreMenu && (
+                <div className="more-options-menu" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    className="pdf-download-btn"
+                    onClick={handleDownloadPdf}
+                    disabled={isGeneratingPdf}
+                  >
+                    <img src={pdfDownloadButton} alt="PDF 다운로드" />
+                    {isGeneratingPdf && <span className="pdf-loading">생성 중...</span>}
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* 닫기 버튼 */}
             <button 
@@ -121,7 +203,6 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
 
         {/* 컨텐츠 영역 */}
         <div className={`portfolio-viewer-content ${isFullView ? 'full-view-mode' : ''}`}>
-          {/* 기본 정보 영역 - 전체보기 모드에서 숨김 */}
           {!isFullView && (
             <>
               <div className="viewer-icon-wrapper">
@@ -153,9 +234,8 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
             </>
           )}
 
-          {/* ===== 포트폴리오 렌더링 영역 ===== */}
+          {/* 포트폴리오 렌더링 영역 */}
           <div className="portfolio-render-wrapper">
-            {/* 이전 페이지 버튼 */}
             <button 
               className="page-nav-btn prev-page-btn"
               onClick={handlePrevPage}
@@ -170,15 +250,14 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* 포트폴리오 렌더링 영역 ⭐ 실제 컴포넌트! */}
-            <div className="portfolio-render-area">
+            {/* ⭐ ref 추가! */}
+            <div className="portfolio-render-area" ref={portfolioRef}>
               <PortfolioPage 
                 portfolioData={portfolioData} 
-                currentPage={currentPage}  // ⭐ 현재 페이지 전달
+                currentPage={currentPage}
               />
             </div>
 
-            {/* 다음 페이지 버튼 */}
             <button 
               className="page-nav-btn next-page-btn"
               onClick={handleNextPage}

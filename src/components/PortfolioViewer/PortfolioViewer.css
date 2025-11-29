@@ -380,3 +380,58 @@
       order: 1;
     }
   }
+
+  /* ===================================
+   더보기 메뉴
+   =================================== */
+.more-options-wrapper {
+  position: relative;
+}
+
+.more-options-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.pdf-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pdf-download-btn:hover {
+  background: #f5f5f5;
+}
+
+.pdf-download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pdf-download-btn img {
+  width: auto;
+  height: 32px;
+  object-fit: contain;
+}
+
+.pdf-loading {
+  font-family: "SUIT Variable";
+  font-size: 12px;
+  color: #666;
+}
