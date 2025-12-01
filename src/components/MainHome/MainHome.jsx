@@ -55,6 +55,7 @@ const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
     <ActivityNote isPanelCollapsed={isPanelCollapsed} />
     </div>
     
+    {/* 아카이브 */}
     <div className="status-container2">
     <HomeTracker isPanelCollapsed={isPanelCollapsed} 
     onGoToChooseOption={onGoToChooseOption}/>

@@ -10,13 +10,9 @@ import grayCheck from './images/graycheck.png';
 import './HomeTracker.css';
 
 const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
-  // 임시 경험 데이터 (나중에 실제 데이터로 교체)
-  // const [experiences, setExperiences] = useState({
-  //   ongoing: [], // 진행 중인 경험 배열
-  //   spec: [],    // 주요 스펙 배열
-  //   completed: [] // 완료된 경험 배열
-  // });
-  // experiences state에 임시 데이터 추가
+  // ✅ 현재 선택된 탭 state 추가
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'ongoing', 'spec', 'completed'
+  
   const [experiences, setExperiences] = useState({
     ongoing: [{
       tag: '해커톤',
@@ -31,11 +27,10 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
     completed: []
   });
   
-  // 각 박스 타입별 설정
   const boxConfigs = {
     ongoing: {
       titleIcon: greenFlag,
-      title: '진행 중인 경험',
+      title: '나의 경험',
       count: experiences.ongoing.length,
       emptyIcon: grayFlag,
       emptyText: '아직 정리된 경험이 없어요',
@@ -44,7 +39,7 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
     },
     spec: {
       titleIcon: greenLight,
-      title: '주요 스펙',
+      title: '나의 스펙',
       count: experiences.spec.length,
       emptyIcon: grayLight,
       emptyText: '아직 정리된 스펙이 없어요',
@@ -53,7 +48,7 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
     },
     completed: {
       titleIcon: greenCheck,
-      title: '완료된 경험',
+      title: '나의 포트폴리오',
       count: experiences.completed.length,
       emptyIcon: grayCheck,
       emptyText: '아직 완료된 경험이 없어요',
@@ -62,11 +57,18 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
     }
   };
 
+  // ✅ 탭 데이터 정의
+  const tabs = [
+    { id: 'all', label: '전체', count: experiences.ongoing.length + experiences.spec.length + experiences.completed.length },
+    { id: 'ongoing', label: '나의 경험', count: experiences.ongoing.length },
+    { id: 'spec', label: '나의 스펙', count: experiences.spec.length },
+    { id: 'completed', label: '나의 포트폴리오', count: experiences.completed.length },
+  ];
+
   const handleMenuClick = (type) => {
     console.log(`${type} 메뉴 클릭`);
   };
 
-  // 박스 렌더링 함수 (경험 있으면 FullBox, 없으면 EmptyBox)
   const renderBox = (type) => {
     const hasExperiences = experiences[type].length > 0;
     
@@ -76,7 +78,7 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
           key={type}
           isPanelCollapsed={isPanelCollapsed}
           config={boxConfigs[type]}
-          experienceData={experiences[type][0]} // 첫 번째 경험 표시 (나중에 리스트로 변경 가능)
+          experienceData={experiences[type][0]}
           onMenuClick={() => handleMenuClick(type)}
         />
       );
@@ -93,27 +95,30 @@ const HomeTracker = ({isPanelCollapsed, onGoToChooseOption}) => {
     }
   };
 
+  // ✅ 선택된 탭에 따라 보여줄 박스 결정
+  const getVisibleBoxTypes = () => {
+    if (activeTab === 'all') {
+      return ['ongoing', 'spec', 'completed'];
+    }
+    return [activeTab]; // 선택된 탭만 보여줌
+  };
+
   return (
     <div className="home-tracker">
       <div className="tracker-tabs">
-        <button className="tab active">
-          모든 경험 <span>{experiences.ongoing.length + experiences.spec.length + experiences.completed.length}</span>
-        </button>
-        <button className="tab">
-          진행 중인 경험 <span>{experiences.ongoing.length}</span>
-        </button>
-        <button className="tab">
-          주요 스펙 <span>{experiences.spec.length}</span>
-        </button>
-        <button className="tab">
-          완료된 경험 <span>{experiences.completed.length}</span>
-        </button>
+        {tabs.map((tab) => (
+          <button 
+            key={tab.id}
+            className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label} <span>{tab.count}</span>
+          </button>
+        ))}
       </div>
 
       <div className="tracker-boxes">
-        {renderBox('ongoing')}
-        {renderBox('spec')}
-        {renderBox('completed')}
+        {getVisibleBoxTypes().map((type) => renderBox(type))}
       </div>
     </div>
   );
