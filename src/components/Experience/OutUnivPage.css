@@ -1,26 +1,26 @@
 /* 기본 컨테이너 */
-.contest-page-container {
+.outuniv-page-container {
   display: flex;
   min-height: 100vh;
   background-color: #f7f7f7;
 }
 
-.contest-content {
+.outuniv-content {
   flex: 1;
   margin-left: 240px;
   transition: margin-left 0.3s ease;
   overflow-y: auto;
-  width: 100%; /* 고정값 제거 */
+  width: 100%;
   min-height: 100vh;
-  padding: 20px; /* 모바일 여백 추가 */
+  padding: 20px;
 }
 
-.contest-content.expanded {
+.outuniv-content.expanded {
   margin-left: 60px;
 }
 
 /* 메인 박스 - 반응형 */
-.contest-main-box {
+.outuniv-main-box {
   display: flex;
   padding: 24px;
   flex-direction: column;
@@ -29,33 +29,64 @@
   border-radius: 30px;
   background: #fff;
   width: 100%;
-  max-width: 1527px; /* 최대 너비 설정 */
+  max-width: 1527px;
   height: auto;
-  margin: 79px auto 0; /* 중앙 정렬 */
+  margin: 79px auto 0;
   box-sizing: border-box;
 }
 
 /* 최상단 바 - 반응형 */
-.contest-top-bar {
+.outuniv-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   border-radius: 28px;
+  padding: 24px;
   min-height: 45px;
   gap: 16px;
-  flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
+  flex-wrap: wrap;
 }
 
 /* 버튼들 */
 .cancel-button,
 .complete-button {
-  flex-shrink: 0; /* 버튼 크기 고정 */
+  flex-shrink: 0;
   white-space: nowrap;
+}
+
+.cancel-button {
+  width: auto;
+  min-width: 83px;
+  height: 45px;
+  border-radius: 18px;
+  padding: 10px 24px;
+  background-color: #fff4f4;
+  border: none;
+  cursor: pointer;
+  color: #f14452;
+  text-align: center;
+  font-family: "SUIT Variable", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .cancel-button:hover {
   opacity: 0.8;
+}
+
+/* 중앙 영역 */
+.top-bar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+  text-align: center;
+  font-family: "SUIT Variable";
+  font-size: 24px;
+  font-weight: 700;
+  flex: 1;
+  justify-content: center;
 }
 
 .complete-button {
@@ -73,7 +104,7 @@
   color: #fff;
   font-size: 20px;
   font-weight: 600;
-  margin-right: 40px; /* ← 오른쪽 끝에서 20px 안쪽으로 이동 */
+  margin-right: 40px;
 }
 
 .complete-button:hover {
@@ -81,18 +112,18 @@
 }
 
 /* 기본정보 + 관련자료 컨테이너 - 반응형 */
-.contest-main-content {
+.outuniv-main-content {
   display: flex;
   gap: 24px;
   align-items: flex-start;
   width: 100%;
-  flex-wrap: wrap; /* 작은 화면에서 세로 배치 */
+  flex-wrap: wrap;
 }
 
 /* 기본정보 컨테이너 */
-.contest-form-container {
+.outuniv-form-container {
   flex: 1;
-  min-width: 300px; /* 최소 너비 */
+  min-width: 300px;
   padding: 36px;
   display: flex;
   flex-direction: column;
@@ -186,7 +217,7 @@
   display: flex;
   gap: 32px;
   align-items: flex-start;
-  flex-wrap: wrap; /* 작은 화면에서 세로 배치 */
+  flex-wrap: wrap;
 }
 
 /* 주제 필드 - 반응형 */
@@ -195,31 +226,25 @@
   min-width: 250px;
 }
 
-/* 주최 기관 필드 - 반응형 */
+/* 주최기관 필드 - 반응형 */
 .field-organizer {
   flex: 1;
   min-width: 200px;
 }
 
-/* 출품작명 필드 - 반응형 */
-.field-entry-name {
+/* 참여 형태 필드 */
+.field-participation-type {
   flex: 1;
   min-width: 250px;
 }
 
-/* 수상 여부 필드 - 반응형 */
-.field-award-status {
-  flex: 1;
-  min-width: 300px;
-}
-
-/* 수상 여부 입력 그룹 */
+/* 입력 그룹 */
 .award-input-group {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 24px;
-  flex-wrap: wrap; /* 작은 화면 대응 */
+  flex-wrap: wrap;
 }
 
 /* 라디오 버튼 */
@@ -255,19 +280,6 @@
 .radio-label input[type="radio"]:checked {
   border: 5px solid #126431;
   background: transparent;
-}
-
-/* 수상 내역 입력창 - 반응형 */
-.award-detail-input {
-  flex: 1;
-  min-width: 200px;
-  height: 48px;
-}
-
-/* 참여 형태 필드 */
-.field-participation-type {
-  flex: 1;
-  min-width: 250px;
 }
 
 /* 역할 필드 */
@@ -410,18 +422,18 @@
 
 /* 태블릿 (1024px 이하) */
 @media (max-width: 1024px) {
-  .contest-content {
+  .outuniv-content {
     margin-left: 60px;
     padding: 15px;
   }
 
-  .contest-main-box {
+  .outuniv-main-box {
     margin-top: 40px;
     padding: 20px;
     gap: 30px;
   }
 
-  .contest-top-bar {
+  .outuniv-top-bar {
     padding: 16px;
   }
 
@@ -429,8 +441,8 @@
     font-size: 20px;
   }
 
-  .contest-main-content {
-    flex-direction: column; /* 세로 배치 */
+  .outuniv-main-content {
+    flex-direction: column;
   }
 
   .related-materials-container {
@@ -440,19 +452,19 @@
 
 /* 모바일 (768px 이하) */
 @media (max-width: 768px) {
-  .contest-content {
+  .outuniv-content {
     margin-left: 0;
     padding: 10px;
   }
 
-  .contest-main-box {
+  .outuniv-main-box {
     margin-top: 20px;
     padding: 16px;
     gap: 24px;
     border-radius: 20px;
   }
 
-  .contest-top-bar {
+  .outuniv-top-bar {
     padding: 12px;
     flex-direction: column;
     gap: 12px;
@@ -460,7 +472,7 @@
 
   .top-bar-center {
     font-size: 18px;
-    order: -1; /* 제목을 맨 위로 */
+    order: -1;
   }
 
   .cancel-button,
@@ -475,8 +487,6 @@
 
   .field-topic,
   .field-organizer,
-  .field-entry-name,
-  .field-award-status,
   .field-participation-type,
   .field-team-role {
     min-width: 100%;
@@ -487,12 +497,7 @@
     align-items: flex-start;
   }
 
-  .award-detail-input {
-    width: 100% !important;
-    min-width: 100%;
-  }
-
-  .contest-form-container,
+  .outuniv-form-container,
   .related-materials-container,
   .detail-content-container {
     padding: 24px;
@@ -506,7 +511,7 @@
 
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-  .contest-main-box {
+  .outuniv-main-box {
     padding: 12px;
     gap: 20px;
   }
@@ -534,93 +539,4 @@
     font-size: 18px;
     height: 40px;
   }
-}
-.work-period-container {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  margin-top: 8px;
-}
-
-.work-date-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.work-date-label {
-  font-size: 14px;
-  color: #666;
-}
-
-.year-select,
-.month-select {
-  height: 38px;
-  border: 1px solid #dcdcdc;
-  border-radius: 10px;
-  padding: 0 10px;
-  background: white;
-  font-size: 14px;
-}
-
-.selected-date {
-  display: none !important;
-}
-
-/* --- 초록 토글 스위치 --- */
-
-.toggle-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.working-text {
-  font-size: 14px;
-  color: #333;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 45px;
-  height: 24px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ddd;
-  transition: 0.3s;
-  border-radius: 30px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #0a8a38; /* 초록색 */
-}
-
-input:checked + .slider:before {
-  transform: translateX(21px);
 }

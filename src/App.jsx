@@ -9,12 +9,21 @@ import OAuthCallback from "./pages/OAuthCallback";
 import MainPage from "./pages/MainPage";
 import LeftPanel from "./components/LeftPanel/LeftPanel";
 import ResetPWConfirm from "./components/Auth/ResetPWConfirm";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 // import GoogleLoginButton from "./components/GoogleLoginButton"; // ✅ 필요 시 홈 테스트용
 import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
 import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 import ContestPage from "./components/Experience/ContestPage"; //공모전
+import ProjectPage from "./components/Experience/Projectpage.jsx"; //프로젝트
+import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
+import OutUnivPage from "./components/Experience/OutUniv.jsx"; //교외활동
+import Career from "./components/Spec/Career.jsx"; //경력
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -72,15 +81,29 @@ export default function App() {
           path="/api/v1/auth/google/callback"
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
         /> */}
-        
-        <Route path="/google/callback/" element={<GoogleCallback 
-        onLoginSuccess={handleAuthSuccess}/>} />
+
+        <Route
+          path="/google/callback/"
+          element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
+        />
 
         {/* ✅ ChooseOption 페이지 */}
         <Route path="/choose" element={<ChooseOption />} />
 
         {/* ✅ 공모전 페이지 */}
         <Route path="/contest" element={<ContestPage />} />
+
+        {/* ✅ 프로젝트 페이지 */}
+        <Route path="/project" element={<ProjectPage />} />
+
+        {/* ✅ 교내활동 페이지 */}
+        <Route path="/campus" element={<InUnivPage />} />
+
+        {/* ✅ 교외활동 페이지 */}
+        <Route path="/external" element={<OutUnivPage />} />
+
+        {/* ✅ 경력 페이지 */}
+        <Route path="/career" element={<Career />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
@@ -90,7 +113,7 @@ export default function App() {
               {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
                     <GithubGrass username="octocat" year="last" />
                     <h1>포트폴리오 사이트</h1> */}
-              {/* {<MainPage onLogout={handleLogout} />} */}
+              {<MainPage onLogout={handleLogout} />}
 
               {isLoggedIn ? (
                 <>
@@ -126,16 +149,10 @@ export default function App() {
         />
 
         {/* ✅ 3️⃣ ChooseOption 페이지 라우트 추가 */}
-        <Route 
-          path="/choose" 
-          element={<ChooseOptionWrapper />} 
-        />
+        <Route path="/choose" element={<ChooseOptionWrapper />} />
 
         {/* ✅ 4️⃣ MakingPortfolio 페이지 라우트 추가 */}
-        <Route 
-          path="/making-portfolio" 
-          element={<MakingPortfolio />} 
-        />
+        <Route path="/making-portfolio" element={<MakingPortfolio />} />
       </Routes>
     </Router>
   );
@@ -146,23 +163,23 @@ function ChooseOptionWrapper() {
   const navigate = useNavigate();
 
   const handleGoToPortfolio = (tags) => {
-    console.log('🎯 handleGoToPortfolio 호출됨!', tags);
-    console.log('🚀 navigate to /making-portfolio');
-    navigate('/making-portfolio', { state: { selectedTags: tags } });
+    console.log("🎯 handleGoToPortfolio 호출됨!", tags);
+    console.log("🚀 navigate to /making-portfolio");
+    navigate("/making-portfolio", { state: { selectedTags: tags } });
   };
 
   const handleGoToExperience = (tags) => {
-    console.log('경험 페이지로 이동:', tags);
+    console.log("경험 페이지로 이동:", tags);
     // navigate('/experience', { state: { selectedTags: tags } }); // 추후 구현
   };
 
   const handleGoToSpec = (tags) => {
-    console.log('스펙 페이지로 이동:', tags);
+    console.log("스펙 페이지로 이동:", tags);
     // navigate('/spec', { state: { selectedTags: tags } }); // 추후 구현
   };
 
   return (
-    <ChooseOption 
+    <ChooseOption
       onGoToExperience={handleGoToExperience}
       onGoToSpec={handleGoToSpec}
       onGoToPortfolio={handleGoToPortfolio}
