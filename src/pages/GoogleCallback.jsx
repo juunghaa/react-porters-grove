@@ -13,7 +13,7 @@ export default function GoogleCallback({ onLoginSuccess }) {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const redirectUri =
-      "https://react-porters-grove.vercel.app/google/callback/";
+      "https://grove.ajousw.kr/auth/google/callback";
 
     if (!code) {
       setStatus("인증 코드가 없습니다.");
