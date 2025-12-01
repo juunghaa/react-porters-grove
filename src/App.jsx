@@ -73,7 +73,7 @@ export default function App() {
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
         /> */}
         
-        <Route path="/google/callback/" element={<GoogleCallback 
+        <Route path="/auth/google/callback" element={<GoogleCallback 
         onLoginSuccess={handleAuthSuccess}/>} />
 
         {/* ✅ ChooseOption 페이지 */}
