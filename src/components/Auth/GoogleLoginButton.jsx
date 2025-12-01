@@ -3,11 +3,11 @@ import React from "react";
 export default function GoogleLoginButton({ disabled }) {
   const handleGoogle = () => {
     if (disabled) return;
-    
+
     const clientId =
       "279122774110-vhr4qq7m6gm8a6squkk5fde3l4n2d8mu.apps.googleusercontent.com";
     const redirectUri =
-      "https://react-porters-grove.vercel.app/google/callback/";
+      "https://grove.ajousw.kr/auth/google/callback";
     const scope = "email profile";
     const responseType = "code";
     const accessType = "online";

@@ -59,7 +59,7 @@ const MainHome = ({ isPanelCollapsed, onGoToChooseOption }) => {
     <HomeTracker isPanelCollapsed={isPanelCollapsed} 
     onGoToChooseOption={onGoToChooseOption}/>
     </div>
-
+    
     {/* 2열 레이아웃: 왼쪽 모든 활동, 오른쪽 내 포트폴리오 
     이거 디자인 수정돼서 안쓸 것 같은데 혹시 몰라서 남겨둠 */}
     {/* <div className="tracker-content">
