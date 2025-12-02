@@ -16,7 +16,7 @@ const Career = () => {
 
   // form state
   const [companyName, setCompanyName] = useState("");
-  const [employmentType, setEmploymentType] = useState(""); // e.g. "intern", "individual", "contract", "freelancer"
+  const [employmentType, setEmploymentType] = useState("");
   const [position, setPosition] = useState("");
 
   const [startDate, setStartDate] = useState(""); // format "YYYY.MM"
@@ -55,10 +55,14 @@ const Career = () => {
     navigate("/");
   };
 
-  // 파일 handlers (UI only for now)
+  // 파일 handlers
   const handleFileSelect = (event) => {
     const files = Array.from(event.target.files);
     setUploadedFiles((prev) => [...prev, ...files]);
+  };
+  const handleRemoveFile = (index) => {
+    const newFiles = uploadedFiles.filter((_, i) => i !== index);
+    setUploadedFiles(newFiles);
   };
   const handleUploadClick = () => fileInputRef.current?.click();
   const handleDragOver = (e) => {
@@ -440,19 +444,27 @@ const Career = () => {
                   </div>
                 </div>
 
+                {/* 업로드된 파일 목록 */}
+                {uploadedFiles.length > 0 && (
+                  <div className="uploaded-files-list">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="uploaded-file-item">
+                        <span className="file-name">{file.name}</span>
+                        <button
+                          className="remove-file-btn"
+                          onClick={() => handleRemoveFile(index)}
+                          type="button"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <label className="put-link-label" style={{ cursor: "pointer" }}>
                   링크 추가하기 +
                 </label>
-
-                {/* link input */}
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="https://example.com"
-                  value={linkUrl}
-                  onChange={(e) => setLinkUrl(e.target.value)}
-                  style={{ marginTop: 12 }}
-                />
               </div>
             </div>
           </div>

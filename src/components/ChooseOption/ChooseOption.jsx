@@ -54,7 +54,11 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
       //대외활동으로 이동
       navigate("/external", { state: { selectedTag: tagId } });
     } else if (cardType === "spec" && tagId === "career") {
+      //경력으로 이동
       navigate("/career", { state: { selectedTag: tagId } });
+    } else if (cardType === "spec" && tagId === "certificate") {
+      //자격증으로 이동
+      navigate("/certificate", { state: { selectedTag: tagId } });
     }
   };
 

@@ -22,8 +22,9 @@ import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // �
 import ContestPage from "./components/Experience/ContestPage"; //공모전
 import ProjectPage from "./components/Experience/Projectpage.jsx"; //프로젝트
 import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
-import OutUnivPage from "./components/Experience/OutUniv.jsx"; //교외활동
+import OutUnivPage from "./components/Experience/OutUnivPage.jsx"; //교외활동
 import Career from "./components/Spec/Career.jsx"; //경력
+import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -104,6 +105,9 @@ export default function App() {
 
         {/* ✅ 경력 페이지 */}
         <Route path="/career" element={<Career />} />
+
+        {/* ✅ 자격증 페이지 */}
+        <Route path="/certificate" element={<CertificatePage />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
