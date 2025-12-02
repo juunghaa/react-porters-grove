@@ -1,6 +1,6 @@
 // src/pages/GoogleCallback.jsx
 import { useEffect, useRef, useState } from "react";
-import { exchangeGoogleCode } from "../api/api"; // 경로는 실제 위치에 맞게 조정
+import { exchangeGoogleCode } from "../api"; // 경로는 실제 위치에 맞게 조정
 
 export default function GoogleCallback({ onLoginSuccess }) {
   const [status, setStatus] = useState("처리 중...");
