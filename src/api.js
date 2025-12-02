@@ -53,19 +53,30 @@ export const register = async (email, password1, password2, name) => {
 };
 
 // Google OAuth 코드 교환 - POST /api/v1/auth/google/
-// 요청: { code, redirect_uri }
+// 요청: { code, redirect_uri, code_verifier }
 // 응답: { access, refresh, user }
-export const exchangeGoogleCode = async (code, redirectUri) => {
+export const exchangeGoogleCode = async (code, redirectUri, codeVerifier) => {
+  const body = {
+    code,
+    redirect_uri: redirectUri,
+  };
+
+  // PKCE용 code_verifier가 있으면 같이 보냄
+  if (codeVerifier) {
+    body.code_verifier = codeVerifier;
+  }
+
+  // ❗ 절대 도메인 직접 쓰지 말고 /api/... 상대경로 사용 (Vercel 프록시 타도록)
   const res = await fetch("/api/v1/auth/google/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ code, redirect_uri: redirectUri }),
+    body: JSON.stringify(body),
   });
   
   const data = await res.json().catch(() => ({}));
   
   if (!res.ok) {
-    throw new Error(data.detail || data.message || 'Google 코드 교환 실패');
+    throw new Error(data.detail || data.message || "Google 코드 교환 실패");
   }
   
   return data;
@@ -137,16 +148,6 @@ async function tryFetch(factory) {
 }
 
 // ✅ 내 프로필 조회 - GET /api/profiles/me/
-// 응답 예시:
-// {
-//   "id": 3,
-//   "display_name": "강승",
-//   "bio": "소개글",
-//   "job_role": {
-//     "id": 5,
-//     "name": "백엔드 개발자"
-//   }
-// }
 export async function fetchMyProfile() {
   const res = await tryFetch(() =>
     fetch(`/api/profiles/me/`, {
@@ -163,20 +164,11 @@ export async function fetchMyProfile() {
 }
 
 // ✅ 내 프로필 수정 - PUT/PATCH /api/profiles/me/
-// 요청 예시:
-// {
-//   "display_name": "강승",
-//   "bio": "소개글",
-//   "level": "newgrad",
-//   "job_role_id": 5
-// }
-// JSON 또는 FormData 지원
 export async function updateMyProfileJson(payload) {
   const isFormData = payload instanceof FormData;
   
   const headers = {
     ...authHeaders(),
-    // FormData일 경우 Content-Type을 설정하지 않음 (브라우저가 자동으로 boundary 설정)
     ...(isFormData ? {} : { "Content-Type": "application/json" }),
   };
 
@@ -199,7 +191,6 @@ export async function updateMyProfileJson(payload) {
 }
 
 // ✅ 레벨 목록 조회 - GET /api/profiles/options/levels/
-// 응답 예시: [ { "value": "student", "label": "학생" } ]
 export async function fetchLevels() {
   const res = await fetch(`/api/profiles/options/levels/`);
   
@@ -211,7 +202,6 @@ export async function fetchLevels() {
 }
 
 // ✅ 직무 카테고리 목록 조회 - GET /api/profiles/options/job-categories/
-// 응답 예시: [ { "id": 1, "name": "개발" } ]
 export async function fetchJobCategories() {
   const res = await fetch(`/api/profiles/options/job-categories/`);
   
@@ -223,7 +213,6 @@ export async function fetchJobCategories() {
 }
 
 // ✅ 직무 목록 조회 - GET /api/profiles/options/job-roles/?group=dev
-// 응답 예시: [ { "id": 5, "name": "백엔드 개발자", "group": "dev" } ]
 export async function fetchJobRoles(group) {
   const url = group
     ? `/api/profiles/options/job-roles/?group=${encodeURIComponent(group)}`
@@ -239,7 +228,6 @@ export async function fetchJobRoles(group) {
 }
 
 // ✅ 하드스킬 검색 - GET /api/profiles/options/hard-skills/?q=django
-// 응답 예시: [ { "id": 10, "name": "Django", "code": "django" } ]
 export async function searchHardSkills(query) {
   const url = `/api/profiles/options/hard-skills/?q=${encodeURIComponent(query)}`;
   
@@ -253,7 +241,6 @@ export async function searchHardSkills(query) {
 }
 
 // ✅ 소프트스킬 검색 - GET /api/profiles/options/soft-skills/?q=lead
-// 응답 예시: [ { "id": 2, "name": "리더십" } ]
 export async function searchSoftSkills(query) {
   const url = `/api/profiles/options/soft-skills/?q=${encodeURIComponent(query)}`;
   
@@ -267,11 +254,6 @@ export async function searchSoftSkills(query) {
 }
 
 // ✅ 직무별 스킬 매핑 조회 - GET /api/profiles/job-roles/{id}/skills/
-// 응답 예시:
-// {
-//   "hard_skills": [ {"id":1,"name":"Python"} ],
-//   "soft_skills": [ {"id":2,"name":"Communication"} ]
-// }
 export async function fetchJobRoleSkills(jobRoleId) {
   const res = await tryFetch(() =>
     fetch(`/api/profiles/job-roles/${jobRoleId}/skills/`, {
@@ -288,7 +270,6 @@ export async function fetchJobRoleSkills(jobRoleId) {
 }
 
 // ✅ 직무별 스킬 매핑 저장 - POST /api/profiles/job-roles/{id}/skills/
-// 요청 예시: { "hard_ids": [1,2], "soft_ids": [3,4] }
 export async function saveJobRoleSkills(jobRoleId, hardIds, softIds) {
   const res = await tryFetch(() =>
     fetch(`/api/profiles/job-roles/${jobRoleId}/skills/`, {

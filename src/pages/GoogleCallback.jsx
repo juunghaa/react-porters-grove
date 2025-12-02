@@ -1,4 +1,6 @@
+// src/pages/GoogleCallback.jsx
 import { useEffect, useRef, useState } from "react";
+import { exchangeGoogleCode } from "../api/api"; // 경로는 실제 위치에 맞게 조정
 
 export default function GoogleCallback({ onLoginSuccess }) {
   const [status, setStatus] = useState("처리 중...");
@@ -12,7 +14,6 @@ export default function GoogleCallback({ onLoginSuccess }) {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const redirectUri = "https://grove.ajousw.kr/auth/google/callback";
-
     const codeVerifier = localStorage.getItem("google_code_verifier");
 
     if (!code) {
@@ -28,35 +29,24 @@ export default function GoogleCallback({ onLoginSuccess }) {
       try {
         setStatus("백엔드로 인증 코드 전송 중...");
 
-        const backendUrl = "https://grove.beer/api/v1/auth/google/";
-        const response = await fetch(backendUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            code,
-            redirect_uri: redirectUri,
-            code_verifier: codeVerifier,
-          }),
-        });
+        // ✅ 이제는 도메인 직접 호출 X, api.js helper 사용 (상대 경로 /api/... 호출)
+        const data = await exchangeGoogleCode(code, redirectUri, codeVerifier);
 
-        const responseText = await response.text();
-
+        // 디버그용 정보
         setDebugInfo({
-          url: backendUrl,
-          status: response.status,
-          responseText: responseText.substring(0, 500),
+          url: "/api/v1/auth/google/",
+          status: 200,
+          responseText: JSON.stringify(data).substring(0, 500),
         });
-
-        if (!response.ok)
-          throw new Error(`HTTP ${response.status} ${responseText}`);
-
-        const data = JSON.parse(responseText);
 
         // jwt 저장
         if (data.access) localStorage.setItem("access", data.access);
         if (data.refresh) localStorage.setItem("refresh", data.refresh);
         if (data.user)
           localStorage.setItem("user", JSON.stringify(data.user));
+
+        // PKCE verifier 제거
+        localStorage.removeItem("google_code_verifier");
 
         if (onLoginSuccess) onLoginSuccess(data);
 
@@ -67,7 +57,7 @@ export default function GoogleCallback({ onLoginSuccess }) {
         setStatus(`로그인 실패: ${err.message}`);
       }
     })();
-  }, []);
+  }, [onLoginSuccess]);
 
   return (
     <div
