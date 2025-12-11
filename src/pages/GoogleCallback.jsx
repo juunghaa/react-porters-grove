@@ -1,54 +1,57 @@
 // src/pages/GoogleCallback.jsx
 import { useEffect, useRef, useState } from "react";
+import { exchangeGoogleCode } from "../api"; // 경로는 실제 위치에 맞게 조정
 
 export default function GoogleCallback({ onLoginSuccess }) {
   const [status, setStatus] = useState("처리 중...");
   const [debugInfo, setDebugInfo] = useState(null);
-  const processedRef = useRef(false); // 이미 처리했는지 여부
+  const processedRef = useRef(false);
 
   useEffect(() => {
-    if (processedRef.current) return; // 중복 실행 방지
+    if (processedRef.current) return;
     processedRef.current = true;
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
-    const redirectUri =
-      "https://react-porters-grove.vercel.app/google/callback/";
+    const redirectUri = "https://grove.ajousw.kr/auth/google/callback";
+    const codeVerifier = localStorage.getItem("google_code_verifier");
 
     if (!code) {
-      setStatus("인증 코드가 없습니다.");
+      setStatus("❌ 인증 코드 없음");
+      return;
+    }
+    if (!codeVerifier) {
+      setStatus("❌ code_verifier 없음 (로그인 버튼 페이지에서 생성 안됨)");
       return;
     }
 
     (async () => {
       try {
         setStatus("백엔드로 인증 코드 전송 중...");
-        const backendUrl = "https://grove.beer/api/v1/auth/google/";
-        const response = await fetch(backendUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, redirect_uri: redirectUri }),
-        });
 
-        const responseText = await response.text();
+        // ✅ 이제는 도메인 직접 호출 X, api.js helper 사용 (상대 경로 /api/... 호출)
+        const data = await exchangeGoogleCode(code, redirectUri, codeVerifier);
+
+        // 디버그용 정보
         setDebugInfo({
-          url: backendUrl,
-          status: response.status,
-          responseText: responseText.substring(0, 500),
+          url: "/api/v1/auth/google/",
+          status: 200,
+          responseText: JSON.stringify(data).substring(0, 500),
         });
 
-        if (!response.ok)
-          throw new Error(`HTTP ${response.status}: ${responseText}`);
-
-        const data = JSON.parse(responseText);
-        if (data?.access) localStorage.setItem("access", data.access);
-        if (data?.refresh) localStorage.setItem("refresh", data.refresh);
-        if (data?.user)
+        // jwt 저장
+        if (data.access) localStorage.setItem("access", data.access);
+        if (data.refresh) localStorage.setItem("refresh", data.refresh);
+        if (data.user)
           localStorage.setItem("user", JSON.stringify(data.user));
+
+        // PKCE verifier 제거
+        localStorage.removeItem("google_code_verifier");
+
         if (onLoginSuccess) onLoginSuccess(data);
 
-        setStatus("로그인 성공! 메인 페이지로 이동 중...");
-        setTimeout(() => window.location.replace("/"), 1000);
+        setStatus("로그인 성공! 이동 중...");
+        setTimeout(() => window.location.replace("/"), 800);
       } catch (err) {
         console.error("구글 로그인 실패:", err);
         setStatus(`로그인 실패: ${err.message}`);
@@ -64,48 +67,24 @@ export default function GoogleCallback({ onLoginSuccess }) {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        padding: "20px",
         fontFamily: "monospace",
-        backgroundColor: "#f5f5f5",
       }}
     >
       <h2>Google 로그인 디버그</h2>
-      <p style={{ marginTop: "20px", fontSize: "16px" }}>{status}</p>
+      <p>{status}</p>
 
       {debugInfo && (
-        <div
+        <pre
           style={{
-            marginTop: "30px",
+            background: "#eee",
             padding: "20px",
-            backgroundColor: "#fff",
-            border: "2px solid #ddd",
-            borderRadius: "8px",
-            maxWidth: "800px",
-            width: "100%",
-            textAlign: "left",
+            maxWidth: "600px",
+            whiteSpace: "pre-wrap",
+            marginTop: "20px",
           }}
         >
-          <h3>🔍 디버그 정보</h3>
-          <p>
-            <strong>URL:</strong> {debugInfo.url}
-          </p>
-          <p>
-            <strong>Status:</strong> {debugInfo.status}
-          </p>
-          <p>
-            <strong>Response:</strong>
-          </p>
-          <pre
-            style={{
-              backgroundColor: "#f5f5f5",
-              padding: "10px",
-              overflow: "auto",
-              fontSize: "12px",
-            }}
-          >
-            {debugInfo.responseText}
-          </pre>
-        </div>
+          {JSON.stringify(debugInfo, null, 2)}
+        </pre>
       )}
     </div>
   );

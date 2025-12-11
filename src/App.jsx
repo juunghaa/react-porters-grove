@@ -84,7 +84,7 @@ export default function App() {
         /> */}
 
         <Route
-          path="/google/callback/"
+          path="/auth/google/callback"
           element={<GoogleCallback onLoginSuccess={handleAuthSuccess} />}
         />
 
