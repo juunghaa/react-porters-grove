@@ -7,39 +7,98 @@ import viewerIcon from '../../assets/icons/viewerComplete.png';
 import pdfDownloadButton from '../../assets/icons/pdfDownloadButton.png';
 import PortfolioPage from '../../components/PortfolioPage/PortfolioPage';
 
+// ⭐ 세부활동 API 함수 (api.js에서 가져오거나 여기서 정의)
+const fetchSubActivities = async (activityId) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 목록 조회 실패');
+  }
+
+  return response.json();
+};
+
 const PortfolioViewer = ({ portfolioData, onClose }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [scale, setScale] = useState(1);  // ⭐ 스케일 상태 추가
+  const [scale, setScale] = useState(1);
+  const [subActivities, setSubActivities] = useState({}); // ⭐ 세부활동 데이터
+  const [totalPages, setTotalPages] = useState(1); // ⭐ 동적 총 페이지 수
   
   const portfolioRef = useRef(null);
-  const wrapperRef = useRef(null);  // ⭐ wrapper ref 추가
+  const wrapperRef = useRef(null);
   
   const selectedItemsCount = portfolioData?.selectedItems?.length || 0;
-  const totalPages = 1 + selectedItemsCount;
 
-  // ⭐ 고정 크기 (A4 비율 기준)
+  // 고정 크기 (A4 비율 기준)
   const FIXED_WIDTH = 952;
   const FIXED_HEIGHT = 1347;
 
-  // ⭐ 스케일 계산 함수
+  // ⭐ 세부활동 로딩
+  useEffect(() => {
+    const loadSubActivities = async () => {
+      const selectedItems = portfolioData?.selectedItems || [];
+      const newSubActivities = {};
+      
+      for (const item of selectedItems) {
+        if (item.id) {
+          try {
+            const subs = await fetchSubActivities(item.id);
+            newSubActivities[item.id] = subs || [];
+          } catch (error) {
+            console.error('세부활동 로딩 실패:', error);
+            newSubActivities[item.id] = [];
+          }
+        }
+      }
+      
+      setSubActivities(newSubActivities);
+    };
+
+    if (selectedItemsCount > 0) {
+      loadSubActivities();
+    }
+  }, [portfolioData?.selectedItems, selectedItemsCount]);
+
+  // ⭐ 총 페이지 수 계산 (세부활동 포함)
+  useEffect(() => {
+    let pageCount = 1; // 표지
+    
+    const selectedItems = portfolioData?.selectedItems || [];
+    for (const item of selectedItems) {
+      pageCount++; // 경험 상세 페이지
+      const subs = subActivities[item.id] || [];
+      pageCount += subs.length; // 세부활동 페이지들
+    }
+    
+    setTotalPages(pageCount);
+  }, [portfolioData?.selectedItems, subActivities]);
+
+  // 스케일 계산 함수
   const calculateScale = () => {
     if (!wrapperRef.current) return;
     
     const wrapper = wrapperRef.current;
     const wrapperWidth = wrapper.clientWidth;
     
-    // 전체보기 모드일 때는 더 작게, 기본 모드일 때는 wrapper 크기에 맞게
     const targetWidth = isFullView ? wrapperWidth * 0.35 : wrapperWidth * 0.7;
     const newScale = Math.min(targetWidth / FIXED_WIDTH, 1);
     
     setScale(newScale);
   };
 
-  // ⭐ 리사이즈 및 모드 변경 시 스케일 재계산
+  // 리사이즈 및 모드 변경 시 스케일 재계산
   useEffect(() => {
     calculateScale();
     
@@ -255,7 +314,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
             </>
           )}
 
-          {/* ⭐ 포트폴리오 렌더링 영역 - ref 추가 */}
+          {/* 포트폴리오 렌더링 영역 */}
           <div className="portfolio-render-wrapper" ref={wrapperRef}>
             <button 
               className="page-nav-btn prev-page-btn"
@@ -271,7 +330,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* ⭐ 스케일 컨테이너 추가 */}
+            {/* 스케일 컨테이너 */}
             <div 
               className="portfolio-scale-container"
               style={{
@@ -309,6 +368,11 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 />
               </svg>
             </button>
+          </div>
+
+          {/* ⭐ 페이지 인디케이터 */}
+          <div className="page-indicator">
+            <span>{currentPage} / {totalPages}</span>
           </div>
         </div>
       </div>

@@ -394,3 +394,22 @@
   font-size: 12px;
   color: #666;
 }
+
+/* ===================================
+   페이지 인디케이터
+   =================================== */
+.page-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  padding: 8px 16px;
+}
+
+.page-indicator span {
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.14px;
+}

@@ -359,3 +359,128 @@ export async function fetchActivityDetail(activityId) {
   
   return res.json();
 }
+
+
+// ============================================
+// 세부활동(Sub-Activity) API 함수들
+// ============================================
+
+/**
+ * 특정 활동의 세부활동 목록 조회
+ * @param {number} activityId - 활동 ID
+ * @returns {Promise<Array>} 세부활동 목록
+ */
+export const fetchSubActivities = async (activityId) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 목록 조회 실패');
+  }
+
+  return response.json();
+};
+
+/**
+ * 특정 세부활동 상세 조회
+ * @param {number} activityId - 활동 ID
+ * @param {number} subActivityId - 세부활동 ID
+ * @returns {Promise<Object>} 세부활동 상세 정보
+ */
+export const fetchSubActivityDetail = async (activityId, subActivityId) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/${subActivityId}/`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 상세 조회 실패');
+  }
+
+  return response.json();
+};
+
+/**
+ * 세부활동 생성
+ * @param {number} activityId - 활동 ID
+ * @param {Object} data - 세부활동 데이터
+ * @returns {Promise<Object>} 생성된 세부활동
+ */
+export const createSubActivity = async (activityId, data) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 생성 실패');
+  }
+
+  return response.json();
+};
+
+/**
+ * 세부활동 수정
+ * @param {number} activityId - 활동 ID
+ * @param {number} subActivityId - 세부활동 ID
+ * @param {Object} data - 수정할 데이터
+ * @returns {Promise<Object>} 수정된 세부활동
+ */
+export const updateSubActivity = async (activityId, subActivityId, data) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/${subActivityId}/`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 수정 실패');
+  }
+
+  return response.json();
+};
+
+/**
+ * 세부활동 삭제
+ * @param {number} activityId - 활동 ID
+ * @param {number} subActivityId - 세부활동 ID
+ * @returns {Promise<void>}
+ */
+export const deleteSubActivity = async (activityId, subActivityId) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch(`/api/activities/${activityId}/sub-activities/${subActivityId}/`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('세부활동 삭제 실패');
+  }
+};
