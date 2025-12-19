@@ -1,22 +1,23 @@
 /* EmptyBox.css */
 .box-status {
-    flex: 1;
-    min-width: 239px;
-    max-width: 400px;
+    flex: 1 1 0; /* ⭐ 균등 분배 */
+    min-width: 0; /* ⭐ 핵심! flex item이 content보다 작아질 수 있게 */
+    max-width: 100%;
     display: flex;
-    padding: 15px 10px 10px 10px; /* 👈 20px에서 15px로 */
+    padding: 15px 10px 10px 10px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 12px; /* 👈 16px에서 12px로 */
+    gap: 12px;
     transition: all 0.3s ease;
     border-radius: 30px;
     background: rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
 }
 
 .box-status.expanded {
-    flex: 1;
-    min-width: 30px;
+    flex: 1 1 0;
+    min-width: 0;
     max-width: none;
 }
 
@@ -25,7 +26,7 @@
     display: flex;
     padding-left: 5px;
     flex-direction: column;
-    gap: 10px; /* 👈 12px에서 10px로 */
+    gap: 10px;
     border-radius: 20px;
     box-sizing: border-box;
 }
@@ -34,7 +35,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px; /* 👈 8px에서 6px로 */
+    margin-bottom: 6px;
     color: rgba(0, 0, 0, 0.70);
     font-family: "SUIT Variable";
     font-size: 18px;
@@ -49,6 +50,7 @@
     height: 20px;
     object-fit: contain;
     aspect-ratio: 1/1;
+    flex-shrink: 0;
 }
 
 .empty-box-title {
@@ -62,6 +64,7 @@
     font-weight: 700;
     line-height: normal;
     letter-spacing: -0.18px;
+    min-width: 0; /* ⭐ 텍스트 오버플로우 방지 */
 }
 
 .empty-box-icon {
@@ -77,6 +80,9 @@
     font-weight: 700;
     line-height: normal;
     letter-spacing: -0.18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .empty-box-count {
@@ -84,11 +90,13 @@
     color: #999;
     margin-left: 4px;
     font-family: "SUIT Variable"; 
+    flex-shrink: 0;
 }
 
 .empty-box-actions {
     display: flex;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .empty-box-menu-btn,
@@ -117,14 +125,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px; /* 👈 60px에서 40px로! 가장 큰 변화 */
-    gap: 10px; /* 👈 12px에서 10px로 */
+    padding: 40px 20px;
+    gap: 10px;
 }
 
 .empty-box-image {
     width: 26px;
     height: 26px;
-    margin-bottom: 6px; /* 👈 8px에서 6px로 */
+    margin-bottom: 6px;
 }
 
 .empty-box-main-text {
@@ -136,6 +144,7 @@
     font-weight: 600;
     line-height: normal;
     letter-spacing: -0.2px;
+    text-align: center;
 }
 
 .empty-box-sub-text {
@@ -147,6 +156,7 @@
     font-weight: 600;
     line-height: normal;
     letter-spacing: -0.18px;
+    text-align: center;
 }
 
 /* 하단 추가 버튼 */
@@ -170,6 +180,7 @@
     font-family: "SUIT Variable";
     line-height: normal;
     letter-spacing: -0.16px;
+    box-sizing: border-box;
 }
 
 .empty-box-add-button:hover {
@@ -181,4 +192,29 @@
     font-size: 16px;
     font-weight: 400;
     font-family: "SUIT Variable";
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
+    .empty-box-title h3 {
+        font-size: 16px;
+    }
+    
+    .empty-box-main-text {
+        font-size: 14px;
+    }
+    
+    .empty-box-sub-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .box-status {
+        padding: 12px 8px 8px 8px;
+    }
+    
+    .empty-box-content {
+        padding: 30px 15px;
+    }
 }

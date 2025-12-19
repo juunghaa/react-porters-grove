@@ -1,512 +1,652 @@
 /* 포트폴리오 페이지 전체 */
 .portfolio-page {
-    width: 100%;
-    height: 100%;
-    padding: 40px 56px;
-    background: #FFF;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
-  
-  /* 로딩 메시지 */
-  .loading-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #999;
-    font-family: "SUIT Variable";
-    font-size: 18px;
-  }
-  
-  /* ===================================
-     태그 영역
-     =================================== */
-  .tags-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-bottom: 24px;
-  }
-  
-  .portfolio-tag {
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: #F0F0F0;
-    color: #444;
-    font-family: "SUIT Variable";
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.13px;
-  }
-  
-  /* ===================================
-     구분선
-     =================================== */
-  .portfolio-divider {
-    width: calc(100% - 32px);
-    height: 1px;
-    background-color: #E4E4E4;
-    margin: 1px 16px 24px 16px;
-  }
-  
-  /* ===================================
-     자기소개 영역
-     =================================== */
-  .intro-section {
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 8px;
-    margin-top: 80px;
-  }
-  
-  /* 질문 1 답변 (workStyle) */
-  .work-style-text {
-    color: #444;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    margin: 0 0 0 0;
-    text-align: left;
-    width: 100%;
-  }
-  
-  /* 이름 */
-  .portfolio-name {
-    color: #000 !important;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    text-align: left !important;
-    width: 100%;
-  }
-  
-  /* 질문 2 답변 (strengths) */
-  .strengths-text {
-    color: rgba(0, 0, 0, 0.80);
-    font-family: "SUIT Variable";
-    font-size: 14.4px;
-    font-weight: 600;
-    line-height: 150%; /* 21.6px */
-    letter-spacing: -0.144px;
-    margin: 40px 0 20px 0;
-    text-align: left;
-    width: 100%;
-  }
-  
-  /* 연락처 정보 */
-  .contact-info {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    margin: 0 0 8px 0;
-    text-align: left;
-    width: 100%;
-  }
-  
-  /* ===================================
-     Contents 섹션
-     =================================== */
-  .contents-section {
-    margin-top: 32px;
-  }
-  
-  .contents-title {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 25.6px;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.256px;
-    margin: 0 0 16px 0;
-  }
-  
-  .contents-line {
-    width: 841px;
-    max-width: 100%;
-    height: 4px;
-    background: #000;
-    flex-shrink: 0;
-    margin-bottom: 24px;
-  }
-  
-  /* ⭐ 경험 목록 */
-  .experience-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-end;  /* ⭐ 오른쪽 정렬 */
-    margin-top: 70px;
-    margin-right: 30px;
-  }
-  
-  .experience-item {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    justify-content: flex-end;  /* ⭐ 오른쪽 정렬 */
-  }
-  
-  /* 인덱스 (오른쪽 정렬) */
-  .experience-index {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    text-align: right;
-    min-width: 32px;
-    flex-shrink: 0;
-  }
-  
-  /* 제목 */
-  .experience-title {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    flex: 1;
-  }
-  
-  /* ===================================
-     경험 상세 페이지 (페이지 2+)
-     =================================== */
-  /* 상단 가로줄 */
-  .experience-detail-line {
-    width: 1623px;
-    max-width: 100%;
-    height: 0;
-    border-bottom: 1px solid #000;
-    flex-shrink: 0;
-    margin-bottom: 40px;
-  }
-  
-  /* 경험 인덱스 번호 */
-  .experience-detail-index {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 45px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    letter-spacing: -0.45px;
-    margin-bottom: 16px;
-  }
-  
-  /* 경험 제목 */
-  .experience-detail-title {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 32.4px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.324px;
-    margin: 0 0 16px 0;
-  }
-  
-  /* 주제 */
-  .experience-detail-subject {
-    color: rgba(0, 0, 0, 0.70);
-    font-family: "SUIT Variable";
-    font-size: 24.3px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.243px;
-    margin: 0 0 32px 0;
-  }
-  
-  /* ⭐ Mini Details */
-  .experience-mini-details {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .mini-detail-item {
-    display: flex;
-    gap: 16px;
-    align-items: baseline;
-  }
-  
-  /* Mini Detail 라벨 */
-  .mini-detail-label {
-    color: rgba(0, 0, 0, 0.60);
-    font-family: "SUIT Variable";
-    font-size: 13.997px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.14px;
-    min-width: 80px;
-    flex-shrink: 0;
-  }
-  
-  /* Mini Detail 값 */
-  .mini-detail-value {
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 13.997px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    letter-spacing: -0.14px;
-    flex: 1;
-  }
-  
-  /* ===================================
-     반응형 디자인
-     =================================== */
-  @media (max-width: 1024px) {
-    .portfolio-page {
-      padding: 32px 40px;
-    }
-  
-    .contents-line {
-      width: 100%;
-    }
-  
-    .experience-index {
-      min-width: 28px;
-      font-size: 15px;
-    }
-  
-    .experience-title {
-      font-size: 15px;
-    }
-  
-    /* 경험 상세 페이지 */
-    .experience-detail-line {
-      width: 100%;
-    }
-  
-    .experience-detail-index {
-      font-size: 38px;
-    }
-  
-    .experience-detail-title {
-      font-size: 28px;
-    }
-  
-    .experience-detail-subject {
-      font-size: 20px;
-    }
-  
-    .mini-detail-label,
-    .mini-detail-value {
-      font-size: 12.5px;
-    }
-  
-    .mini-detail-label {
-      min-width: 70px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .portfolio-page {
-      padding: 24px 32px;
-    }
-  
-    .portfolio-tag {
-      font-size: 12px;
-      padding: 5px 12px;
-    }
-  
-    .work-style-text,
-    .portfolio-name,
-    .contact-info {
-      font-size: 14px;
-    }
-  
-    .strengths-text {
-      font-size: 13px;
-    }
-  
-    .contents-title {
-      font-size: 22px;
-    }
-  
-    .experience-index {
-      min-width: 24px;
-      font-size: 14px;
-    }
-  
-    .experience-title {
-      font-size: 14px;
-    }
-  
-    /* 경험 상세 페이지 */
-    .experience-detail-index {
-      font-size: 32px;
-    }
-  
-    .experience-detail-title {
-      font-size: 24px;
-    }
-  
-    .experience-detail-subject {
-      font-size: 18px;
-    }
-  
-    .mini-detail-label,
-    .mini-detail-value {
-      font-size: 12px;
-    }
-  
-    .mini-detail-label {
-      min-width: 65px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .portfolio-page {
-      padding: 20px 24px;
-    }
-  
-    .portfolio-tag {
-      font-size: 11px;
-      padding: 4px 10px;
-    }
-  
-    .work-style-text,
-    .portfolio-name,
-    .contact-info {
-      font-size: 13px;
-    }
-  
-    .strengths-text {
-      font-size: 12px;
-    }
-  
-    .contents-title {
-      font-size: 20px;
-    }
-  
-    .contents-line {
-      height: 3px;
-    }
-  
-    .experience-index {
-      min-width: 20px;
-      font-size: 13px;
-    }
-  
-    .experience-title {
-      font-size: 13px;
-    }
-  
-    .experience-item {
-      gap: 12px;
-    }
-  
-    /* 경험 상세 페이지 */
-    .experience-detail-index {
-      font-size: 28px;
-    }
-  
-    .experience-detail-title {
-      font-size: 20px;
-    }
-  
-    .experience-detail-subject {
-      font-size: 16px;
-    }
-  
-    .mini-detail-label,
-    .mini-detail-value {
-      font-size: 11px;
-    }
-  
-    .mini-detail-label {
-      min-width: 60px;
-    }
-  
-    .mini-detail-item {
-      gap: 12px;
-    }
-  }
-
-  /* ===================================
-   프로젝트 상세 섹션
-   =================================== */
-.project-detail-section {
-  margin-top: 48px;
+  width: 100%;
+  height: 100%;
+  padding: 40px 56px;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-/* 프로젝트 상세 제목 */
-.project-detail-title {
+/* 로딩 메시지 */
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-family: "SUIT Variable";
+  font-size: 18px;
+}
+
+/* ===================================
+   태그 영역
+   =================================== */
+.tags-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.portfolio-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #F0F0F0;
+  color: #444;
+  font-family: "SUIT Variable";
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.13px;
+}
+
+/* ===================================
+   구분선
+   =================================== */
+.portfolio-divider {
+  width: calc(100% - 32px);
+  height: 1px;
+  background-color: #E4E4E4;
+  margin: 1px 16px 24px 16px;
+}
+
+/* ===================================
+   자기소개 영역
+   =================================== */
+.intro-section {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 8px;
+  margin-top: 80px;
+}
+
+/* 질문 1 답변 (workStyle) */
+.work-style-text {
+  color: #444;
+  font-family: "SUIT Variable";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  margin: 0 0 0 0;
+  text-align: left;
+  width: 100%;
+}
+
+/* 이름 */
+.portfolio-name {
+  color: #000 !important;
+  font-family: "SUIT Variable";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  text-align: left !important;
+  width: 100%;
+}
+
+/* 질문 2 답변 (strengths) */
+.strengths-text {
+  color: rgba(0, 0, 0, 0.80);
+  font-family: "SUIT Variable";
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 150%; /* 21.6px */
+  letter-spacing: -0.144px;
+  margin: 40px 0 20px 0;
+  text-align: left;
+  width: 100%;
+}
+
+/* 연락처 정보 */
+.contact-info {
   color: #000;
   font-family: "SUIT Variable";
-  font-size: 20px;
-  font-style: normal;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  margin: 0 0 8px 0;
+  text-align: left;
+  width: 100%;
+}
+
+/* ===================================
+   Contents 섹션
+   =================================== */
+.contents-section {
+  margin-top: 32px;
+}
+
+.contents-title {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 25.6px;
   font-weight: 700;
   line-height: normal;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.256px;
   margin: 0 0 16px 0;
 }
 
-/* 프로젝트 상세 구분선 */
-.project-detail-divider {
-  width: 419px;
+.contents-line {
+  width: 841px;
   max-width: 100%;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.10);
-  margin-bottom: 32px;
+  height: 4px;
+  background: #000;
+  flex-shrink: 0;
+  margin-bottom: 24px;
 }
 
-/* 프로젝트 상세 아이템 */
-.project-detail-item {
-  margin-bottom: 32px;
+/* ⭐ 경험 목록 */
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;  /* ⭐ 오른쪽 정렬 */
+  margin-top: 70px;
+  margin-right: 30px;
 }
 
-/* 프로젝트 상세 아이템 제목 (프로젝트 배경, 목표 정의 등) */
-.project-detail-item-title {
-  color: var(--Grove-Green, #126431);
+.experience-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  justify-content: flex-end;  /* ⭐ 오른쪽 정렬 */
+}
+
+/* 인덱스 (오른쪽 정렬) */
+.experience-index {
+  color: #000;
   font-family: "SUIT Variable";
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
   letter-spacing: -0.16px;
-  margin: 0 0 12px 0;
+  text-align: right;
+  min-width: 32px;
+  flex-shrink: 0;
+}
+
+/* 제목 */
+.experience-title {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  flex: 1;
+}
+
+/* ===================================
+   경험 상세 페이지 (페이지 2+)
+   =================================== */
+/* 상단 가로줄 */
+.experience-detail-line {
+  width: 1623px;
+  max-width: 100%;
+  height: 0;
+  border-bottom: 1px solid #000;
+  flex-shrink: 0;
+  margin-bottom: 40px;
+}
+
+/* 경험 인덱스 번호 */
+.experience-detail-index {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 45px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.45px;
+  margin-bottom: 16px;
+}
+
+/* 경험 제목 */
+.experience-detail-title {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 32.4px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.324px;
+  margin: 0 0 16px 0;
+}
+
+/* 주제 */
+.experience-detail-subject {
+  color: rgba(0, 0, 0, 0.70);
+  font-family: "SUIT Variable";
+  font-size: 24.3px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.243px;
+  margin: 0 0 32px 0;
+}
+
+/* ⭐ Mini Details */
+.experience-mini-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-detail-item {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+
+/* Mini Detail 라벨 */
+.mini-detail-label {
+  color: rgba(0, 0, 0, 0.60);
+  font-family: "SUIT Variable";
+  font-size: 13.997px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.14px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+/* Mini Detail 값 */
+.mini-detail-value {
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 13.997px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.14px;
+  flex: 1;
+}
+
+/* ===================================
+ 프로젝트 상세 섹션
+ =================================== */
+.project-detail-section {
+margin-top: 48px;
+}
+
+/* 프로젝트 상세 제목 */
+.project-detail-title {
+color: #000;
+font-family: "SUIT Variable";
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.2px;
+margin: 0 0 16px 0;
+}
+
+/* 프로젝트 상세 구분선 */
+.project-detail-divider {
+width: 419px;
+max-width: 100%;
+height: 1px;
+background: rgba(0, 0, 0, 0.10);
+margin-bottom: 32px;
+}
+
+/* 프로젝트 상세 아이템 */
+.project-detail-item {
+margin-bottom: 32px;
+}
+
+/* 프로젝트 상세 아이템 제목 (프로젝트 배경, 목표 정의 등) */
+.project-detail-item-title {
+color: var(--Grove-Green, #126431);
+font-family: "SUIT Variable";
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.16px;
+margin: 0 0 12px 0;
 }
 
 /* 프로젝트 상세 아이템 내용 (답변) */
 .project-detail-item-content {
-  color: #000;
-  font-family: "SUIT Variable";
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 160%;
-  letter-spacing: -0.14px;
-  margin: 0;
-  white-space: pre-wrap;  /* 줄바꿈 유지 */
+color: #000;
+font-family: "SUIT Variable";
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 160%;
+letter-spacing: -0.14px;
+margin: 0;
+white-space: pre-wrap;  /* 줄바꿈 유지 */
 }
 
 /* ===================================
-   반응형 - 프로젝트 상세
+ 첨부파일 섹션
+ =================================== */
+ .attachments-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 첨부파일 그리드 */
+.attachments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+/* 첨부파일 아이템 */
+.attachment-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 썸네일 컨테이너 */
+.attachment-thumbnail {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+}
+
+/* 썸네일 이미지 */
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 비디오 썸네일 */
+.thumbnail-video {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.thumbnail-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #333;
+}
+
+/* PDF 썸네일 */
+.thumbnail-pdf {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+}
+
+.pdf-icon {
+  color: #fff;
+  font-family: "SUIT Variable";
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* 기본 파일 썸네일 */
+.thumbnail-default {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+}
+
+.file-icon {
+  font-size: 48px;
+}
+
+/* 파일명 */
+.attachment-filename {
+  color: #000;
+  text-align: center;
+  font-family: "SUIT Variable";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.16px;
+  margin: 0;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* ===================================
+ ⭐ 세부활동 (Sub-Activity) 페이지
+ =================================== */
+
+/* 나의 핵심 기여 제목 */
+.sub-activity-header-title {
+color: #000;
+font-family: "SUIT Variable";
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.24px;
+width: 812.544px;
+max-width: 100%;
+margin: 0 0 16px 0;
+}
+
+/* 기간 영역 */
+.sub-activity-period {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 16px;
+}
+
+/* 달력 아이콘 */
+.sub-activity-calendar-icon {
+width: 15.232px;
+height: 15.232px;
+aspect-ratio: 15.23 / 15.23;
+flex-shrink: 0;
+}
+
+/* 기간 텍스트 */
+.sub-activity-period-text {
+color: rgba(0, 0, 0, 0.50);
+font-family: "SUIT Variable";
+font-size: 14.336px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+letter-spacing: -0.143px;
+}
+
+/* 세부활동 제목 */
+.sub-activity-title {
+color: #000;
+font-family: "SUIT Variable";
+font-size: 21.504px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.215px;
+margin: 0 0 24px 0;
+}
+
+/* 세부활동 구분선 */
+.sub-activity-divider {
+width: 894.208px;
+max-width: 100%;
+height: 0.896px;
+background: #E4E4E4;
+margin-bottom: 32px;
+}
+
+/* 세부활동 상세 섹션 (프로젝트 상세 재활용) */
+.sub-activity-detail-section {
+margin-top: 0;
+}
+
+.sub-activity-detail-section .project-detail-item {
+margin-bottom: 28px;
+}
+
+/* ===================================
+   반응형 디자인
    =================================== */
+@media (max-width: 1024px) {
+  .portfolio-page {
+    padding: 32px 40px;
+  }
+
+  .contents-line {
+    width: 100%;
+  }
+
+  .experience-index {
+    min-width: 28px;
+    font-size: 15px;
+  }
+
+  .experience-title {
+    font-size: 15px;
+  }
+
+  /* 경험 상세 페이지 */
+  .experience-detail-line {
+    width: 100%;
+  }
+
+  .experience-detail-index {
+    font-size: 38px;
+  }
+
+  .experience-detail-title {
+    font-size: 28px;
+  }
+
+  .experience-detail-subject {
+    font-size: 20px;
+  }
+
+  .mini-detail-label,
+  .mini-detail-value {
+    font-size: 12.5px;
+  }
+
+  .mini-detail-label {
+    min-width: 70px;
+  }
+
+  /* 세부활동 */
+  .sub-activity-header-title {
+    font-size: 22px;
+    width: 100%;
+  }
+
+  .sub-activity-title {
+    font-size: 19px;
+  }
+
+  .sub-activity-divider {
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
+  .portfolio-page {
+    padding: 24px 32px;
+  }
+
+  .portfolio-tag {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+
+  .work-style-text,
+  .portfolio-name,
+  .contact-info {
+    font-size: 14px;
+  }
+
+  .strengths-text {
+    font-size: 13px;
+  }
+
+  .contents-title {
+    font-size: 22px;
+  }
+
+  .experience-index {
+    min-width: 24px;
+    font-size: 14px;
+  }
+
+  .experience-title {
+    font-size: 14px;
+  }
+
+  /* 경험 상세 페이지 */
+  .experience-detail-index {
+    font-size: 32px;
+  }
+
+  .experience-detail-title {
+    font-size: 24px;
+  }
+
+  .experience-detail-subject {
+    font-size: 18px;
+  }
+
+  .mini-detail-label,
+  .mini-detail-value {
+    font-size: 12px;
+  }
+
+  .mini-detail-label {
+    min-width: 65px;
+  }
+
+  /* 프로젝트 상세 */
   .project-detail-title {
     font-size: 18px;
   }
@@ -522,9 +662,105 @@
   .project-detail-item-content {
     font-size: 13px;
   }
+
+  /* 첨부파일 */
+  .attachments-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .attachment-filename {
+    font-size: 14px;
+  }
+
+  .video-play-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  /* 세부활동 */
+  .sub-activity-header-title {
+    font-size: 20px;
+  }
+
+  .sub-activity-title {
+    font-size: 17px;
+  }
+
+  .sub-activity-period-text {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 480px) {
+  .portfolio-page {
+    padding: 20px 24px;
+  }
+
+  .portfolio-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .work-style-text,
+  .portfolio-name,
+  .contact-info {
+    font-size: 13px;
+  }
+
+  .strengths-text {
+    font-size: 12px;
+  }
+
+  .contents-title {
+    font-size: 20px;
+  }
+
+  .contents-line {
+    height: 3px;
+  }
+
+  .experience-index {
+    min-width: 20px;
+    font-size: 13px;
+  }
+
+  .experience-title {
+    font-size: 13px;
+  }
+
+  .experience-item {
+    gap: 12px;
+  }
+
+  /* 경험 상세 페이지 */
+  .experience-detail-index {
+    font-size: 28px;
+  }
+
+  .experience-detail-title {
+    font-size: 20px;
+  }
+
+  .experience-detail-subject {
+    font-size: 16px;
+  }
+
+  .mini-detail-label,
+  .mini-detail-value {
+    font-size: 11px;
+  }
+
+  .mini-detail-label {
+    min-width: 60px;
+  }
+
+  .mini-detail-item {
+    gap: 12px;
+  }
+
+  /* 프로젝트 상세 */
   .project-detail-title {
     font-size: 16px;
   }
@@ -540,166 +776,40 @@
   .project-detail-item {
     margin-bottom: 24px;
   }
-}
 
-/* ===================================
-   첨부파일 섹션
-   =================================== */
-   .attachments-section {
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  /* 첨부파일 그리드 */
+  /* 첨부파일 */
   .attachments-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 24px;
-  }
-  
-  /* 첨부파일 아이템 */
-  .attachment-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  
-  /* 썸네일 컨테이너 */
-  .attachment-thumbnail {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e0e0e0;
-  }
-  
-  /* 썸네일 이미지 */
-  .thumbnail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  /* 비디오 썸네일 */
-  .thumbnail-video {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000;
-  }
-  
-  .thumbnail-video video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .video-play-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 48px;
-    height: 48px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: #333;
-  }
-  
-  /* PDF 썸네일 */
-  .thumbnail-pdf {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
-  }
-  
-  .pdf-icon {
-    color: #fff;
-    font-family: "SUIT Variable";
-    font-size: 24px;
-    font-weight: 700;
-  }
-  
-  /* 기본 파일 썸네일 */
-  .thumbnail-default {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f0f0f0;
-  }
-  
-  .file-icon {
-    font-size: 48px;
-  }
-  
-  /* 파일명 */
+
   .attachment-filename {
-    color: #000;
-    text-align: center;
-    font-family: "SUIT Variable";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.16px;
-    margin: 0;
-    word-break: break-word;
-    max-width: 100%;
+    font-size: 12px;
   }
-  
-  /* ===================================
-     반응형 - 첨부파일
-     =================================== */
-  @media (max-width: 768px) {
-    .attachments-grid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 16px;
-    }
-  
-    .attachment-filename {
-      font-size: 14px;
-    }
-  
-    .video-play-icon {
-      width: 40px;
-      height: 40px;
-      font-size: 16px;
-    }
+
+  .pdf-icon {
+    font-size: 20px;
   }
-  
-  @media (max-width: 480px) {
-    .attachments-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-  
-    .attachment-filename {
-      font-size: 12px;
-    }
-  
-    .pdf-icon {
-      font-size: 20px;
-    }
-  
-    .file-icon {
-      font-size: 36px;
-    }
+
+  .file-icon {
+    font-size: 36px;
   }
+
+  /* 세부활동 */
+  .sub-activity-header-title {
+    font-size: 18px;
+  }
+
+  .sub-activity-title {
+    font-size: 15px;
+  }
+
+  .sub-activity-period-text {
+    font-size: 12px;
+  }
+
+  .sub-activity-calendar-icon {
+    width: 14px;
+    height: 14px;
+  }
+}

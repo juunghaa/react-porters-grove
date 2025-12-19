@@ -28,6 +28,7 @@ import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
 import Award from "./components/Spec/Award.jsx"; //수상
 import Overseas from "./components/Spec/Overseas.jsx"; //해외경험
 import Language from "./components/Spec/Language.jsx"; //외국어
+import PortfolioCreationFlow from './components/MakingPortfolio/PortfolioCreationFlow';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -120,6 +121,8 @@ export default function App() {
 
         {/* ✅ 외국어페이지 */}
         <Route path="/language" element={<Language />} />
+        {/* 포트폴리오 생성 플로우 페이지 */}
+        <Route path="/portfolio-creation" element={<PortfolioCreationFlow />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
@@ -129,7 +132,7 @@ export default function App() {
               {/* 메인 페이지 코드 올릴 때 중복 렌더링 안되게 조심 제발
                     <GithubGrass username="octocat" year="last" />
                     <h1>포트폴리오 사이트</h1> */}
-              {<MainPage onLogout={handleLogout} />}
+              {/* {<MainPage onLogout={handleLogout} />} */}
 
               {isLoggedIn ? (
                 <>

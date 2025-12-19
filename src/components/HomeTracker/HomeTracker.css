@@ -1,55 +1,199 @@
 .home-tracker {
-    width: 100%; /* 👈 추가 */
-    /* padding: 20px; 혹시라도 여백 필요하면 써.... 필요없음 */
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.tracker-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 12px 4px;
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  font-family: "SUIT Variable";
+}
+
+.tab.active {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #1a1a1a;
+}
+
+.tab span {
+  margin-left: 6px;
+  font-size: 14px;
+}
+
+/* ⭐ 전체/스펙/포트폴리오 탭용 박스 컨테이너 */
+.tracker-boxes {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 박스가 균등하게 분배되도록 */
+.tracker-boxes > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(33.333% - 11px);
+}
+
+/* ⭐ 나의 경험 탭 wrapper */
+.experience-archive-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* ⭐ 커스텀 스크롤바 트랙 - 박스 위에 위치 */
+.custom-scrollbar-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #F5F5F5;
+  position: relative;
+  cursor: pointer;
+}
+
+/* ⭐ 커스텀 스크롤바 썸 */
+.custom-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: #DDD;
+  cursor: grab;
+  transition: background 0.2s;
+}
+
+.custom-scrollbar-thumb:hover {
+  background: #CCC;
+}
+
+.custom-scrollbar-thumb:active {
+  cursor: grabbing;
+  background: #BBB;
+}
+
+/* ⭐ 나의 경험 탭 리스트 - 공통 스타일 */
+.experience-archive-list {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ⭐ 3개 이하일 때: 균등 분배 (스크롤 없음) */
+.experience-archive-list.no-scroll {
+  overflow: hidden;
+}
+
+.experience-archive-list.no-scroll > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(33.333% - 11px);
+}
+
+/* ⭐ 4개 이상일 때: 고정 너비 + 가로 스크롤 */
+.experience-archive-list.has-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* 기본 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.experience-archive-list.has-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.experience-archive-list.has-scroll > * {
+  flex: 0 0 auto;
+  width: calc(33.333% - 11px);
+  min-width: 280px;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #999;
+  font-family: "SUIT Variable";
+  font-size: 16px;
+}
+
+/* ⭐ 반응형 */
+@media (max-width: 1200px) {
+  .tracker-boxes > * {
+    max-width: calc(50% - 8px);
   }
-  
-  .tracker-tabs {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
-  .tab {
-    background: none;
-    border: none;
-    padding: 12px 4px;
-    font-size: 16px;
-    color: #999;
-    cursor: pointer;
-    position: relative;
-    transition: color 0.2s;
-  }
-  
-  .tab.active {
-    color: #1a1a1a;
-    font-weight: 600;
-  }
-  
-  .tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #1a1a1a;
-  }
-  
-  .tab span {
-    margin-left: 6px;
-    font-size: 14px;
-  }
-  
+
   .tracker-boxes {
-    display: flex;
-    gap: 16px;
-    width: 100%; /* 👈 추가 */
-    flex-wrap: nowrap; /* 👈 wrap에서 nowrap으로 변경! */
+    flex-wrap: wrap;
   }
-  
-  @media (max-width: 1024px) {
-    .tracker-boxes {
-      flex-direction: column;
-    }
+
+  .experience-archive-list.no-scroll > * {
+    max-width: calc(50% - 8px);
   }
+
+  .experience-archive-list.has-scroll > * {
+    width: calc(50% - 8px);
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tracker-boxes {
+    flex-direction: column;
+  }
+
+  .tracker-boxes > * {
+    max-width: 100%;
+  }
+
+  .experience-archive-wrapper {
+    gap: 12px;
+  }
+
+  .custom-scrollbar-track {
+    height: 8px;
+  }
+
+  .experience-archive-list.no-scroll {
+    flex-direction: column;
+  }
+
+  .experience-archive-list.no-scroll > * {
+    max-width: 100%;
+  }
+
+  .experience-archive-list.has-scroll > * {
+    width: 280px;
+    min-width: 260px;
+  }
+}
