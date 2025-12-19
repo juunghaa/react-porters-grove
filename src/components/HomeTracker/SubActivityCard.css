@@ -1,0 +1,202 @@
+/* SubActivityCard.css */
+
+.sub-activity-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #FFFFFF;
+    border: 1px solid #F3F3F3;
+    transition: box-shadow 0.2s;
+  }
+  
+  .sub-activity-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* 스킬 태그 영역 */
+  .sub-card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  /* 스킬 태그 공통 */
+  .skill-tag {
+    display: flex;
+    height: 30px;
+    padding: 3px 10px;
+    align-items: center;
+    gap: 4px;
+    border-radius: 8px;
+  }
+  
+  .skill-tag svg {
+    width: 18px;
+    height: 18px;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
+  }
+  
+  /* 하드스킬 태그 */
+  .hard-skill-tag {
+    background: #126431;
+  }
+  
+  .hard-skill-text {
+    color: #E1FFEC;
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  /* 소프트스킬 태그 */
+  .soft-skill-tag {
+    background: #EBF6EF;
+  }
+  
+  .soft-skill-text {
+    color: #126431;
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  /* 경험 제목 (activity title) */
+  .sub-card-activity-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .sub-card-activity-title svg {
+    width: 18px;
+    height: 18px;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
+  }
+  
+  .sub-card-activity-title span {
+    color: #808080;
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* 세부활동 제목 */
+  .sub-card-title {
+    margin: 0;
+    color: #000;
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.18px;
+  }
+  
+  /* 구분선 */
+  .sub-card-divider {
+    width: 100%;
+    max-width: 304px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 기간 */
+  .sub-card-period {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .sub-card-period svg {
+    width: 12.772px;
+    height: 13.458px;
+    flex-shrink: 0;
+  }
+  
+  .sub-card-period span {
+    color: rgba(0, 0, 0, 0.50);
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .sub-activity-card {
+      padding: 14px;
+      gap: 10px;
+    }
+  
+    .skill-tag {
+      height: 26px;
+      padding: 2px 8px;
+    }
+  
+    .hard-skill-text,
+    .soft-skill-text {
+      font-size: 14px;
+    }
+  
+    .skill-tag svg {
+      width: 16px;
+      height: 16px;
+    }
+  
+    .sub-card-activity-title span {
+      font-size: 14px;
+    }
+  
+    .sub-card-title {
+      font-size: 16px;
+    }
+  
+    .sub-card-period span {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .sub-activity-card {
+      padding: 12px;
+    }
+  
+    .skill-tag {
+      height: 24px;
+    }
+  
+    .hard-skill-text,
+    .soft-skill-text {
+      font-size: 13px;
+    }
+  
+    .sub-card-activity-title span {
+      font-size: 13px;
+    }
+  
+    .sub-card-title {
+      font-size: 15px;
+    }
+  
+    .sub-card-period span {
+      font-size: 13px;
+    }
+  }

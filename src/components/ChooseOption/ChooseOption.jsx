@@ -62,6 +62,14 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
     }
   };
 
+  // ✅ 포트폴리오 카드 클릭 시 - onGoToPortfolio prop 사용 (LeftPanel 유지됨!)
+  const handlePortfolioClick = () => {
+    console.log("✨ 포트폴리오 카드 클릭 - MainPage 내부에서 페이지 전환");
+    if (onGoToPortfolio) {
+      onGoToPortfolio([]); // 빈 태그 배열 전달 (또는 필요한 값)
+    }
+  };
+
   return (
     <div className="choose-option">
       <div className="choose-header">
@@ -159,15 +167,21 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
           )}
         </div>
 
-        {/* 포트폴리오 카드 */}
+        {/* 포트폴리오 카드 - ✅ 호버 기능 주석처리, 클릭 시 바로 이동 */}
         <div
-          className={`option-card ${
-            expandedCard === "portfolio" ? "expanded portfolio-card" : ""
-          }`}
-          onMouseEnter={() => setExpandedCard("portfolio")}
-          onMouseLeave={() => setExpandedCard(null)}
+          className="option-card"
+          onClick={handlePortfolioClick}
+          style={{ cursor: 'pointer' }}
+          // ========== 호버로 태그 선택하는 기능 주석처리 ==========
+          // className={`option-card ${
+          //   expandedCard === "portfolio" ? "expanded portfolio-card" : ""
+          // }`}
+          // onMouseEnter={() => setExpandedCard("portfolio")}
+          // onMouseLeave={() => setExpandedCard(null)}
+          // ======================================================
         >
-          {expandedCard === "portfolio" ? (
+          {/* ========== 호버 시 태그 선택 UI 주석처리 ========== */}
+          {/* {expandedCard === "portfolio" ? (
             <div className="card-expanded-content">
               <div className="tag-container portfolio-tags">
                 {tagOptions.portfolio.map((tag) => (
@@ -199,7 +213,14 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
               src="./images/Card_Portfolio.png"
               alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요"
             />
-          )}
+          )} */}
+          {/* ======================================================= */}
+          
+          {/* ✅ 항상 카드 이미지만 보여주기 */}
+          <img
+            src="./images/Card_Portfolio.png"
+            alt="포트폴리오 - 내가 쌓은 경험과 스펙, 스킬을 모아 정리해요"
+          />
         </div>
       </div>
     </div>
