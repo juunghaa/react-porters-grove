@@ -25,6 +25,9 @@ import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
 import OutUnivPage from "./components/Experience/OutUnivPage.jsx"; //교외활동
 import Career from "./components/Spec/Career.jsx"; //경력
 import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
+import Award from "./components/Spec/Award.jsx"; //수상
+import Overseas from "./components/Spec/Overseas.jsx"; //해외경험
+import Language from "./components/Spec/Language.jsx"; //외국어
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -108,6 +111,15 @@ export default function App() {
 
         {/* ✅ 자격증 페이지 */}
         <Route path="/certificate" element={<CertificatePage />} />
+
+        {/* ✅ 수상 페이지 */}
+        <Route path="/award" element={<Award />} />
+
+        {/* ✅ 해외활동 페이지 */}
+        <Route path="/overseas" element={<Overseas />} />
+
+        {/* ✅ 외국어페이지 */}
+        <Route path="/language" element={<Language />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route

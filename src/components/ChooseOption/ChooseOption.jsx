@@ -27,7 +27,7 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
       { id: "certificate", label: "자격증" },
       { id: "award", label: "수상" },
       { id: "career", label: "경력" },
-      { id: "intern", label: "인턴" },
+      { id: "language", label: "외국어" },
       { id: "overseas", label: "해외경험" },
     ],
     portfolio: [
@@ -59,6 +59,15 @@ const ChooseOption = ({ onGoToExperience, onGoToSpec, onGoToPortfolio }) => {
     } else if (cardType === "spec" && tagId === "certificate") {
       //자격증으로 이동
       navigate("/certificate", { state: { selectedTag: tagId } });
+    } else if (cardType === "spec" && tagId === "award") {
+      //수상으로 이동
+      navigate("/award", { state: { selectedTag: tagId } });
+    } else if (cardType === "spec" && tagId === "overseas") {
+      //해외경험으로 이동
+      navigate("/overseas", { state: { selectedTag: tagId } });
+    } else if (cardType === "spec" && tagId === "language") {
+      //외국어로 이동
+      navigate("/language", { state: { selectedTag: tagId } });
     }
   };
 
