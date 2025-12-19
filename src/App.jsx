@@ -25,6 +25,7 @@ import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
 import OutUnivPage from "./components/Experience/OutUnivPage.jsx"; //교외활동
 import Career from "./components/Spec/Career.jsx"; //경력
 import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
+import PortfolioCreationFlow from './components/MakingPortfolio/PortfolioCreationFlow';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -108,6 +109,9 @@ export default function App() {
 
         {/* ✅ 자격증 페이지 */}
         <Route path="/certificate" element={<CertificatePage />} />
+
+        {/* 포트폴리오 생성 플로우 페이지 */}
+        <Route path="/portfolio-creation" element={<PortfolioCreationFlow />} />
 
         {/* ✅ 2️⃣ 기본 로그인/회원가입/메인 흐름은 기존 그대로 유지 */}
         <Route
