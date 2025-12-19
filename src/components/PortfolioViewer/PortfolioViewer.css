@@ -82,7 +82,7 @@
     transition: all 0.3s ease;
   }
   
-  /* 전체보기 모드 ⭐ */
+  /* 전체보기 모드 */
   .portfolio-viewer-content.full-view-mode {
     padding: 24px;
     border: none;
@@ -145,7 +145,7 @@
     transition: all 0.3s ease;
   }
   
-  /* 전체보기 모드일 때 렌더링 영역 ⭐ */
+  /* 전체보기 모드일 때 렌더링 영역 */
   .full-view-mode .portfolio-render-wrapper {
     margin-top: 0;
     gap: 24px;
@@ -180,25 +180,24 @@
     width: 52px;
     height: 52px;
   }
-  
-  /* 포트폴리오 렌더링 영역 */
-  .portfolio-render-area {
-    width: 70%;
-    aspect-ratio: 952/1347.2;
-    background: #FFF;
+
+  /* ⭐ 스케일 컨테이너 - 축소된 크기를 감싸는 박스 */
+  .portfolio-scale-container {
+    position: relative;
+    overflow: hidden;
     box-shadow: 0 0 20px 1.6px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 8px;
+    background: #FFF;
     flex-shrink: 0;
     transition: all 0.3s ease;
   }
   
-  /* 전체보기 모드일 때 렌더링 영역 크기 증가 ⭐ */
-  .full-view-mode .portfolio-render-area {
-    width: 30%;
-    max-width: 952px;
+  /* ⭐ 포트폴리오 렌더링 영역 - 고정 크기, transform으로 축소 */
+  .portfolio-render-area {
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
   
   .portfolio-render-area h2 {
@@ -214,16 +213,6 @@
      반응형 디자인
      =================================== */
   @media (max-width: 1200px) {
-    .portfolio-render-area {
-      width: 700px;
-      height: 990px;
-    }
-  
-    .full-view-mode .portfolio-render-area {
-      width: 90%;
-      max-width: 800px;
-    }
-  
     .portfolio-render-wrapper {
       gap: 24px;
     }
@@ -246,16 +235,6 @@
     
     .portfolio-viewer-title {
       font-size: 28px;
-    }
-  
-    .portfolio-render-area {
-      width: 600px;
-      height: 850px;
-    }
-  
-    .full-view-mode .portfolio-render-area {
-      width: 90%;
-      max-width: 700px;
     }
   
     .portfolio-render-area h2 {
@@ -283,16 +262,6 @@
   
     .portfolio-render-wrapper {
       gap: 16px;
-    }
-  
-    .portfolio-render-area {
-      width: 400px;
-      height: 566px;
-    }
-  
-    .full-view-mode .portfolio-render-area {
-      width: 85%;
-      max-width: 500px;
     }
   
     .portfolio-render-area h2 {
@@ -345,16 +314,6 @@
     .portfolio-render-wrapper {
       flex-direction: column;
       gap: 20px;
-    }
-  
-    .portfolio-render-area {
-      width: 280px;
-      height: 396px;
-    }
-  
-    .full-view-mode .portfolio-render-area {
-      width: 90%;
-      max-width: 320px;
     }
   
     .portfolio-render-area h2 {

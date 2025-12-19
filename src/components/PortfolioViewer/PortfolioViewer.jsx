@@ -1,33 +1,62 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import './PortfolioViewer.css';
 import portfolioTag from '../../assets/icons/portfolio-tag.png';
 import viewerIcon from '../../assets/icons/viewerComplete.png';
-import pdfDownloadButton from '../../assets/icons/pdfDownloadButton.png';  // ⭐ 추가!
+import pdfDownloadButton from '../../assets/icons/pdfDownloadButton.png';
 import PortfolioPage from '../../components/PortfolioPage/PortfolioPage';
 
 const PortfolioViewer = ({ portfolioData, onClose }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
-  const [showMoreMenu, setShowMoreMenu] = useState(false);  // ⭐ 더보기 메뉴 상태
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);  // ⭐ PDF 생성 중 상태
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [scale, setScale] = useState(1);  // ⭐ 스케일 상태 추가
   
-  const portfolioRef = useRef(null);  // ⭐ PDF로 변환할 영역 ref
+  const portfolioRef = useRef(null);
+  const wrapperRef = useRef(null);  // ⭐ wrapper ref 추가
   
   const selectedItemsCount = portfolioData?.selectedItems?.length || 0;
   const totalPages = 1 + selectedItemsCount;
+
+  // ⭐ 고정 크기 (A4 비율 기준)
+  const FIXED_WIDTH = 952;
+  const FIXED_HEIGHT = 1347;
+
+  // ⭐ 스케일 계산 함수
+  const calculateScale = () => {
+    if (!wrapperRef.current) return;
+    
+    const wrapper = wrapperRef.current;
+    const wrapperWidth = wrapper.clientWidth;
+    
+    // 전체보기 모드일 때는 더 작게, 기본 모드일 때는 wrapper 크기에 맞게
+    const targetWidth = isFullView ? wrapperWidth * 0.35 : wrapperWidth * 0.7;
+    const newScale = Math.min(targetWidth / FIXED_WIDTH, 1);
+    
+    setScale(newScale);
+  };
+
+  // ⭐ 리사이즈 및 모드 변경 시 스케일 재계산
+  useEffect(() => {
+    calculateScale();
+    
+    const handleResize = () => calculateScale();
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isFullView]);
 
   const handleShare = () => {
     console.log('공유 버튼 클릭');
   };
 
   const handleMoreOptions = () => {
-    setShowMoreMenu(!showMoreMenu);  // ⭐ 토글
+    setShowMoreMenu(!showMoreMenu);
   };
 
-  // ⭐ 메뉴 외부 클릭 시 닫기
   const handleCloseMenu = () => {
     setShowMoreMenu(false);
   };
@@ -56,7 +85,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
     }
   };
 
-  // ⭐ PDF 다운로드 함수
+  // PDF 다운로드 함수
   const handleDownloadPdf = async () => {
     if (!portfolioRef.current || isGeneratingPdf) return;
     
@@ -68,15 +97,10 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // 모든 페이지를 PDF로 변환
       for (let page = 1; page <= totalPages; page++) {
-        // 페이지 변경
         setCurrentPage(page);
-        
-        // 렌더링 대기
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // 캔버스로 변환
         const canvas = await html2canvas(portfolioRef.current, {
           scale: 2,
           useCORS: true,
@@ -88,7 +112,6 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
         const imgWidth = pdfWidth;
         const imgHeight = (canvas.height * pdfWidth) / canvas.width;
         
-        // 첫 페이지가 아니면 새 페이지 추가
         if (page > 1) {
           pdf.addPage();
         }
@@ -96,7 +119,6 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       }
       
-      // PDF 저장
       const fileName = portfolioName || '포트폴리오';
       pdf.save(`${fileName}.pdf`);
       
@@ -113,7 +135,6 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
 
   return (
     <div className="portfolio-viewer-container" onClick={handleCloseMenu}>
-      {/* 흰색 상자 */}
       <div className="portfolio-viewer-box" onClick={(e) => e.stopPropagation()}>
         {/* 상단 헤더 */}
         <div className="portfolio-viewer-header">
@@ -153,7 +174,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* ⭐ 더보기 버튼 + 드롭다운 메뉴 */}
+            {/* 더보기 버튼 + 드롭다운 메뉴 */}
             <div className="more-options-wrapper">
               <button 
                 className="portfolio-action-btn"
@@ -173,7 +194,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 </svg>
               </button>
 
-              {/* ⭐ 드롭다운 메뉴 */}
+              {/* 드롭다운 메뉴 */}
               {showMoreMenu && (
                 <div className="more-options-menu" onClick={(e) => e.stopPropagation()}>
                   <button 
@@ -234,8 +255,8 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
             </>
           )}
 
-          {/* 포트폴리오 렌더링 영역 */}
-          <div className="portfolio-render-wrapper">
+          {/* ⭐ 포트폴리오 렌더링 영역 - ref 추가 */}
+          <div className="portfolio-render-wrapper" ref={wrapperRef}>
             <button 
               className="page-nav-btn prev-page-btn"
               onClick={handlePrevPage}
@@ -250,12 +271,29 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               </svg>
             </button>
 
-            {/* ⭐ ref 추가! */}
-            <div className="portfolio-render-area" ref={portfolioRef}>
-              <PortfolioPage 
-                portfolioData={portfolioData} 
-                currentPage={currentPage}
-              />
+            {/* ⭐ 스케일 컨테이너 추가 */}
+            <div 
+              className="portfolio-scale-container"
+              style={{
+                width: FIXED_WIDTH * scale,
+                height: FIXED_HEIGHT * scale,
+              }}
+            >
+              <div 
+                className="portfolio-render-area" 
+                ref={portfolioRef}
+                style={{
+                  width: FIXED_WIDTH,
+                  height: FIXED_HEIGHT,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top left',
+                }}
+              >
+                <PortfolioPage 
+                  portfolioData={portfolioData} 
+                  currentPage={currentPage}
+                />
+              </div>
             </div>
 
             <button 
