@@ -1,0 +1,142 @@
+/* SpecCard.css */
+
+.spec-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: #FFFFFF;
+    border: 1px solid #F3F3F3;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s;
+  }
+  
+  .spec-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* 스펙 태그 */
+  .spec-tag {
+    display: flex;
+    height: 30px;
+    padding: 3px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 8px;
+    width: fit-content;
+  }
+  
+  .spec-tag svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  
+  .spec-tag span {
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  /* 타이틀 */
+  .spec-card-title {
+    margin: 0;
+    color: #000;
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.18px;
+  }
+  
+  /* 세부정보 */
+  .spec-card-details {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    color: #808080;
+    font-family: Pretendard;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  .spec-card-details .dot {
+    color: #D0D0D0;
+    font-size: 12px;
+  }
+  
+  /* 구분선 */
+  .spec-card-divider {
+    width: 100%;
+    max-width: 304px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 날짜 */
+  .spec-card-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .spec-card-date svg {
+    width: 17px;
+    height: 17px;
+    aspect-ratio: 1/1;
+    flex-shrink: 0;
+  }
+  
+  .spec-card-date span {
+    color: rgba(0, 0, 0, 0.50);
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: -0.16px;
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .spec-card {
+      padding: 14px;
+      gap: 10px;
+    }
+  
+    .spec-tag {
+      height: 26px;
+      padding: 2px 8px;
+    }
+  
+    .spec-tag span {
+      font-size: 14px;
+    }
+  
+    .spec-tag svg {
+      width: 16px;
+      height: 16px;
+    }
+  
+    .spec-card-title {
+      font-size: 16px;
+    }
+  
+    .spec-card-details {
+      font-size: 14px;
+    }
+  
+    .spec-card-date span {
+      font-size: 14px;
+    }
+  }
