@@ -6,7 +6,8 @@ import MakingPortfolio from "./../components/MakingPortfolio/MakingPortfolio";
 import MakingPortfolioNext from "./../components/MakingPortfolio/MakingPortfolioNext";
 import MakingPortfolioFinal from "./../components/MakingPortfolio/MakingPortfolioFinal";
 import MakingPortfolioComplete from "./../components/MakingPortfolio/MakingPortfolioComplete";
-import PortfolioViewer from "./../components/PortfolioViewer/PortfolioViewer"; // ⭐ 뷰어 추가!
+import PortfolioViewer from "./../components/PortfolioViewer/PortfolioViewer";
+import ArchivePage from "./../components/HomeTracker/ArchivePage"; // ⭐ HomeTracker 폴더
 import "./../App.css";
 import ProfileCard from "../components/Profile/ProfileCard";
 import banner from "../assets/icons/banner.png";
@@ -38,7 +39,7 @@ export default function MainPage({ onLogout }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const navigate = useNavigate();
   const [selectedPortfolioItems, setSelectedPortfolioItems] = useState([]);
-  const [createdPortfolioData, setCreatedPortfolioData] = useState(null); // ⭐ 추가!
+  const [createdPortfolioData, setCreatedPortfolioData] = useState(null);
 
   // ChooseOption 페이지로 이동하는 함수
   const handleGoToChooseOption = () => {
@@ -55,6 +56,11 @@ export default function MainPage({ onLogout }) {
 
   const handleHomeClick = () => {
     setCurrentPage("home");
+  };
+
+  // ⭐ 아카이브 페이지로 이동
+  const handleArchiveClick = () => {
+    setCurrentPage("archive");
   };
 
   const handleGoToActivity = () => {
@@ -76,14 +82,12 @@ export default function MainPage({ onLogout }) {
   const handleGoToExperience = (tags) => {
     console.log('경험 페이지로 이동:', tags);
     setSelectedTags(tags);
-    // setCurrentPage("experience");
   };
 
   // ✅ 스펙 페이지로 이동 (추후 구현)
   const handleGoToSpec = (tags) => {
     console.log('스펙 페이지로 이동:', tags);
     setSelectedTags(tags);
-    // setCurrentPage("spec");
   };
 
   // ===== 포트폴리오 5단계 플로우 =====
@@ -120,30 +124,28 @@ export default function MainPage({ onLogout }) {
     console.log('🎉 포트폴리오 생성 완료!');
     console.log('전체 데이터:', portfolioData);
     
-    // ⭐ 포트폴리오 데이터 저장!
     setCreatedPortfolioData(portfolioData);
-    
-    // TODO: API 호출
-    // await savePortfolio(portfolioData);
-    
-    // 완료 페이지로 이동
     setCurrentPage("portfolioComplete");
   };
 
-  // Step 4 -> Step 5 (뷰어로 자동 이동) ⭐ 수정!
+  // Step 4 -> Step 5 (뷰어로 자동 이동)
   const handleGoToPortfolioViewer = () => {
     console.log('📋 포트폴리오 뷰어로 이동');
     setCurrentPage("portfolioViewer");
   };
 
-  // 뷰어 닫기 ⭐ 추가!
+  // 뷰어 닫기
   const handleClosePortfolioViewer = () => {
     console.log('뷰어 닫기 - 홈으로 이동');
     setCurrentPage("home");
-    // 데이터 초기화
     setCreatedPortfolioData(null);
     setSelectedPortfolioItems([]);
     setSelectedTags([]);
+  };
+
+  // 포트폴리오 저장 성공
+  const handleSaveSuccess = (savedPortfolio) => {
+    console.log('포트폴리오 저장 성공:', savedPortfolio);
   };
 
   useEffect(() => {
@@ -152,10 +154,9 @@ export default function MainPage({ onLogout }) {
     }
   }, [isProfileSettingsOpen]);
 
-  // ⭐ Complete 페이지에서 자동으로 뷰어로 이동
+  // Complete 페이지에서 자동으로 뷰어로 이동
   useEffect(() => {
     if (currentPage === "portfolioComplete") {
-      // 2초 후 자동으로 뷰어로 이동
       const timer = setTimeout(() => {
         handleGoToPortfolioViewer();
       }, 2000);
@@ -165,9 +166,23 @@ export default function MainPage({ onLogout }) {
   }, [currentPage]);
 
   const renderMainContent = () => {
+    // ⭐ 아카이브 페이지
+    if (currentPage === "archive") {
+      return (
+        <ArchivePage 
+          isPanelCollapsed={isPanelCollapsed}
+          onGoToChooseOption={handleGoToChooseOption}
+        />
+      );
+    }
+
     if (currentPage === "home") {
-      return <MainHome isPanelCollapsed={isPanelCollapsed} 
-      onGoToChooseOption={handleGoToChooseOption}/>;
+      return (
+        <MainHome 
+          isPanelCollapsed={isPanelCollapsed} 
+          onGoToChooseOption={handleGoToChooseOption}
+        />
+      );
     } 
     else if (currentPage === "chooseOption") {
       return (
@@ -218,12 +233,13 @@ export default function MainPage({ onLogout }) {
         />
       );
     }
-    // ===== Step 5: 포트폴리오 뷰어 ===== ⭐ 새로 추가!
+    // ===== Step 5: 포트폴리오 뷰어 =====
     else if (currentPage === "portfolioViewer") {
       return (
         <PortfolioViewer 
           portfolioData={createdPortfolioData}
           onClose={handleClosePortfolioViewer}
+          onSaveSuccess={handleSaveSuccess}
         />
       );
     }
@@ -240,6 +256,9 @@ export default function MainPage({ onLogout }) {
     { name: "CATCH", logo: catchLogo, url: "https://www.catch.co.kr" },
   ];
 
+  // ⭐ 아카이브 페이지에서는 사이드바 숨김
+  const showSidebar = currentPage === "home";
+
   return (
     <div className="App" style={{backgroundColor: "#F7F7F7"}}>
       <LeftPanel
@@ -247,6 +266,7 @@ export default function MainPage({ onLogout }) {
         onToggle={handlePanelToggle}
         onCreateNew={handleCreateNew}
         onHomeClick={handleHomeClick}
+        onArchiveClick={handleArchiveClick}  // ⭐ 아카이브 핸들러 전달
         onLogout={onLogout}
         isProfileSettingsOpen={isProfileSettingsOpen}
         onOpenProfileSettings={handleOpenProfileSettings} 
@@ -272,7 +292,7 @@ export default function MainPage({ onLogout }) {
             display: "flex",
             gap: "24px",
             margin: "0 auto",
-            paddingTop: "24px",
+            paddingTop: currentPage === "archive" ? "0" : "24px",
             flex: "1 1 auto",
             width: "100%",
             justifyContent: "center",
@@ -288,7 +308,8 @@ export default function MainPage({ onLogout }) {
             {renderMainContent()}
           </div>
 
-          {currentPage === "home" && (
+          {/* ⭐ 홈에서만 사이드바 표시 */}
+          {showSidebar && (
             <div
               style={{
                 width: "340px",

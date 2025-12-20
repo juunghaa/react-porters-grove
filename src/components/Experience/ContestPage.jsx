@@ -9,7 +9,7 @@ import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 const createActivity = async (data) => {
   const access = localStorage.getItem("access");
   
-  const response = await fetch("https://grove.beer/api/activities/", {
+  const response = await fetch("https://grove.ajousw.kr/api/activities/", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${access}`,

@@ -6,7 +6,6 @@ import checkIcon from '../../assets/image/check.png';
 const GoalStatus = ({ isPanelCollapsed }) => {
   const [goal, setGoal] = useState('');
   const [savedGoal, setSavedGoal] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -27,7 +26,6 @@ const GoalStatus = ({ isPanelCollapsed }) => {
           if (data.content) {
             setGoal(data.content);
             setSavedGoal(data.content);
-            setIsCompleted(data.is_completed || false);
           }
         }
       } catch (error) {
@@ -39,7 +37,7 @@ const GoalStatus = ({ isPanelCollapsed }) => {
   }, []);
 
   // 목표 저장 API 호출
-  const saveGoal = async (content, completed = false) => {
+  const saveGoal = async (content) => {
     const access = localStorage.getItem('access');
     
     const response = await fetch('/api/dashboard/goal/', {
@@ -50,7 +48,6 @@ const GoalStatus = ({ isPanelCollapsed }) => {
       },
       body: JSON.stringify({
         content: content,
-        is_completed: completed,
       }),
     });
 
@@ -68,7 +65,7 @@ const GoalStatus = ({ isPanelCollapsed }) => {
     setIsLoading(true);
 
     try {
-      const result = await saveGoal(goal.trim(), isCompleted);
+      const result = await saveGoal(goal.trim());
       console.log('✅ 목표 저장 성공:', result);
       
       setSavedGoal(goal.trim());
@@ -80,24 +77,6 @@ const GoalStatus = ({ isPanelCollapsed }) => {
     } catch (error) {
       console.error('❌ 목표 저장 실패:', error);
       alert('목표 저장에 실패했습니다. 다시 시도해주세요.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 완료 토글
-  const handleToggleComplete = async () => {
-    if (!savedGoal || isLoading) return;
-
-    setIsLoading(true);
-
-    try {
-      const newCompleted = !isCompleted;
-      await saveGoal(savedGoal, newCompleted);
-      setIsCompleted(newCompleted);
-      console.log('✅ 완료 상태 변경:', newCompleted);
-    } catch (error) {
-      console.error('❌ 완료 상태 변경 실패:', error);
     } finally {
       setIsLoading(false);
     }
@@ -149,26 +128,9 @@ const GoalStatus = ({ isPanelCollapsed }) => {
           </button>
         </div>
 
-        {/* 저장된 목표가 있으면 완료 체크박스 표시 */}
-        {savedGoal && (
-          <div className="saved-goal-section">
-            <label className="complete-label">
-              <input
-                type="checkbox"
-                checked={isCompleted}
-                onChange={handleToggleComplete}
-                disabled={isLoading}
-              />
-              <span className={isCompleted ? 'completed' : ''}>
-                {isCompleted ? '목표 달성! 🎉' : '목표 달성하기'}
-              </span>
-            </label>
-          </div>
-        )}
-
         {showMessage && (
           <div className="saved-goal-message">
-            목표가 저장되었습니다! 🎯
+            목표가 저장되었습니다!
           </div>
         )}
       </div>

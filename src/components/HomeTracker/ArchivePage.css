@@ -1,0 +1,414 @@
+/* ===================================
+   아카이브 페이지 컨테이너
+   =================================== */
+   .archive-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 32px 40px;
+    box-sizing: border-box;
+    background: #F7F7F7;
+  }
+  
+  /* ===================================
+     페이지 헤더
+     =================================== */
+  .archive-header {
+    margin-bottom: 32px;
+  }
+  
+  .archive-title {
+    font-family: "SUIT Variable";
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.32px;
+  }
+  
+  .archive-subtitle {
+    font-family: "SUIT Variable";
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    margin: 0;
+  }
+  
+  /* ===================================
+     탭 영역
+     =================================== */
+  .archive-tabs {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 0;
+  }
+  
+  .archive-tab {
+    background: none;
+    border: none;
+    padding: 16px 4px;
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-weight: 500;
+    color: #999;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  
+  .archive-tab:hover {
+    color: #666;
+  }
+  
+  .archive-tab.active {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  
+  .archive-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #126431;
+    border-radius: 2px 2px 0 0;
+  }
+  
+  .archive-tab-count {
+    margin-left: 8px;
+    font-size: 16px;
+    color: inherit;
+  }
+  
+  /* ===================================
+     콘텐츠 영역
+     =================================== */
+  .archive-content {
+    width: 100%;
+  }
+  
+  /* ===================================
+     전체 탭 박스 컨테이너
+     =================================== */
+  .archive-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+  
+  .archive-boxes > * {
+    min-height: 400px;
+  }
+  
+  /* ===================================
+     나의 경험 탭 wrapper
+     =================================== */
+  .archive-experience-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  /* ===================================
+     커스텀 스크롤바
+     =================================== */
+  .archive-scrollbar-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: #EBEBEB;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .archive-scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-radius: 999px;
+    background: #CCC;
+    cursor: grab;
+    transition: background 0.2s;
+  }
+  
+  .archive-scrollbar-thumb:hover {
+    background: #BBB;
+  }
+  
+  .archive-scrollbar-thumb:active {
+    cursor: grabbing;
+    background: #AAA;
+  }
+  
+  /* ===================================
+     경험 리스트
+     =================================== */
+  .archive-list {
+    display: grid;
+    gap: 24px;
+    width: 100%;
+  }
+  
+  /* 4개 이하: 그리드로 균등 분배 */
+  .archive-list.no-scroll {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .archive-list.no-scroll > * {
+    min-height: 380px;
+  }
+  
+  /* 5개 이상: 가로 스크롤 */
+  .archive-list.has-scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+  }
+  
+  .archive-list.has-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .archive-list.has-scroll > * {
+    flex: 0 0 calc(25% - 18px);
+    min-width: 280px;
+    min-height: 380px;
+  }
+  
+  /* ===================================
+     로딩 상태
+     =================================== */
+  .archive-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    color: #999;
+    font-family: "SUIT Variable";
+    font-size: 18px;
+  }
+  
+  /* ===================================
+     빈 상태 메시지
+     =================================== */
+  .archive-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    background: #FFF;
+    border-radius: 20px;
+    text-align: center;
+  }
+  
+  .archive-empty-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 24px;
+    opacity: 0.5;
+  }
+  
+  .archive-empty-text {
+    font-family: "SUIT Variable";
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .archive-empty-subtext {
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 24px;
+  }
+  
+  .archive-empty-button {
+    padding: 12px 24px;
+    background: #126431;
+    color: #FFF;
+    border: none;
+    border-radius: 8px;
+    font-family: "SUIT Variable";
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .archive-empty-button:hover {
+    background: #0d4a24;
+  }
+  
+  /* ===================================
+     반응형 - 대형 화면
+     =================================== */
+  @media (min-width: 1600px) {
+    .archive-page {
+      padding: 40px 60px;
+    }
+  
+    .archive-list.no-scroll {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  
+    .archive-list.has-scroll > * {
+      flex: 0 0 calc(20% - 20px);
+    }
+  }
+  
+  /* ===================================
+     반응형 - 중간 화면
+     =================================== */
+  @media (max-width: 1400px) {
+    .archive-boxes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .archive-list.no-scroll {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .archive-list.has-scroll > * {
+      flex: 0 0 calc(33.333% - 16px);
+      min-width: 260px;
+    }
+  }
+  
+  @media (max-width: 1200px) {
+    .archive-page {
+      padding: 24px 32px;
+    }
+  
+    .archive-boxes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .archive-list.no-scroll {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .archive-list.has-scroll > * {
+      flex: 0 0 calc(50% - 12px);
+      min-width: 240px;
+    }
+  
+    .archive-tabs {
+      gap: 24px;
+    }
+  
+    .archive-tab {
+      font-size: 16px;
+      padding: 12px 4px;
+    }
+  }
+  
+  /* ===================================
+     반응형 - 작은 화면
+     =================================== */
+  @media (max-width: 900px) {
+    .archive-page {
+      padding: 20px 24px;
+    }
+  
+    .archive-title {
+      font-size: 28px;
+    }
+  
+    .archive-subtitle {
+      font-size: 14px;
+    }
+  
+    .archive-tabs {
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+  
+    .archive-tabs::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .archive-tab {
+      font-size: 15px;
+      white-space: nowrap;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .archive-page {
+      padding: 16px 20px;
+    }
+  
+    .archive-header {
+      margin-bottom: 24px;
+    }
+  
+    .archive-title {
+      font-size: 24px;
+    }
+  
+    .archive-boxes {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  
+    .archive-boxes > * {
+      min-height: 300px;
+    }
+  
+    .archive-list.no-scroll {
+      grid-template-columns: 1fr;
+    }
+  
+    .archive-list.no-scroll > * {
+      min-height: 300px;
+    }
+  
+    .archive-list.has-scroll > * {
+      flex: 0 0 85%;
+      min-width: 280px;
+    }
+  
+    .archive-scrollbar-track {
+      height: 8px;
+    }
+  }
+  
+  /* ===================================
+     모바일
+     =================================== */
+  @media (max-width: 480px) {
+    .archive-page {
+      padding: 12px 16px;
+    }
+  
+    .archive-title {
+      font-size: 22px;
+    }
+  
+    .archive-tabs {
+      gap: 12px;
+    }
+  
+    .archive-tab {
+      font-size: 14px;
+      padding: 10px 2px;
+    }
+  
+    .archive-tab-count {
+      font-size: 14px;
+      margin-left: 4px;
+    }
+  }
