@@ -1,0 +1,114 @@
+/* 메인 컨텐츠 컨테이너 - flex로 변경 */
+.contest-main-content {
+  display: flex;
+  gap: 16px; /* 두 박스 사이 간격 */
+  align-items: stretch; /* 자식 요소들 높이를 같게 */
+}
+
+/* 기본정보 박스 */
+.contest-form-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 관련자료 박스 */
+.related-materials-container {
+  flex: 0 0 360px; /* 원하는 너비로 조정 가능 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 어학 시험 섹션 */
+.language-test-section {
+  padding: 0 24px 24px 24px;
+  width: 100%;
+}
+
+.add-language-test-btn {
+  padding: 12px 0;
+  background-color: transparent;
+  border: none;
+  color: #126431; /* 색상 변경 */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+  text-align: left;
+  width: auto;
+}
+
+.add-language-test-btn:hover {
+  color: #0d4a23; /* 호버 시 조금 더 진한 색 */
+}
+
+/* 어학 시험 컨테이너 -*/
+.language-test-container {
+  background-color: #fafafa;
+  border: 2px #d0d5dd;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
+
+  width: 98%; /* 전체 너비 */
+  box-sizing: border-box;
+}
+
+.language-test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.language-test-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+}
+
+.remove-test-btn {
+  background: none;
+  border: none;
+  color: #d0d5dd;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.remove-test-btn:hover {
+  color: #999;
+  background-color: #f0f0f0;
+}
+
+.language-test-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.test-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.test-field-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.test-field .form-input {
+  width: 100%;
+  box-sizing: border-box;
+}

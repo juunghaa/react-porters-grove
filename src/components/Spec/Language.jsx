@@ -16,14 +16,18 @@ const Language = () => {
   const [experienceType, setExperienceType] = useState("");
   const [language, setLanguage] = useState("");
   const [customLanguage, setCustomLanguage] = useState("");
+  const [proficiencyLevel, setProficiencyLevel] = useState("");
+
+  // 어학 시험 배열 state 추가
+  const [languageTests, setLanguageTests] = useState([]);
 
   // form state
   const [companyName, setCompanyName] = useState("");
   const [employmentType, setEmploymentType] = useState("");
   const [position, setPosition] = useState("");
 
-  const [startDate, setStartDate] = useState(""); // format "YYYY.MM"
-  const [endDate, setEndDate] = useState(""); // format "YYYY.MM"
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [isWorking, setIsWorking] = useState(false);
 
   const [situation, setSituation] = useState("");
@@ -42,9 +46,9 @@ const Language = () => {
     return `${year}-${month}-01`;
   };
 
-  // API instance (optional: set baseURL if needed)
+  // API instance
   const api = axios.create({
-    baseURL: "/", // 필요하면 "https://api.example.com" 으로 변경
+    baseURL: "/",
     headers: { "Content-Type": "application/json" },
   });
 
@@ -56,6 +60,38 @@ const Language = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     navigate("/");
+  };
+
+  // 구사 수준 라디오 버튼 핸들러
+  const handleProficiencyChange = (e) => {
+    setProficiencyLevel(e.target.value);
+  };
+
+  // 어학 시험 추가 핸들러
+  const handleAddLanguageTest = () => {
+    setLanguageTests([
+      ...languageTests,
+      {
+        id: Date.now(), // 고유 ID
+        testName: "",
+        score: "",
+        acquisitionDate: "",
+      },
+    ]);
+  };
+
+  // 어학 시험 삭제 핸들러
+  const handleRemoveLanguageTest = (id) => {
+    setLanguageTests(languageTests.filter((test) => test.id !== id));
+  };
+
+  // 어학 시험 입력값 변경 핸들러
+  const handleLanguageTestChange = (id, field, value) => {
+    setLanguageTests(
+      languageTests.map((test) =>
+        test.id === id ? { ...test, [field]: value } : test
+      )
+    );
   };
 
   // 파일 handlers
@@ -98,7 +134,7 @@ const Language = () => {
       company_name: companyName,
       employment_type: employmentType,
       position: position,
-      period_start: yyyymmToIsoDate(startDate), // e.g. "2024-08-01"
+      period_start: yyyymmToIsoDate(startDate),
       period_end: isWorking ? null : yyyymmToIsoDate(endDate),
       is_current: isWorking,
       situation: situation,
@@ -106,6 +142,7 @@ const Language = () => {
       action_detail: actionDetail,
       result_detail: resultDetail,
       link_url: linkUrl || null,
+      language_tests: languageTests, // 어학 시험 데이터 추가
     };
 
     try {
@@ -113,10 +150,8 @@ const Language = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // 성공 처리
       alert("경력 정보가 저장되었습니다.");
-      // 이동하거나 상태 업데이트
-      navigate("/"); // 원하는 페이지로 변경
+      navigate("/");
     } catch (err) {
       console.error("POST /api/careers/ error:", err.response?.data || err);
       const message =
@@ -190,126 +225,41 @@ const Language = () => {
                 />
               )}
 
-              {/* 기간*/}
+              {/* 구사 수준 */}
               <div className="form-row">
-                <div className="form-field-frame field-duration">
-                  <label className="form-field-label">기간</label>
-
-                  <div className="work-period-container">
-                    {/* 시작 */}
-                    <div className="work-date-box">
-                      <span className="work-date-label">시작</span>
-
-                      <select
-                        className="year-select"
-                        value={startDate.split(".")[0] || ""}
-                        onChange={(e) => {
-                          const year = e.target.value;
-                          const month = startDate.split(".")[1] || "01";
-                          setStartDate(`${year}.${month}`);
-                        }}
-                      >
-                        <option value="" disabled>
-                          연도
-                        </option>
-                        {Array.from({ length: 20 }, (_, i) => 2025 - i).map(
-                          (year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          )
-                        )}
-                      </select>
-
-                      <select
-                        className="month-select"
-                        value={startDate.split(".")[1] || ""}
-                        onChange={(e) => {
-                          const month = e.target.value;
-                          const year = startDate.split(".")[0] || "2025";
-                          setStartDate(`${year}.${month}`);
-                        }}
-                      >
-                        <option value="" disabled>
-                          월
-                        </option>
-                        {Array.from({ length: 12 }, (_, i) => {
-                          const m = (i + 1).toString().padStart(2, "0");
-                          return (
-                            <option key={m} value={m}>
-                              {m}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-
-                    {/* 종료*/}
-                    {!isWorking && (
-                      <div className="work-date-box">
-                        <span className="work-date-label">종료</span>
-
-                        <select
-                          className="year-select"
-                          value={endDate?.split(".")[0] || ""}
-                          onChange={(e) => {
-                            const year = e.target.value;
-                            const month = endDate?.split(".")[1] || "01";
-                            setEndDate(`${year}.${month}`);
-                          }}
-                        >
-                          <option value="" disabled>
-                            연도
-                          </option>
-                          {Array.from({ length: 20 }, (_, i) => 2025 - i).map(
-                            (year) => (
-                              <option key={year} value={year}>
-                                {year}
-                              </option>
-                            )
-                          )}
-                        </select>
-
-                        <select
-                          className="month-select"
-                          value={endDate?.split(".")[1] || ""}
-                          onChange={(e) => {
-                            const month = e.target.value;
-                            const year = endDate?.split(".")[0] || "2025";
-                            setEndDate(`${year}.${month}`);
-                          }}
-                        >
-                          <option value="" disabled>
-                            월
-                          </option>
-                          {Array.from({ length: 12 }, (_, i) => {
-                            const m = (i + 1).toString().padStart(2, "0");
-                            return (
-                              <option key={m} value={m}>
-                                {m}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    )}
-
-                    {/* 진행중 토글 */}
-                    <div className="toggle-box">
-                      <span className="working-text">진행 중</span>
-
-                      <label className="switch">
-                        <input
-                          type="checkbox"
-                          checked={isWorking}
-                          onChange={() => {
-                            setIsWorking(!isWorking);
-                            if (!isWorking) setEndDate("");
-                          }}
-                        />
-                        <span className="slider"></span>
-                      </label>
-                    </div>
+                <div className="form-field-frame field-proficiency">
+                  <label className="form-field-label">구사 수준</label>
+                  <div className="award-input-group">
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name="proficiency"
+                        value="conversational"
+                        checked={proficiencyLevel === "conversational"}
+                        onChange={handleProficiencyChange}
+                      />
+                      일상 회화
+                    </label>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name="proficiency"
+                        value="business"
+                        checked={proficiencyLevel === "business"}
+                        onChange={handleProficiencyChange}
+                      />
+                      비즈니스 회화
+                    </label>
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        name="proficiency"
+                        value="native"
+                        checked={proficiencyLevel === "native"}
+                        onChange={handleProficiencyChange}
+                      />
+                      원어민 수준
+                    </label>
                   </div>
                 </div>
               </div>
@@ -342,12 +292,11 @@ const Language = () => {
                       <img src={uploadIcon} alt="upload" />
                     </div>
                     <div className="upload-text">
-                      파일을 선택하거나 여기로 끌어다 놓으세요
+                      파일을 선택하거나 끌어다 놓으세요
                     </div>
                   </div>
                 </div>
 
-                {/* 업로드된 파일 목록 */}
                 {uploadedFiles.length > 0 && (
                   <div className="uploaded-files-list">
                     {uploadedFiles.map((file, index) => (
@@ -370,6 +319,86 @@ const Language = () => {
                 </label>
               </div>
             </div>
+          </div>
+
+          {/* 어학 시험 추가하기 섹션 */}
+          <div className="language-test-section">
+            <button
+              className="add-language-test-btn"
+              onClick={handleAddLanguageTest}
+            >
+              어학 시험 추가하기 +
+            </button>
+
+            {/* 어학 시험 목록 */}
+            {languageTests.map((test, index) => (
+              <div key={test.id} className="language-test-container">
+                <div className="language-test-header">
+                  <h3 className="language-test-title">어학 시험 {index + 1}</h3>
+                  <button
+                    className="remove-test-btn"
+                    onClick={() => handleRemoveLanguageTest(test.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="language-test-fields">
+                  {/* 시험명 */}
+                  <div className="test-field">
+                    <label className="test-field-label">시험명</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="어학 시험의 이름을 입력하세요"
+                      value={test.testName}
+                      onChange={(e) =>
+                        handleLanguageTestChange(
+                          test.id,
+                          "testName",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  {/* 점수/등급 */}
+                  <div className="test-field">
+                    <label className="test-field-label">점수/등급</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="취득한 점수나 등급을 입력하세요"
+                      value={test.score}
+                      onChange={(e) =>
+                        handleLanguageTestChange(
+                          test.id,
+                          "score",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+
+                  {/* 취득일 */}
+                  <div className="test-field">
+                    <label className="test-field-label">취득일</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={test.acquisitionDate}
+                      onChange={(e) =>
+                        handleLanguageTestChange(
+                          test.id,
+                          "acquisitionDate",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
