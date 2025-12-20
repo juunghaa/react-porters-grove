@@ -9,7 +9,108 @@ const ProjectPage = () => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
+
+  // 폼 데이터 state
+  const [formData, setFormData] = useState({
+    title: "",                    // 프로젝트명
+    subject: "",                  // 내용 설명
+    participation_type: "",       // 참여 형태 (team / individual)
+    role: "",                     // 역할
+    period_start: "",             // 시작 기간
+    period_end: "",               // 종료 기간
+    situation: "",                // STAR-T: Situation
+    task_detail: "",              // STAR-T: Task
+    action_detail: "",            // STAR-T: Action
+    result_detail: "",            // STAR-T: Result
+    takeaway: "",                 // STAR-T: Taken
+    link_url: "",                 // 링크 URL
+    // 기본값들
+    organization: "",
+    host: "",
+    work_title: "",
+    is_awarded: false,
+    award_detail: "",
+    attachment: null,
+    category_id: null,
+    tag_ids: [],
+    primary_tag_ids: [],
+    secondary_tag_ids: [],
+    role_items: []
+  });
+
+  // 입력값 변경 핸들러
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // 라디오 버튼 변경 핸들러
+  const handleRadioChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      participation_type: e.target.value
+    }));
+  };
+
+  // API 호출 함수
+  const createActivity = async (data) => {
+    const access = localStorage.getItem("access");
+    
+    const response = await fetch("/api/activities/", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "활동 저장에 실패했습니다.");
+    }
+
+    return response.json();
+  };
+
+  // 작성 완료 버튼 클릭
+  const handleSubmit = async () => {
+    // 필수값 검증
+    if (!formData.title.trim()) {
+      alert("프로젝트명을 입력해주세요.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await createActivity(formData);
+      console.log("✅ 활동 저장 성공:", result);
+      
+      // TODO: 완료 페이지로 이동
+      // navigate("/project-complete", { state: { activityId: result.id } });
+      alert("저장되었습니다!");
+      navigate("/");
+      
+    } catch (error) {
+      console.error("❌ 활동 저장 실패:", error);
+      alert(error.message || "저장에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 취소 버튼
+  const handleCancel = () => {
+    if (window.confirm("작성을 취소하시겠습니까? 입력한 내용이 사라집니다.")) {
+      navigate(-1);
+    }
+  };
 
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -63,43 +164,55 @@ const ProjectPage = () => {
       <div className={`project-content ${isCollapsed ? "expanded" : ""}`}>
         <div className="project-main-box">
           <div className="project-top-bar">
-            <button className="cancel-button">취소</button>
+            <button className="cancel-button" onClick={handleCancel}>
+              취소
+            </button>
             <div className="top-bar-center">
               <img src={chipIcon} alt="chip" className="ProjectChip.png" />
               <span className="top-bar-title">경험 정리하기</span>
             </div>
-            <button className="complete-button">작성 완료</button>
+            <button 
+              className="complete-button" 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "저장 중..." : "작성 완료"}
+            </button>
           </div>
 
           {/* 기본정보 + 관련자료 컨테이너 */}
           <div className="project-main-content">
             {/*큰 박스: 기본정보*/}
             <div className="project-form-container">
-              {/* 기본정보 헤더 */}
               <div className="form-section-header">
                 <h2 className="form-section-title">기본정보</h2>
               </div>
-              {/* 구분선 */}
               <div className="divider-line"></div>
 
-              {/* 프로젝트명 프레임 */}
+              {/* 프로젝트명 */}
               <div className="form-field-frame">
                 <label className="form-field-label">프로젝트명</label>
                 <input
                   type="text"
+                  name="title"
                   className="form-input"
                   placeholder="진행한 프로젝트의 이름을 입력하세요"
+                  value={formData.title}
+                  onChange={handleInputChange}
                 />
               </div>
 
-              {/* 주제, 소속 프레임 */}
+              {/* 내용 설명 */}
               <div className="form-row">
                 <div className="form-field-frame field-topic">
                   <label className="form-field-label">내용 설명</label>
                   <input
                     type="text"
+                    name="subject"
                     className="form-input"
                     placeholder="프로젝트의 주제나 목적을 적어주세요"
+                    value={formData.subject}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -110,13 +223,22 @@ const ProjectPage = () => {
                   <label className="form-field-label">참여 형태</label>
                   <div className="award-input-group">
                     <label className="radio-label">
-                      <input type="radio" name="participation" value="team" />팀
+                      <input 
+                        type="radio" 
+                        name="participation" 
+                        value="team"
+                        checked={formData.participation_type === "team"}
+                        onChange={handleRadioChange}
+                      />
+                      팀
                     </label>
                     <label className="radio-label">
                       <input
                         type="radio"
                         name="participation"
                         value="individual"
+                        checked={formData.participation_type === "individual"}
+                        onChange={handleRadioChange}
                       />
                       개인
                     </label>
@@ -124,26 +246,44 @@ const ProjectPage = () => {
                 </div>
               </div>
 
-              {/* 역할 프레임 */}
+              {/* 역할 */}
               <div className="form-row">
                 <div className="form-field-frame field-team-role">
                   <label className="form-field-label">역할</label>
                   <input
                     type="text"
+                    name="role"
                     className="form-input"
                     placeholder="이 프로젝트에서 어떤 역할을 맡았는지 적어주세요"
+                    value={formData.role}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
 
+              {/* 진행 기간 */}
               <div className="form-row">
                 <div className="form-field-frame field-duration">
                   <label className="form-field-label">진행 기간</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="시작기간 - 종료기간"
-                  />
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <input
+                      type="date"
+                      name="period_start"
+                      className="form-input"
+                      style={{ flex: 1 }}
+                      value={formData.period_start}
+                      onChange={handleInputChange}
+                    />
+                    <span style={{ color: "#999" }}>~</span>
+                    <input
+                      type="date"
+                      name="period_end"
+                      className="form-input"
+                      style={{ flex: 1 }}
+                      value={formData.period_end}
+                      onChange={handleInputChange}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,7 +295,6 @@ const ProjectPage = () => {
               </div>
               <div className="file-divider-line"></div>
 
-              {/* 관련자료 내용이 들어갈 영역 */}
               <div className="materials-content">
                 <label className="form-field-label">파일 업로드</label>
                 <div className="file-upload-box">
@@ -180,24 +319,43 @@ const ProjectPage = () => {
                     </div>
                   </div>
                 </div>
-                <label
-                  className="put-link-label"
-                  onClick={handleUploadClick}
-                  style={{ cursor: "pointer" }}
-                >
-                  링크 추가하기 +
+                
+                {/* 업로드된 파일 목록 */}
+                {uploadedFiles.length > 0 && (
+                  <div className="uploaded-files-list">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="uploaded-file-item">
+                        📄 {file.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 링크 추가 */}
+                <label className="form-field-label" style={{ marginTop: "8px" }}>
+                  링크 URL
                 </label>
+                <input
+                  type="url"
+                  name="link_url"
+                  className="form-input"
+                  placeholder="https://..."
+                  value={formData.link_url}
+                  onChange={handleInputChange}
+                />
               </div>
             </div>
           </div>
 
+          {/* 세부 내용 */}
           <div className="detail-content-container">
             <div className="form-section-header">
               <h2 className="form-section-title">세부 내용</h2>
             </div>
             <div className="divider-line"></div>
-            {/* 세부 내용이 들어갈 영역 */}
+
             <div className="detail-fields">
+              {/* Situation */}
               <div className="text-frame">
                 <div className="first-text-line">Situation (상황)</div>
                 <div className="second-text-line">
@@ -205,61 +363,71 @@ const ProjectPage = () => {
                 </div>
               </div>
               <textarea
+                name="situation"
                 className="detail-textarea"
                 placeholder="어떤 배경이나 문제의식에서 출발했는지 들려주세요."
+                value={formData.situation}
+                onChange={handleInputChange}
               />
 
-              {/* 두 번째 Task (과제) */}
+              {/* Task */}
               <div className="text-frame">
                 <div className="first-text-line">Task (과제)</div>
                 <div className="second-text-line">
                   그 상황에서 맡은 역할이나 해결해야 했던 문제는 무엇이었나요?
                 </div>
               </div>
-
               <textarea
+                name="task_detail"
                 className="detail-textarea"
                 placeholder="스스로 중요하다고 느꼈던 목표나 미션이 있었다면 함께 적어주세요."
+                value={formData.task_detail}
+                onChange={handleInputChange}
               />
 
-              {/* 세번째 Action (행동) */}
+              {/* Action */}
               <div className="text-frame">
                 <div className="first-text-line">Action (행동)</div>
                 <div className="second-text-line">
                   그 목표를 이루기 위해 어떤 시도를 했나요?
                 </div>
               </div>
-
               <textarea
+                name="action_detail"
                 className="detail-textarea"
                 placeholder="그 방식을 선택한 이유나 과정에서 고민했던 점이 있다면 함께 적어주세요."
+                value={formData.action_detail}
+                onChange={handleInputChange}
               />
 
-              {/* 네번째 Result (결과) */}
+              {/* Result */}
               <div className="text-frame">
                 <div className="first-text-line">Result (결과)</div>
                 <div className="second-text-line">
                   그 결과 어떤 변화나 성과가 있었나요?
                 </div>
               </div>
-
               <textarea
+                name="result_detail"
                 className="detail-textarea"
                 placeholder="수치나 결과물, 배운 점 등을 구체적으로 적어주세요."
+                value={formData.result_detail}
+                onChange={handleInputChange}
               />
 
-              {/* 다섯번째 Taken (교훈) */}
+              {/* Taken */}
               <div className="text-frame">
                 <div className="first-text-line">Taken (교훈)</div>
                 <div className="second-text-line">
-                  이 경험을 통해 새롭게 깨달은 점이나 다음에 바꾸고 싶은 점이
-                  있나요?
+                  이 경험을 통해 새롭게 깨달은 점이나 다음에 바꾸고 싶은 점이 있나요?
                 </div>
               </div>
-
               <textarea
+                name="takeaway"
                 className="detail-textarea"
                 placeholder="앞으로 같은 상황이 온다면, 어떻게 접근하고 싶은지 적어주세요"
+                value={formData.takeaway}
+                onChange={handleInputChange}
               />
             </div>
           </div>
