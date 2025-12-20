@@ -14,30 +14,23 @@ const ProjectPage = () => {
 
   // 폼 데이터 state
   const [formData, setFormData] = useState({
-    title: "",                    // 프로젝트명
-    subject: "",                  // 내용 설명
-    participation_type: "",       // 참여 형태 (team / individual)
-    role: "",                     // 역할
-    period_start: "",             // 시작 기간
-    period_end: "",               // 종료 기간
-    situation: "",                // STAR-T: Situation
-    task_detail: "",              // STAR-T: Task
-    action_detail: "",            // STAR-T: Action
-    result_detail: "",            // STAR-T: Result
-    takeaway: "",                 // STAR-T: Taken
-    link_url: "",                 // 링크 URL
-    // 기본값들
+    title: "",
+    subject: "",
+    participation_type: "",
+    role: "",
+    period_start: "",
+    period_end: "",
+    situation: "",
+    task_detail: "",
+    action_detail: "",
+    result_detail: "",
+    takeaway: "",
+    link_url: "",
     organization: "",
     host: "",
     work_title: "",
     is_awarded: false,
     award_detail: "",
-    attachment: null,
-    category_id: null,
-    tag_ids: [],
-    primary_tag_ids: [],
-    secondary_tag_ids: [],
-    role_items: []
   });
 
   // 입력값 변경 핸들러
@@ -57,22 +50,61 @@ const ProjectPage = () => {
     }));
   };
 
+  // ⭐ 빈 값 필터링 함수
+  const cleanFormData = (data) => {
+    const cleaned = {};
+    
+    Object.keys(data).forEach(key => {
+      const value = data[key];
+      
+      // null, undefined, 빈 문자열은 제외
+      if (value === null || value === undefined || value === "") {
+        return;
+      }
+      
+      // 문자열이면 trim
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed) {
+          cleaned[key] = trimmed;
+        }
+      } else {
+        cleaned[key] = value;
+      }
+    });
+
+    return cleaned;
+  };
+
   // API 호출 함수
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
     
-    const response = await fetch("https://grove.ajousw.kr/api/activities/", {
+    // ⭐ 빈 값 제거
+    const cleanedData = cleanFormData(data);
+    
+    console.log("📤 전송할 데이터:", cleanedData);
+    
+    const response = await fetch("/api/activities/", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${access}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanedData),
     });
 
+    // ⭐ 에러 응답 상세 로깅
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "활동 저장에 실패했습니다.");
+      const errorText = await response.text();
+      console.error("❌ API 에러 응답:", errorText);
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        throw new Error(JSON.stringify(errorData));
+      } catch {
+        throw new Error(errorText || "활동 저장에 실패했습니다.");
+      }
     }
 
     return response.json();
@@ -92,14 +124,12 @@ const ProjectPage = () => {
       const result = await createActivity(formData);
       console.log("✅ 활동 저장 성공:", result);
       
-      // TODO: 완료 페이지로 이동
-      // navigate("/project-complete", { state: { activityId: result.id } });
       alert("저장되었습니다!");
       navigate("/");
       
     } catch (error) {
       console.error("❌ 활동 저장 실패:", error);
-      alert(error.message || "저장에 실패했습니다. 다시 시도해주세요.");
+      alert("저장에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
