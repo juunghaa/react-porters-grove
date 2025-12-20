@@ -25,6 +25,9 @@ import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
 import OutUnivPage from "./components/Experience/OutUnivPage.jsx"; //교외활동
 import Career from "./components/Spec/Career.jsx"; //경력
 import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
+import Award from "./components/Spec/Award.jsx"; //수상
+import Overseas from "./components/Spec/Overseas.jsx"; //해외경험
+import Language from "./components/Spec/Language.jsx"; //외국어
 import PortfolioCreationFlow from './components/MakingPortfolio/PortfolioCreationFlow';
 
 export default function App() {
@@ -110,6 +113,14 @@ export default function App() {
         {/* ✅ 자격증 페이지 */}
         <Route path="/certificate" element={<CertificatePage />} />
 
+        {/* ✅ 수상 페이지 */}
+        <Route path="/award" element={<Award />} />
+
+        {/* ✅ 해외활동 페이지 */}
+        <Route path="/overseas" element={<Overseas />} />
+
+        {/* ✅ 외국어페이지 */}
+        <Route path="/language" element={<Language />} />
         {/* 포트폴리오 생성 플로우 페이지 */}
         <Route path="/portfolio-creation" element={<PortfolioCreationFlow />} />
 

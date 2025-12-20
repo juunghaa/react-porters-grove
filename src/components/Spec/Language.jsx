@@ -2,17 +2,20 @@ import React, { useState, useRef } from "react";
 import LeftPanel from "../LeftPanel/LeftPanel";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Career.css";
-import chipIcon from "../../assets/icons/Career.png";
+import "./Language.css";
+import chipIcon from "../../assets/icons/language.png";
 import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 
-const Career = () => {
+const Language = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
   // UI state
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [experienceType, setExperienceType] = useState("");
+  const [language, setLanguage] = useState("");
+  const [customLanguage, setCustomLanguage] = useState("");
 
   // form state
   const [companyName, setCompanyName] = useState("");
@@ -53,17 +56,6 @@ const Career = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     navigate("/");
-  };
-
-  // 취소 버튼 핸들러
-  const handleCancel = () => {
-    if (
-      window.confirm(
-        "작성을 취소하시겠습니까? 입력한 내용이 저장되지 않습니다."
-      )
-    ) {
-      navigate(-1);
-    }
   };
 
   // 파일 handlers
@@ -147,10 +139,7 @@ const Career = () => {
       <div className={`contest-content ${isCollapsed ? "expanded" : ""}`}>
         <div className="contest-main-box">
           <div className="contest-top-bar">
-            <button
-              className="cancel-button"
-              onClick=/*{() => navigate(-1)}*/ {handleCancel}
-            >
+            <button className="cancel-button" onClick={() => navigate(-1)}>
               취소
             </button>
             <div className="top-bar-center">
@@ -169,85 +158,42 @@ const Career = () => {
               </div>
               <div className="divider-line" />
 
-              {/* 회사명 */}
-              <div className="form-field-frame">
-                <label className="form-field-label">회사명</label>
+              <select
+                className="form-input select-experience"
+                value={experienceType}
+                onChange={(e) => setExperienceType(e.target.value)}
+              >
+                <option value="" disabled>
+                  언어를 선택하세요
+                </option>
+                <option value="영어">영어 (English)</option>
+                <option value="프랑스어">프랑스어 (Français)</option>
+                <option value="독일어">독일어 (Deutsch)</option>
+                <option value="스페인어">스페인어 (Español)</option>
+                <option value="이탈리아어">이탈리아어 (Italiano)</option>
+                <option value="일본어">일본어 (日本語)</option>
+                <option value="중국어">중국어 (中文)</option>
+                <option value="러시아어">러시아어 (Русский)</option>
+                <option value="포르투갈어">포르투갈어 (Português)</option>
+                <option value="아랍어">아랍어 (العربية)</option>
+                <option value="custom">기타 (직접입력)</option>
+              </select>
+
+              {experienceType === "custom" && (
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="회사명을 입력해 주세요"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="사용한 언어를 직접 입력하세요"
+                  value={customLanguage}
+                  onChange={(e) => setCustomLanguage(e.target.value)}
+                  style={{ marginTop: "8px" }}
                 />
-              </div>
+              )}
 
-              {/* 참여 형태 - radio */}
-              <div className="form-row">
-                <div className="form-field-frame field-participation-type">
-                  <label className="form-field-label">참여 형태</label>
-                  <div className="award-input-group">
-                    <label className="radio-label">
-                      <input
-                        type="radio"
-                        name="participation"
-                        value="contract"
-                        checked={employmentType === "contract"}
-                        onChange={(e) => setEmploymentType(e.target.value)}
-                      />{" "}
-                      계약직
-                    </label>
-                    <label className="radio-label">
-                      <input
-                        type="radio"
-                        name="participation"
-                        value="individual"
-                        checked={employmentType === "individual"}
-                        onChange={(e) => setEmploymentType(e.target.value)}
-                      />{" "}
-                      정규직
-                    </label>
-                    <label className="radio-label">
-                      <input
-                        type="radio"
-                        name="participation"
-                        value="intern"
-                        checked={employmentType === "intern"}
-                        onChange={(e) => setEmploymentType(e.target.value)}
-                      />{" "}
-                      인턴
-                    </label>
-                    <label className="radio-label">
-                      <input
-                        type="radio"
-                        name="participation"
-                        value="freelancer"
-                        checked={employmentType === "freelancer"}
-                        onChange={(e) => setEmploymentType(e.target.value)}
-                      />{" "}
-                      프리랜서
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* 직무/부서 */}
-              <div className="form-row">
-                <div className="form-field-frame field-team-role">
-                  <label className="form-field-label">직무/부서</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="담당했던 부서나 직무를 입력해주세요"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* 재직 기간 (시작 / 종료 / 재직중) */}
+              {/* 기간*/}
               <div className="form-row">
                 <div className="form-field-frame field-duration">
-                  <label className="form-field-label">재직 기간</label>
+                  <label className="form-field-label">기간</label>
 
                   <div className="work-period-container">
                     {/* 시작 */}
@@ -298,7 +244,7 @@ const Career = () => {
                       </select>
                     </div>
 
-                    {/* 종료 (재직중이면 숨김) */}
+                    {/* 종료*/}
                     {!isWorking && (
                       <div className="work-date-box">
                         <span className="work-date-label">종료</span>
@@ -348,9 +294,9 @@ const Career = () => {
                       </div>
                     )}
 
-                    {/* 재직중 토글 */}
+                    {/* 진행중 토글 */}
                     <div className="toggle-box">
-                      <span className="working-text">재직 중</span>
+                      <span className="working-text">진행 중</span>
 
                       <label className="switch">
                         <input
@@ -366,63 +312,6 @@ const Career = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* 관련 입력들: situation / task / action / result */}
-              <div className="divider-line" />
-
-              <div className="detail-fields">
-                <div className="text-frame">
-                  <div className="first-text-line">Situation (상황)</div>
-                  <div className="second-text-line">
-                    이 경험이 어떤 계기로, 어떤 배경에서 시작됐는지 알려주세요
-                  </div>
-                </div>
-                <textarea
-                  className="detail-textarea"
-                  placeholder="팀 구성, 경험 주제, 당시 상황이 어땠는지 적어주세요"
-                  value={situation}
-                  onChange={(e) => setSituation(e.target.value)}
-                />
-
-                <div className="text-frame">
-                  <div className="first-text-line">Task (과제)</div>
-                  <div className="second-text-line">
-                    그 상황에서 맡은 역할이나 해결해야 했던 문제는 무엇이었나요?
-                  </div>
-                </div>
-                <textarea
-                  className="detail-textarea"
-                  placeholder="구체적인 목표나 미션 중심으로 적어주세요"
-                  value={taskDetail}
-                  onChange={(e) => setTaskDetail(e.target.value)}
-                />
-
-                <div className="text-frame">
-                  <div className="first-text-line">Action (행동)</div>
-                  <div className="second-text-line">
-                    목표를 달성하기 위해 어떤 행동을 했나요?
-                  </div>
-                </div>
-                <textarea
-                  className="detail-textarea"
-                  placeholder="직접 수행한 일, 협업 방식, 사용한 툴 등을 중심으로 적어주세요"
-                  value={actionDetail}
-                  onChange={(e) => setActionDetail(e.target.value)}
-                />
-
-                <div className="text-frame">
-                  <div className="first-text-line">Result (결과)</div>
-                  <div className="second-text-line">
-                    그 결과 어떤 변화나 성과가 있었나요?
-                  </div>
-                </div>
-                <textarea
-                  className="detail-textarea"
-                  placeholder="수치나 결과물, 배운 점 등을 구체적으로 적어주세요"
-                  value={resultDetail}
-                  onChange={(e) => setResultDetail(e.target.value)}
-                />
               </div>
             </div>
 
@@ -488,4 +377,4 @@ const Career = () => {
   );
 };
 
-export default Career;
+export default Language;

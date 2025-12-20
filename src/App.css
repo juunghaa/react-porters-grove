@@ -1,5 +1,9 @@
 .App {
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
+}
+/* index.css */
+html {
+  zoom: 0.8;
 }
 .login-form {
   background-color: #313845;
@@ -108,14 +112,14 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
-  
+
   width: 30%; /*로그인폼의 퍼센트 비율만큼 로그인 옵션이 차지함*/
   min-width: 400px;
   margin-left: auto;
   margin-right: auto;
 }
 .login-options {
-  display:flex;
+  display: flex;
   align-items: center;
   gap: 2px;
 }
@@ -294,7 +298,6 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
   height: 45px;
   padding: 16px 24px;
 
-
   background-color: white;
   color: #333;
   font-weight: 500;
@@ -310,7 +313,9 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 .google-login-button:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
-.google-login-button + .github-login-button { margin-top: 15px; }
+.google-login-button + .github-login-button {
+  margin-top: 15px;
+}
 
 /* App.css */
 .main-page {
@@ -328,7 +333,7 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -339,7 +344,7 @@ https://developers.google.com/identity/branding-guidelines#download-brand-icons
   max-height: 80vh;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
