@@ -30,6 +30,13 @@ export default function ProfileCard({
     const [showPicker, setShowPicker] = useState(false);
     const [showToast, setShowToast] = useState(false);
 
+    // ⭐ stats 상태 추가
+    const [statsCounts, setStatsCounts] = useState({
+      activities: 0,
+      specs: 0,
+      portfolios: 0
+    });
+
     function normalizeUrl(raw) {
         let url = raw.trim();
         if (!/^https?:\/\//i.test(url)) url = "https://" + url;
@@ -98,6 +105,78 @@ export default function ProfileCard({
     // ✅ 전체 프로필 데이터 저장 (날짜 정보 포함)
     const [fullProfile, setFullProfile] = useState(null);
 
+    // ⭐ stats API 호출
+    useEffect(() => {
+      const fetchStats = async () => {
+        const access = localStorage.getItem('access');
+        const headers = {
+          'Authorization': `Bearer ${access}`,
+          'Content-Type': 'application/json',
+        };
+
+        try {
+          const [
+            activitiesRes,
+            careersRes,
+            awardsRes,
+            certificationsRes,
+            foreignlangsRes,
+            globalexpsRes,
+            portfoliosRes,
+          ] = await Promise.allSettled([
+            fetch('/api/activities/', { headers }),
+            fetch('/api/careers/', { headers }),
+            fetch('/api/awards/', { headers }),
+            fetch('/api/certifications/', { headers }),
+            fetch('/api/foreignlangs/', { headers }),
+            fetch('/api/globalexps/', { headers }),
+            fetch('/api/portfolios/', { headers }),
+          ]);
+
+          const getCount = async (result) => {
+            if (result.status === 'fulfilled' && result.value.ok) {
+              const data = await result.value.json();
+              if (Array.isArray(data)) return data.length;
+              if (data.results) return data.results.length;
+              if (data.count !== undefined) return data.count;
+              return 0;
+            }
+            return 0;
+          };
+
+          const [
+            activitiesCount,
+            careersCount,
+            awardsCount,
+            certificationsCount,
+            foreignlangsCount,
+            globalexpsCount,
+            portfoliosCount,
+          ] = await Promise.all([
+            getCount(activitiesRes),
+            getCount(careersRes),
+            getCount(awardsRes),
+            getCount(certificationsRes),
+            getCount(foreignlangsRes),
+            getCount(globalexpsRes),
+            getCount(portfoliosRes),
+          ]);
+
+          const totalSpecCount = careersCount + awardsCount + certificationsCount + foreignlangsCount + globalexpsCount;
+
+          setStatsCounts({
+            activities: activitiesCount,
+            specs: totalSpecCount,
+            portfolios: portfoliosCount
+          });
+
+        } catch (error) {
+          console.error('stats 로딩 실패:', error);
+        }
+      };
+
+      fetchStats();
+    }, []);
 
     useEffect(() => {
       (async () => {
@@ -177,17 +256,18 @@ export default function ProfileCard({
           </div>
         </div>
 
+        {/* ⭐ API 연동된 stats */}
         <div className="stats">
           <div className="stat">
-            <div className="num">{stats.activities ?? 0}</div>
+            <div className="num">{statsCounts.activities}</div>
             <div className="label">경험</div>
           </div>
           <div className="stat">
-            <div className="num">{stats.followers ?? 0}</div>
+            <div className="num">{statsCounts.specs}</div>
             <div className="label">스펙</div>
           </div>
           <div className="stat">
-            <div className="num">{stats.scraps ?? 0}</div>
+            <div className="num">{statsCounts.portfolios}</div>
             <div className="label">포트폴리오</div>
           </div>
         </div>

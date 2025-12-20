@@ -31,7 +31,8 @@
   width: 100%;
   max-width: 1527px;
   height: auto;
-  margin: 79px auto 0;
+  margin-top: 25px;
+  margin-left: -20px;
   box-sizing: border-box;
 }
 
