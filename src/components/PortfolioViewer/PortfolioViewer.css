@@ -210,6 +210,142 @@
   }
   
   /* ===================================
+     더보기 메뉴
+     =================================== */
+.more-options-wrapper {
+  position: relative;
+}
+
+.more-options-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.pdf-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pdf-download-btn:hover {
+  background: #f5f5f5;
+}
+
+.pdf-download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pdf-download-btn img {
+  width: auto;
+  height: 32px;
+  object-fit: contain;
+}
+
+.pdf-loading {
+  font-family: "SUIT Variable";
+  font-size: 12px;
+  color: #666;
+}
+
+/* ===================================
+   ⭐ 저장 드롭다운 메뉴
+   =================================== */
+.save-options-wrapper {
+  position: relative;
+}
+
+.save-options-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  z-index: 100;
+  min-width: 100px;
+}
+
+.save-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+}
+
+.save-menu-item:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.save-menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 저장 성공 메시지 */
+.save-success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  margin: 8px auto 16px;
+  border-radius: 8px;
+  background: rgba(18, 100, 49, 0.1);
+  color: #126431;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===================================
+   페이지 인디케이터
+   =================================== */
+.page-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  padding: 8px 16px;
+}
+
+.page-indicator span {
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.14px;
+}
+
+  /* ===================================
      반응형 디자인
      =================================== */
   @media (max-width: 1200px) {
@@ -339,77 +475,3 @@
       order: 1;
     }
   }
-
-  /* ===================================
-   더보기 메뉴
-   =================================== */
-.more-options-wrapper {
-  position: relative;
-}
-
-.more-options-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 8px;
-  z-index: 100;
-  min-width: 120px;
-}
-
-.pdf-download-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 12px;
-  background: transparent;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.pdf-download-btn:hover {
-  background: #f5f5f5;
-}
-
-.pdf-download-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.pdf-download-btn img {
-  width: auto;
-  height: 32px;
-  object-fit: contain;
-}
-
-.pdf-loading {
-  font-family: "SUIT Variable";
-  font-size: 12px;
-  color: #666;
-}
-
-/* ===================================
-   페이지 인디케이터
-   =================================== */
-.page-indicator {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 16px;
-  padding: 8px 16px;
-}
-
-.page-indicator span {
-  color: rgba(0, 0, 0, 0.5);
-  font-family: "SUIT Variable";
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.14px;
-}

@@ -5,14 +5,142 @@ import "./ContestPage.css";
 import chipIcon from "../../assets/icons/Chip.png";
 import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 
+// ⭐ 활동 생성 API
+const createActivity = async (data) => {
+  const access = localStorage.getItem("access");
+  
+  const response = await fetch("https://grove.beer/api/activities/", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${access}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "활동 저장에 실패했습니다.");
+  }
+
+  return response.json();
+};
+
 const ContestPage = () => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]); // 파일 상태 추가
-  const fileInputRef = useRef(null); // 파일 input ref 추가
-  const [startDate, setStartDate] = useState(""); // format "YYYY.MM"
-  const [endDate, setEndDate] = useState(""); // format "YYYY.MM"
-  const [isWorking, setIsWorking] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef(null);
+
+  // ⭐ 폼 데이터 state
+  const [formData, setFormData] = useState({
+    title: "",                    // 공모전명
+    subject: "",                  // 주제
+    organization: "",             // 주최 기관
+    work_title: "",               // 출품작명
+    is_awarded: false,            // 수상 여부
+    award_detail: "",             // 수상 내역
+    participation_type: "",       // 참여 형태 (team / individual)
+    role: "",                     // 역할
+    period_start: "",             // 시작 기간 (YYYY-MM-DD)
+    period_end: "",               // 종료 기간 (YYYY-MM-DD)
+    situation: "",                // STAR-T: Situation
+    task_detail: "",              // STAR-T: Task
+    action_detail: "",            // STAR-T: Action
+    result_detail: "",            // STAR-T: Result
+    takeaway: "",                 // STAR-T: Taken
+    link_url: "",                 // 링크 URL
+    // 기본값들
+    host: "",
+    attachment: null,
+    category_id: null,
+    tag_ids: [],
+    primary_tag_ids: [],
+    secondary_tag_ids: [],
+    role_items: []
+  });
+
+  // ⭐ 입력값 변경 핸들러
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // ⭐ 라디오 버튼 변경 핸들러 - 참여형태
+  const handleParticipationChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      participation_type: e.target.value
+    }));
+  };
+
+  // ⭐ 라디오 버튼 변경 핸들러 - 수상여부
+  const handleAwardChange = (e) => {
+    const isAwarded = e.target.value === "yes";
+    setFormData(prev => ({
+      ...prev,
+      is_awarded: isAwarded,
+      award_detail: isAwarded ? prev.award_detail : ""
+    }));
+  };
+
+  // ⭐ 날짜 변경 핸들러 (YYYY.MM -> YYYY-MM-DD)
+  const handleDateChange = (type, part, value) => {
+    const currentDate = type === 'start' ? formData.period_start : formData.period_end;
+    const [year, month] = currentDate ? currentDate.split('-') : ['', ''];
+    
+    let newYear = part === 'year' ? value : year;
+    let newMonth = part === 'month' ? value : month;
+    
+    // YYYY-MM-DD 형식으로 저장 (일자는 01로 고정)
+    const newDate = newYear && newMonth ? `${newYear}-${newMonth}-01` : '';
+    
+    setFormData(prev => ({
+      ...prev,
+      [type === 'start' ? 'period_start' : 'period_end']: newDate
+    }));
+  };
+
+  // ⭐ 작성 완료 버튼 클릭
+  const handleSubmit = async () => {
+    // 필수값 검증
+    if (!formData.title.trim()) {
+      alert("공모전명을 입력해주세요.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // host를 organization과 동일하게 설정
+      const submitData = {
+        ...formData,
+        host: formData.organization
+      };
+
+      const result = await createActivity(submitData);
+      console.log("✅ 공모전 저장 성공:", result);
+      alert("저장되었습니다!");
+      navigate("/");
+      
+    } catch (error) {
+      console.error("❌ 공모전 저장 실패:", error);
+      alert(error.message || "저장에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ⭐ 취소 버튼
+  const handleCancel = () => {
+    if (window.confirm("작성을 취소하시겠습니까? 입력한 내용이 사라집니다.")) {
+      navigate(-1);
+    }
+  };
 
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -32,18 +160,15 @@ const ContestPage = () => {
     navigate("/");
   };
 
-  // 파일 선택 핸들러
   const handleFileSelect = (event) => {
     const files = Array.from(event.target.files);
     setUploadedFiles([...uploadedFiles, ...files]);
   };
 
-  // 파일 업로드 영역 클릭 핸들러
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  // 드래그 앤 드롭 핸들러
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -54,6 +179,13 @@ const ContestPage = () => {
     e.stopPropagation();
     const files = Array.from(e.dataTransfer.files);
     setUploadedFiles([...uploadedFiles, ...files]);
+  };
+
+  // 날짜 파싱 헬퍼
+  const getDatePart = (dateStr, part) => {
+    if (!dateStr) return '';
+    const [year, month] = dateStr.split('-');
+    return part === 'year' ? year : month;
   };
 
   return (
@@ -69,12 +201,20 @@ const ContestPage = () => {
       <div className={`contest-content ${isCollapsed ? "expanded" : ""}`}>
         <div className="contest-main-box">
           <div className="contest-top-bar">
-            <button className="cancel-button">취소</button>
+            <button className="cancel-button" onClick={handleCancel}>
+              취소
+            </button>
             <div className="top-bar-center">
               <img src={chipIcon} alt="chip" className="chip-icon" />
               <span className="top-bar-title">경험 정리하기</span>
             </div>
-            <button className="complete-button">작성 완료</button>
+            <button 
+              className="complete-button" 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "저장 중..." : "작성 완료"}
+            </button>
           </div>
 
           {/* 기본정보 + 관련자료 컨테이너 */}
@@ -93,8 +233,11 @@ const ContestPage = () => {
                 <label className="form-field-label">공모전명</label>
                 <input
                   type="text"
+                  name="title"
                   className="form-input"
                   placeholder="참여한 공모전명의 이름을 입력하세요"
+                  value={formData.title}
+                  onChange={handleInputChange}
                 />
               </div>
 
@@ -104,8 +247,11 @@ const ContestPage = () => {
                   <label className="form-field-label">주제</label>
                   <input
                     type="text"
+                    name="subject"
                     className="form-input"
                     placeholder="제안하거나 개발한 아이디어의 주제를 적어주세요"
+                    value={formData.subject}
+                    onChange={handleInputChange}
                   />
                 </div>
 
@@ -113,8 +259,11 @@ const ContestPage = () => {
                   <label className="form-field-label">주최 기관</label>
                   <input
                     type="text"
+                    name="organization"
                     className="form-input"
                     placeholder="주최 기관을 입력하세요"
+                    value={formData.organization}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -125,8 +274,11 @@ const ContestPage = () => {
                   <label className="form-field-label">출품작명</label>
                   <input
                     type="text"
+                    name="work_title"
                     className="form-input"
                     placeholder="출품한 작품의 이름을 입력하세요"
+                    value={formData.work_title}
+                    onChange={handleInputChange}
                   />
                 </div>
 
@@ -134,16 +286,33 @@ const ContestPage = () => {
                   <label className="form-field-label">수상 여부</label>
                   <div className="award-input-group">
                     <label className="radio-label">
-                      <input type="radio" name="award" value="yes" />예
+                      <input 
+                        type="radio" 
+                        name="award" 
+                        value="yes"
+                        checked={formData.is_awarded === true}
+                        onChange={handleAwardChange}
+                      />
+                      예
                     </label>
                     <label className="radio-label">
-                      <input type="radio" name="award" value="no" />
+                      <input 
+                        type="radio" 
+                        name="award" 
+                        value="no"
+                        checked={formData.is_awarded === false}
+                        onChange={handleAwardChange}
+                      />
                       아니요
                     </label>
                     <input
                       type="text"
+                      name="award_detail"
                       className="form-input award-detail-input"
                       placeholder="수상 내역을 입력하세요"
+                      value={formData.award_detail}
+                      onChange={handleInputChange}
+                      disabled={!formData.is_awarded}
                     />
                   </div>
                 </div>
@@ -155,13 +324,22 @@ const ContestPage = () => {
                   <label className="form-field-label">참여 형태</label>
                   <div className="award-input-group">
                     <label className="radio-label">
-                      <input type="radio" name="participation" value="team" />팀
+                      <input 
+                        type="radio" 
+                        name="participation" 
+                        value="team"
+                        checked={formData.participation_type === "team"}
+                        onChange={handleParticipationChange}
+                      />
+                      팀
                     </label>
                     <label className="radio-label">
                       <input
                         type="radio"
                         name="participation"
                         value="individual"
+                        checked={formData.participation_type === "individual"}
+                        onChange={handleParticipationChange}
                       />
                       개인
                     </label>
@@ -175,11 +353,15 @@ const ContestPage = () => {
                   <label className="form-field-label">역할</label>
                   <input
                     type="text"
+                    name="role"
                     className="form-input"
                     placeholder="이 경험에서 어떤 일을 했는지 적어주세요"
+                    value={formData.role}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
+
               {/* 진행 기간 */}
               <div className="form-row">
                 <div className="form-field-frame field-duration">
@@ -192,12 +374,8 @@ const ContestPage = () => {
 
                       <select
                         className="year-select"
-                        value={startDate.split(".")[0] || ""}
-                        onChange={(e) => {
-                          const year = e.target.value;
-                          const month = startDate.split(".")[1] || "01";
-                          setStartDate(`${year}.${month}`);
-                        }}
+                        value={getDatePart(formData.period_start, 'year')}
+                        onChange={(e) => handleDateChange('start', 'year', e.target.value)}
                       >
                         <option value="" disabled>
                           연도
@@ -213,12 +391,8 @@ const ContestPage = () => {
 
                       <select
                         className="month-select"
-                        value={startDate.split(".")[1] || ""}
-                        onChange={(e) => {
-                          const month = e.target.value;
-                          const year = startDate.split(".")[0] || "2025";
-                          setStartDate(`${year}.${month}`);
-                        }}
+                        value={getDatePart(formData.period_start, 'month')}
+                        onChange={(e) => handleDateChange('start', 'month', e.target.value)}
                       >
                         <option value="" disabled>
                           월
@@ -234,71 +408,44 @@ const ContestPage = () => {
                       </select>
                     </div>
 
-                    {/* 종료일 — 재직중이 아닐 때만 표시 */}
-                    {!isWorking && (
-                      <div className="work-date-box">
-                        <span className="work-date-label">종료</span>
+                    {/* 종료일 */}
+                    <div className="work-date-box">
+                      <span className="work-date-label">종료</span>
 
-                        <select
-                          className="year-select"
-                          value={endDate?.split(".")[0] || ""}
-                          onChange={(e) => {
-                            const year = e.target.value;
-                            const month = endDate?.split(".")[1] || "01";
-                            setEndDate(`${year}.${month}`);
-                          }}
-                        >
-                          <option value="" disabled>
-                            연도
-                          </option>
-                          {Array.from({ length: 20 }, (_, i) => 2025 - i).map(
-                            (year) => (
-                              <option key={year} value={year}>
-                                {year}
-                              </option>
-                            )
-                          )}
-                        </select>
+                      <select
+                        className="year-select"
+                        value={getDatePart(formData.period_end, 'year')}
+                        onChange={(e) => handleDateChange('end', 'year', e.target.value)}
+                      >
+                        <option value="" disabled>
+                          연도
+                        </option>
+                        {Array.from({ length: 20 }, (_, i) => 2025 - i).map(
+                          (year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          )
+                        )}
+                      </select>
 
-                        <select
-                          className="month-select"
-                          value={endDate?.split(".")[1] || ""}
-                          onChange={(e) => {
-                            const month = e.target.value;
-                            const year = endDate?.split(".")[0] || "2025";
-                            setEndDate(`${year}.${month}`);
-                          }}
-                        >
-                          <option value="" disabled>
-                            월
-                          </option>
-                          {Array.from({ length: 12 }, (_, i) => {
-                            const m = (i + 1).toString().padStart(2, "0");
-                            return (
-                              <option key={m} value={m}>
-                                {m}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    )}
-
-                    {/* 재직 중 토글 */}
-                    <div className="toggle-box">
-                      <span className="working-text">마감</span>
-
-                      <label className="switch">
-                        <input
-                          type="checkbox"
-                          checked={isWorking}
-                          onChange={() => {
-                            setIsWorking(!isWorking);
-                            if (!isWorking) setEndDate("");
-                          }}
-                        />
-                        <span className="slider"></span>
-                      </label>
+                      <select
+                        className="month-select"
+                        value={getDatePart(formData.period_end, 'month')}
+                        onChange={(e) => handleDateChange('end', 'month', e.target.value)}
+                      >
+                        <option value="" disabled>
+                          월
+                        </option>
+                        {Array.from({ length: 12 }, (_, i) => {
+                          const m = (i + 1).toString().padStart(2, "0");
+                          return (
+                            <option key={m} value={m}>
+                              {m}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -338,16 +485,33 @@ const ContestPage = () => {
                     </div>
                   </div>
                 </div>
-                <label
-                  className="put-link-label"
-                  onClick={handleUploadClick}
-                  style={{ cursor: "pointer" }}
-                >
-                  링크 추가하기 +
+
+                {/* 업로드된 파일 목록 */}
+                {uploadedFiles.length > 0 && (
+                  <div className="uploaded-files-list">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="uploaded-file-item">
+                        📄 {file.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <label className="form-field-label" style={{ marginTop: "8px" }}>
+                  링크 URL
                 </label>
+                <input
+                  type="url"
+                  name="link_url"
+                  className="form-input"
+                  placeholder="https://..."
+                  value={formData.link_url}
+                  onChange={handleInputChange}
+                />
               </div>
             </div>
           </div>
+
           <div className="detail-content-container">
             <div className="form-section-header">
               <h2 className="form-section-title">세부 내용</h2>
@@ -363,8 +527,11 @@ const ContestPage = () => {
                 </div>
               </div>
               <textarea
+                name="situation"
                 className="detail-textarea"
                 placeholder="어떤 배경이나 문제의식에서 출발했는지 들려주세요."
+                value={formData.situation}
+                onChange={handleInputChange}
               />
 
               {/* 두 번째 Task (과제) */}
@@ -377,9 +544,13 @@ const ContestPage = () => {
 
               {/* 두 번째 입력창 */}
               <textarea
+                name="task_detail"
                 className="detail-textarea"
                 placeholder="스스로 중요하다고 느꼈던 목표나 미션이 있었다면 함께 적어주세요."
+                value={formData.task_detail}
+                onChange={handleInputChange}
               />
+
               {/* 세번째 Action (행동) */}
               <div className="text-frame">
                 <div className="first-text-line">Action (행동)</div>
@@ -390,8 +561,11 @@ const ContestPage = () => {
 
               {/* 세번째 입력창 */}
               <textarea
+                name="action_detail"
                 className="detail-textarea"
                 placeholder="그 방식을 선택한 이유나 과정에서 고민했던 점이 있다면 함께 적어주세요."
+                value={formData.action_detail}
+                onChange={handleInputChange}
               />
 
               {/* 네번째 Result (결과) */}
@@ -404,9 +578,13 @@ const ContestPage = () => {
 
               {/* 네번째 입력창 */}
               <textarea
+                name="result_detail"
                 className="detail-textarea"
                 placeholder="수치나 결과물, 배운 점 등을 구체적으로 적어주세요."
+                value={formData.result_detail}
+                onChange={handleInputChange}
               />
+
               {/* 다섯번째 Taken (교훈) */}
               <div className="text-frame">
                 <div className="first-text-line">Taken (교훈)</div>
@@ -418,8 +596,11 @@ const ContestPage = () => {
 
               {/* 다섯번째 입력창 */}
               <textarea
+                name="takeaway"
                 className="detail-textarea"
                 placeholder="앞으로 같은 상황이 온다면, 어떻게 접근하고 싶은지 적어주세요"
+                value={formData.takeaway}
+                onChange={handleInputChange}
               />
             </div>
           </div>

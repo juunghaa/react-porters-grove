@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GoalStatus.css';
 import leafIcon from '../../assets/image/leaf.png';
 import checkIcon from '../../assets/image/check.png';
@@ -6,11 +6,100 @@ import checkIcon from '../../assets/image/check.png';
 const GoalStatus = ({ isPanelCollapsed }) => {
   const [goal, setGoal] = useState('');
   const [savedGoal, setSavedGoal] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
-  const handleSaveGoal = () => {
-    if (goal.trim()) {
-      setSavedGoal(goal);
-      // 여기에 실제 저장 로직을 추가할 수 있습니다 (예: API 호출)
+  // 기존 목표 불러오기
+  useEffect(() => {
+    const fetchGoal = async () => {
+      try {
+        const access = localStorage.getItem('access');
+        const response = await fetch('/api/dashboard/goal/', {
+          headers: {
+            'Authorization': `Bearer ${access}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.content) {
+            setGoal(data.content);
+            setSavedGoal(data.content);
+            setIsCompleted(data.is_completed || false);
+          }
+        }
+      } catch (error) {
+        console.error('목표 불러오기 실패:', error);
+      }
+    };
+
+    fetchGoal();
+  }, []);
+
+  // 목표 저장 API 호출
+  const saveGoal = async (content, completed = false) => {
+    const access = localStorage.getItem('access');
+    
+    const response = await fetch('/api/dashboard/goal/', {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${access}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: content,
+        is_completed: completed,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('목표 저장에 실패했습니다.');
+    }
+
+    return response.json();
+  };
+
+  // 저장 버튼 클릭
+  const handleSaveGoal = async () => {
+    if (!goal.trim() || isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      const result = await saveGoal(goal.trim(), isCompleted);
+      console.log('✅ 목표 저장 성공:', result);
+      
+      setSavedGoal(goal.trim());
+      setShowMessage(true);
+      
+      // 3초 후 메시지 숨김
+      setTimeout(() => setShowMessage(false), 3000);
+      
+    } catch (error) {
+      console.error('❌ 목표 저장 실패:', error);
+      alert('목표 저장에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 완료 토글
+  const handleToggleComplete = async () => {
+    if (!savedGoal || isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      const newCompleted = !isCompleted;
+      await saveGoal(savedGoal, newCompleted);
+      setIsCompleted(newCompleted);
+      console.log('✅ 완료 상태 변경:', newCompleted);
+    } catch (error) {
+      console.error('❌ 완료 상태 변경 실패:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,11 +134,12 @@ const GoalStatus = ({ isPanelCollapsed }) => {
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             onKeyPress={handleKeyPress}
+            disabled={isLoading}
           />
           <button 
             className="check-button"
             onClick={handleSaveGoal}
-            disabled={!goal.trim()}
+            disabled={!goal.trim() || isLoading}
           >
             <img 
               src={checkIcon}
@@ -59,7 +149,24 @@ const GoalStatus = ({ isPanelCollapsed }) => {
           </button>
         </div>
 
+        {/* 저장된 목표가 있으면 완료 체크박스 표시 */}
         {savedGoal && (
+          <div className="saved-goal-section">
+            <label className="complete-label">
+              <input
+                type="checkbox"
+                checked={isCompleted}
+                onChange={handleToggleComplete}
+                disabled={isLoading}
+              />
+              <span className={isCompleted ? 'completed' : ''}>
+                {isCompleted ? '목표 달성! 🎉' : '목표 달성하기'}
+              </span>
+            </label>
+          </div>
+        )}
+
+        {showMessage && (
           <div className="saved-goal-message">
             목표가 저장되었습니다! 🎯
           </div>

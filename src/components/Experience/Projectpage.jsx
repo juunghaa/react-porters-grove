@@ -61,7 +61,7 @@ const ProjectPage = () => {
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
     
-    const response = await fetch("/api/activities/", {
+    const response = await fetch("https://grove.beer/api/activities/", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${access}`,

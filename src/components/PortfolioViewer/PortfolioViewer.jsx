@@ -7,7 +7,7 @@ import viewerIcon from '../../assets/icons/viewerComplete.png';
 import pdfDownloadButton from '../../assets/icons/pdfDownloadButton.png';
 import PortfolioPage from '../../components/PortfolioPage/PortfolioPage';
 
-// ⭐ 세부활동 API 함수 (api.js에서 가져오거나 여기서 정의)
+// ⭐ 세부활동 API 함수
 const fetchSubActivities = async (activityId) => {
   const access = localStorage.getItem('access');
   
@@ -26,15 +26,38 @@ const fetchSubActivities = async (activityId) => {
   return response.json();
 };
 
-const PortfolioViewer = ({ portfolioData, onClose }) => {
+// ⭐ 포트폴리오 저장 API
+const savePortfolio = async (portfolioData) => {
+  const access = localStorage.getItem('access');
+  
+  const response = await fetch('/api/portfolios/', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${access}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(portfolioData),
+  });
+
+  if (!response.ok) {
+    throw new Error('포트폴리오 저장 실패');
+  }
+
+  return response.json();
+};
+
+const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess }) => {
   const [portfolioName, setPortfolioName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showSaveMenu, setShowSaveMenu] = useState(false); // ⭐ 저장 드롭다운 상태
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [scale, setScale] = useState(1);
-  const [subActivities, setSubActivities] = useState({}); // ⭐ 세부활동 데이터
-  const [totalPages, setTotalPages] = useState(1); // ⭐ 동적 총 페이지 수
+  const [subActivities, setSubActivities] = useState({});
+  const [totalPages, setTotalPages] = useState(1);
   
   const portfolioRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -71,7 +94,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
     }
   }, [portfolioData?.selectedItems, selectedItemsCount]);
 
-  // ⭐ 총 페이지 수 계산 (세부활동 포함)
+  // ⭐ 총 페이지 수 계산
   useEffect(() => {
     let pageCount = 1; // 표지
     
@@ -108,16 +131,65 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [isFullView]);
 
-  const handleShare = () => {
-    console.log('공유 버튼 클릭');
+  // ⭐ 포트폴리오 저장 핸들러
+  const handleSavePortfolio = async () => {
+    if (!portfolioName.trim()) {
+      alert('포트폴리오 이름을 입력해주세요.');
+      return;
+    }
+
+    if (isSaving) return;
+
+    setIsSaving(true);
+
+    try {
+      // activity_ids 추출
+      const selectedItems = portfolioData?.selectedItems || [];
+      const activityIds = selectedItems.map(item => item.id).filter(id => id != null);
+
+      const saveData = {
+        title: portfolioName.trim(),
+        selected_tags: portfolioData?.selectedTags || [],
+        work_style: portfolioData?.workStyle || '',
+        strengths: portfolioData?.strengths || '',
+        activity_ids: activityIds
+      };
+
+      const savedPortfolio = await savePortfolio(saveData);
+      
+      setIsSaved(true);
+      setShowSaveMenu(false);
+
+      if (onSaveSuccess) {
+        onSaveSuccess(savedPortfolio);
+      }
+
+      setTimeout(() => {
+        setIsSaved(false);
+      }, 3000);
+
+    } catch (error) {
+      console.error('포트폴리오 저장 실패:', error);
+      alert('포트폴리오 저장에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleMoreOptions = () => {
     setShowMoreMenu(!showMoreMenu);
+    setShowSaveMenu(false);
+  };
+
+  // ⭐ 저장 드롭다운 토글
+  const handleSaveOptions = () => {
+    setShowSaveMenu(!showSaveMenu);
+    setShowMoreMenu(false);
   };
 
   const handleCloseMenu = () => {
     setShowMoreMenu(false);
+    setShowSaveMenu(false);
   };
 
   const handleClose = () => {
@@ -222,16 +294,36 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
               )}
             </button>
 
-            {/* 공유 버튼 */}
-            <button 
-              className="portfolio-action-btn"
-              onClick={handleShare}
-              aria-label="공유"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <path d="M21.625 5C19.7609 5 18.25 6.4773 18.25 8.3C18.25 8.5827 18.2961 8.9347 18.3647 9.1965L12.3426 13.3061C11.8037 12.9497 11.0736 12.7 10.375 12.7C8.51088 12.7 7 14.1773 7 16C7 17.8227 8.51088 19.3 10.375 19.3C11.086 19.3 11.788 19.0415 12.3325 18.6752L18.367 22.8178C18.2928 23.0895 18.25 23.4052 18.25 23.7C18.25 25.5227 19.7609 27 21.625 27C23.4891 27 25 25.5227 25 23.7C25 21.8773 23.4891 20.4 21.625 20.4C20.914 20.4 20.221 20.6508 19.6776 21.0182L13.6274 16.8789C13.7005 16.6072 13.75 16.2948 13.75 16C13.75 15.7052 13.7072 15.3873 13.633 15.1156L19.6686 10.9884C20.2075 11.3437 20.9264 11.6 21.625 11.6C23.4891 11.6 25 10.1227 25 8.3C25 6.4773 23.4891 5 21.625 5ZM21.625 7.2C22.246 7.2 22.75 7.6928 22.75 8.3C22.75 8.9072 22.246 9.4 21.625 9.4C21.004 9.4 20.5 8.9072 20.5 8.3C20.5 7.6928 21.004 7.2 21.625 7.2ZM10.375 14.9C10.996 14.9 11.5 15.3928 11.5 16C11.5 16.6072 10.996 17.1 10.375 17.1C9.754 17.1 9.25 16.6072 9.25 16C9.25 15.3928 9.754 14.9 10.375 14.9ZM21.625 22.6C22.246 22.6 22.75 23.0928 22.75 23.7C22.75 24.3072 22.246 24.8 21.625 24.8C21.004 24.8 20.5 24.3072 20.5 23.7C20.5 23.0928 21.004 22.6 21.625 22.6Z" fill="black" fillOpacity="0.4"/>
-              </svg>
-            </button>
+            {/* ⭐ 저장 버튼 + 드롭다운 */}
+            <div className="save-options-wrapper">
+              <button 
+                className="portfolio-action-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSaveOptions();
+                }}
+                aria-label="저장"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.219C4.28095 26.7189 4 26.0406 4 25.3333V6.66667C4 5.95942 4.28095 5.28115 4.78105 4.78105C5.28115 4.28095 5.95942 4 6.66667 4H21.3333L28 10.6667V25.3333C28 26.0406 27.719 26.7189 27.219 27.219C26.7189 27.719 26.0406 28 25.3333 28Z" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22.6667 28V17.3333H9.33333V28" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9.33333 4V10.6667H20" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              {/* 저장 드롭다운 메뉴 */}
+              {showSaveMenu && (
+                <div className="save-options-menu" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    className="save-menu-item"
+                    onClick={handleSavePortfolio}
+                    disabled={isSaving || !portfolioName.trim()}
+                  >
+                    {isSaving ? '저장 중...' : isSaved ? '저장 완료!' : '저장하기'}
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* 더보기 버튼 + 드롭다운 메뉴 */}
             <div className="more-options-wrapper">
@@ -253,7 +345,7 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 </svg>
               </button>
 
-              {/* 드롭다운 메뉴 */}
+              {/* 더보기 드롭다운 메뉴 - 기존 PDF 다운로드 */}
               {showMoreMenu && (
                 <div className="more-options-menu" onClick={(e) => e.stopPropagation()}>
                   <button 
@@ -302,6 +394,13 @@ const PortfolioViewer = ({ portfolioData, onClose }) => {
                 value={portfolioName}
                 onChange={(e) => setPortfolioName(e.target.value)}
               />
+
+              {/* 저장 성공 메시지 */}
+              {isSaved && (
+                <div className="save-success-message">
+                  포트폴리오가 저장되었습니다! 🎉
+                </div>
+              )}
 
               <div 
                 style={{
