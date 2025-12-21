@@ -13,38 +13,16 @@ const Language = () => {
   // UI state
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 언어 정보 state
   const [experienceType, setExperienceType] = useState("");
-  const [language, setLanguage] = useState("");
   const [customLanguage, setCustomLanguage] = useState("");
   const [proficiencyLevel, setProficiencyLevel] = useState("");
-
-  // 어학 시험 배열 state 추가
-  const [languageTests, setLanguageTests] = useState([]);
-
-  // form state
-  const [companyName, setCompanyName] = useState("");
-  const [employmentType, setEmploymentType] = useState("");
-  const [position, setPosition] = useState("");
-
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [isWorking, setIsWorking] = useState(false);
-
-  const [situation, setSituation] = useState("");
-  const [taskDetail, setTaskDetail] = useState("");
-  const [actionDetail, setActionDetail] = useState("");
-  const [resultDetail, setResultDetail] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
 
-  // helper: format YYYY.MM -> YYYY-MM-01 (or null)
-  const yyyymmToIsoDate = (val) => {
-    if (!val) return null;
-    const parts = val.split(".");
-    if (parts.length !== 2) return null;
-    const year = parts[0];
-    const month = parts[1].padStart(2, "0");
-    return `${year}-${month}-01`;
-  };
+  // 어학 시험 배열 state
+  const [languageTests, setLanguageTests] = useState([]);
 
   // API instance
   const api = axios.create({
@@ -72,7 +50,7 @@ const Language = () => {
     setLanguageTests([
       ...languageTests,
       {
-        id: Date.now(), // 고유 ID
+        id: Date.now(),
         testName: "",
         score: "",
         acquisitionDate: "",
@@ -99,15 +77,19 @@ const Language = () => {
     const files = Array.from(event.target.files);
     setUploadedFiles((prev) => [...prev, ...files]);
   };
+
   const handleRemoveFile = (index) => {
     const newFiles = uploadedFiles.filter((_, i) => i !== index);
     setUploadedFiles(newFiles);
   };
+
   const handleUploadClick = () => fileInputRef.current?.click();
+
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
+
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -115,14 +97,54 @@ const Language = () => {
     setUploadedFiles((prev) => [...prev, ...files]);
   };
 
-  // === 제출 함수 ===
+  // ⭐ 빈 값 필터링 함수
+  const cleanFormData = (data) => {
+    const cleaned = {};
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+      if (value === null || value === undefined || value === "") return;
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed) cleaned[key] = trimmed;
+      } else {
+        cleaned[key] = value;
+      }
+    });
+    return cleaned;
+  };
+
+  // ⭐ API 호출 - 외국어 정보 생성
+  const createForeignLanguage = async (data) => {
+    const access = localStorage.getItem("access");
+    const cleanedData = cleanFormData(data);
+
+    console.log("📤 전송할 데이터:", cleanedData);
+
+    const response = await axios.post("/api/foreignlangs/", cleanedData, {
+      headers: {
+        Authorization: `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  };
+
+  // ⭐ 제출 함수
   const handleSubmit = async () => {
-    if (!companyName.trim()) return alert("회사명을 입력해 주세요.");
-    if (!employmentType) return alert("참여 형태를 선택해 주세요.");
-    if (!position.trim()) return alert("직무/부서를 입력해 주세요.");
-    if (!startDate) return alert("시작일을 선택해 주세요.");
-    if (!isWorking && !endDate)
-      return alert("종료일을 선택하거나 '재직 중'을 체크하세요.");
+    // 필수값 검증
+    const langName =
+      experienceType === "custom" ? customLanguage : experienceType;
+
+    if (!langName.trim()) {
+      alert("언어를 선택하거나 입력해주세요.");
+      return;
+    }
+
+    if (!proficiencyLevel) {
+      alert("구사 수준을 선택해주세요.");
+      return;
+    }
 
     const token = localStorage.getItem("access");
     if (!token) {
@@ -130,33 +152,49 @@ const Language = () => {
       return;
     }
 
-    const body = {
-      company_name: companyName,
-      employment_type: employmentType,
-      position: position,
-      period_start: yyyymmToIsoDate(startDate),
-      period_end: isWorking ? null : yyyymmToIsoDate(endDate),
-      is_current: isWorking,
-      situation: situation,
-      task_detail: taskDetail,
-      action_detail: actionDetail,
-      result_detail: resultDetail,
-      link_url: linkUrl || null,
-      language_tests: languageTests, // 어학 시험 데이터 추가
-    };
+    setIsSubmitting(true);
 
     try {
-      const res = await api.post("/api/careers/", body, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // 어학 시험이 있는 경우
+      if (languageTests.length > 0) {
+        // 각 어학 시험마다 별도의 API 요청
+        for (const test of languageTests) {
+          const body = {
+            lang_name: langName,
+            lang_level: proficiencyLevel,
+            exam_name: test.testName || null,
+            exam_grade: test.score || null,
+            achievement_date: test.acquisitionDate || null,
+            link_url: linkUrl || null,
+          };
 
-      alert("경력 정보가 저장되었습니다.");
+          await createForeignLanguage(body);
+        }
+      } else {
+        // 어학 시험 없이 언어 정보만 저장
+        const body = {
+          lang_name: langName,
+          lang_level: proficiencyLevel,
+          link_url: linkUrl || null,
+        };
+
+        await createForeignLanguage(body);
+      }
+
+      console.log("✅ 외국어 정보 저장 성공");
+      alert("저장되었습니다!");
       navigate("/");
-    } catch (err) {
-      console.error("POST /api/careers/ error:", err.response?.data || err);
-      const message =
-        err.response?.data?.detail || "저장 중 오류가 발생했습니다.";
-      alert(message);
+    } catch (error) {
+      console.error("❌ 외국어 정보 저장 실패:", error);
+
+      if (error.response?.data) {
+        console.error("에러 상세:", error.response.data);
+        alert(`저장에 실패했습니다: ${JSON.stringify(error.response.data)}`);
+      } else {
+        alert("저장에 실패했습니다. 다시 시도해주세요.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -181,8 +219,12 @@ const Language = () => {
               <img src={chipIcon} alt="chip" className="chip-icon" />
               <span className="top-bar-title">스펙 정리하기</span>
             </div>
-            <button className="complete-button" onClick={handleSubmit}>
-              작성 완료
+            <button
+              className="complete-button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "저장 중..." : "작성 완료"}
             </button>
           </div>
 
@@ -193,37 +235,41 @@ const Language = () => {
               </div>
               <div className="divider-line" />
 
-              <select
-                className="form-input select-experience"
-                value={experienceType}
-                onChange={(e) => setExperienceType(e.target.value)}
-              >
-                <option value="" disabled>
-                  언어를 선택하세요
-                </option>
-                <option value="영어">영어 (English)</option>
-                <option value="프랑스어">프랑스어 (Français)</option>
-                <option value="독일어">독일어 (Deutsch)</option>
-                <option value="스페인어">스페인어 (Español)</option>
-                <option value="이탈리아어">이탈리아어 (Italiano)</option>
-                <option value="일본어">일본어 (日本語)</option>
-                <option value="중국어">중국어 (中文)</option>
-                <option value="러시아어">러시아어 (Русский)</option>
-                <option value="포르투갈어">포르투갈어 (Português)</option>
-                <option value="아랍어">아랍어 (العربية)</option>
-                <option value="custom">기타 (직접입력)</option>
-              </select>
+              {/* 언어 선택 */}
+              <div className="form-field-frame">
+                <label className="form-field-label">언어</label>
+                <select
+                  className="form-input select-experience"
+                  value={experienceType}
+                  onChange={(e) => setExperienceType(e.target.value)}
+                >
+                  <option value="" disabled>
+                    언어를 선택하세요
+                  </option>
+                  <option value="영어">영어 (English)</option>
+                  <option value="프랑스어">프랑스어 (Français)</option>
+                  <option value="독일어">독일어 (Deutsch)</option>
+                  <option value="스페인어">스페인어 (Español)</option>
+                  <option value="이탈리아어">이탈리아어 (Italiano)</option>
+                  <option value="일본어">일본어 (日本語)</option>
+                  <option value="중국어">중국어 (中文)</option>
+                  <option value="러시아어">러시아어 (Русский)</option>
+                  <option value="포르투갈어">포르투갈어 (Português)</option>
+                  <option value="아랍어">아랍어 (العربية)</option>
+                  <option value="custom">기타 (직접입력)</option>
+                </select>
 
-              {experienceType === "custom" && (
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="사용한 언어를 직접 입력하세요"
-                  value={customLanguage}
-                  onChange={(e) => setCustomLanguage(e.target.value)}
-                  style={{ marginTop: "8px" }}
-                />
-              )}
+                {experienceType === "custom" && (
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="사용한 언어를 직접 입력하세요"
+                    value={customLanguage}
+                    onChange={(e) => setCustomLanguage(e.target.value)}
+                    style={{ marginTop: "8px" }}
+                  />
+                )}
+              </div>
 
               {/* 구사 수준 */}
               <div className="form-row">
@@ -314,9 +360,20 @@ const Language = () => {
                   </div>
                 )}
 
-                <label className="put-link-label" style={{ cursor: "pointer" }}>
-                  링크 추가하기 +
+                {/* 링크 URL */}
+                <label
+                  className="form-field-label"
+                  style={{ marginTop: "16px" }}
+                >
+                  링크 URL
                 </label>
+                <input
+                  type="url"
+                  className="form-input"
+                  placeholder="https://..."
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -350,7 +407,7 @@ const Language = () => {
                     <input
                       type="text"
                       className="form-input"
-                      placeholder="어학 시험의 이름을 입력하세요"
+                      placeholder="어학 시험의 이름을 입력하세요 (예: TOEIC, TOEFL)"
                       value={test.testName}
                       onChange={(e) =>
                         handleLanguageTestChange(
@@ -368,7 +425,7 @@ const Language = () => {
                     <input
                       type="text"
                       className="form-input"
-                      placeholder="취득한 점수나 등급을 입력하세요"
+                      placeholder="취득한 점수나 등급을 입력하세요 (예: 900점, B2)"
                       value={test.score}
                       onChange={(e) =>
                         handleLanguageTestChange(
