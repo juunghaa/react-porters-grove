@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LeftPanel from "../LeftPanel/LeftPanel";
-
+import chipIcon1 from "../../assets/icons/puzzle.svg";
 import chipIcon from "../../assets/icons/colorpuzzle.svg";
 import "./ProjectDetailPage.css";
 
@@ -129,14 +129,15 @@ const ProjectDetailPage = () => {
 
           {/* 포함된 활동 */}
           <div className="activity-section">
-            <div className="section-header">
-              <span className="activity-count">0</span>
-            </div>
+            <div className="section-header"></div>
             <div className="activity-placeholder">
               <span className="section-title">
                 <img src={chipIcon}></img>포함된 활동
               </span>
-              <div className="placeholder-icon">💭</div>
+              <span className="activity-count">0</span>
+              <div className="placeholder-icon">
+                <img src={chipIcon1}></img>
+              </div>
               <p className="placeholder-text">아직 정리한 활동이 없어요</p>
               <p className="placeholder-subtext">
                 이 경험의 활동을 등록해보세요
