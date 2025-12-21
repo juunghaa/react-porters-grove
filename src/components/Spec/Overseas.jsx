@@ -384,18 +384,6 @@ const Overseas = () => {
                   </div>
                 </div>
               </div>
-
-              {/* 설명 (선택사항) */}
-              <div className="form-field-frame">
-                <label className="form-field-label">설명 (선택)</label>
-                <textarea
-                  className="form-input"
-                  placeholder="해외 경험에 대한 추가 설명을 입력하세요"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows="4"
-                />
-              </div>
             </div>
 
             {/* 관련자료 */}

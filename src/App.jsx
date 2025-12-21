@@ -21,6 +21,7 @@ import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
 import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 import ContestPage from "./components/Experience/ContestPage"; //공모전
 import ProjectPage from "./components/Experience/Projectpage.jsx"; //프로젝트
+import ProjectDetailPage from "./components/ProjectDetailPage/ProjectDetailPage"; // ⭐ 이 줄 추가!
 import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
 import OutUnivPage from "./components/Experience/OutUnivPage.jsx"; //교외활동
 import Career from "./components/Spec/Career.jsx"; //경력
@@ -28,7 +29,7 @@ import CertificatePage from "./components/Spec/Certificate.jsx"; //자격증
 import Award from "./components/Spec/Award.jsx"; //수상
 import Overseas from "./components/Spec/Overseas.jsx"; //해외경험
 import Language from "./components/Spec/Language.jsx"; //외국어
-import PortfolioCreationFlow from './components/MakingPortfolio/PortfolioCreationFlow';
+import PortfolioCreationFlow from "./components/MakingPortfolio/PortfolioCreationFlow";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); //잠깐 바꿔둠
@@ -100,6 +101,9 @@ export default function App() {
 
         {/* ✅ 프로젝트 페이지 */}
         <Route path="/project" element={<ProjectPage />} />
+
+        {/* ✅ 프로젝트 상세 페이지 */}
+        <Route path="/project/:id" element={<ProjectDetailPage />} />
 
         {/* ✅ 교내활동 페이지 */}
         <Route path="/campus" element={<InUnivPage />} />

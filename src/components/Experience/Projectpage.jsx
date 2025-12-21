@@ -10,6 +10,7 @@ const ProjectPage = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   // 폼 데이터 state
@@ -36,32 +37,32 @@ const ProjectPage = () => {
   // 입력값 변경 핸들러
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   // 라디오 버튼 변경 핸들러
   const handleRadioChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      participation_type: e.target.value
+      participation_type: e.target.value,
     }));
   };
 
   // ⭐ 빈 값 필터링 함수
   const cleanFormData = (data) => {
     const cleaned = {};
-    
-    Object.keys(data).forEach(key => {
+
+    Object.keys(data).forEach((key) => {
       const value = data[key];
-      
+
       // null, undefined, 빈 문자열은 제외
       if (value === null || value === undefined || value === "") {
         return;
       }
-      
+
       // 문자열이면 trim
       if (typeof value === "string") {
         const trimmed = value.trim();
@@ -79,16 +80,16 @@ const ProjectPage = () => {
   // API 호출 함수
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
-    
+
     // ⭐ 빈 값 제거
     const cleanedData = cleanFormData(data);
-    
+
     console.log("📤 전송할 데이터:", cleanedData);
-    
+
     const response = await fetch("/api/activities/", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${access}`,
+        Authorization: `Bearer ${access}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(cleanedData),
@@ -98,7 +99,7 @@ const ProjectPage = () => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("❌ API 에러 응답:", errorText);
-      
+
       try {
         const errorData = JSON.parse(errorText);
         throw new Error(JSON.stringify(errorData));
@@ -123,10 +124,10 @@ const ProjectPage = () => {
     try {
       const result = await createActivity(formData);
       console.log("✅ 활동 저장 성공:", result);
-      
+
+      // 저장 성공 후 상세 페이지로 이동
       alert("저장되었습니다!");
-      navigate("/");
-      
+      navigate(`/project/${result.id}`);
     } catch (error) {
       console.error("❌ 활동 저장 실패:", error);
       alert("저장에 실패했습니다. 다시 시도해주세요.");
@@ -152,6 +153,14 @@ const ProjectPage = () => {
 
   const handleCreateNew = () => {
     navigate("/choose");
+  };
+
+  const handleArchiveClick = () => {
+    navigate("/archive");
+  };
+
+  const handleOpenProfileSettings = () => {
+    setIsProfileSettingsOpen(true);
   };
 
   const handleLogout = () => {
@@ -188,8 +197,10 @@ const ProjectPage = () => {
         onToggle={handleToggle}
         onHomeClick={handleHomeClick}
         onCreateNew={handleCreateNew}
+        onArchiveClick={handleArchiveClick}
         onLogout={handleLogout}
-        isProfileSettingsOpen={false}
+        isProfileSettingsOpen={isProfileSettingsOpen}
+        onOpenProfileSettings={handleOpenProfileSettings}
       />
       <div className={`project-content ${isCollapsed ? "expanded" : ""}`}>
         <div className="project-main-box">
@@ -201,8 +212,8 @@ const ProjectPage = () => {
               <img src={chipIcon} alt="chip" className="ProjectChip.png" />
               <span className="top-bar-title">경험 정리하기</span>
             </div>
-            <button 
-              className="complete-button" 
+            <button
+              className="complete-button"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
@@ -253,9 +264,9 @@ const ProjectPage = () => {
                   <label className="form-field-label">참여 형태</label>
                   <div className="award-input-group">
                     <label className="radio-label">
-                      <input 
-                        type="radio" 
-                        name="participation" 
+                      <input
+                        type="radio"
+                        name="participation"
                         value="team"
                         checked={formData.participation_type === "team"}
                         onChange={handleRadioChange}
@@ -295,7 +306,13 @@ const ProjectPage = () => {
               <div className="form-row">
                 <div className="form-field-frame field-duration">
                   <label className="form-field-label">진행 기간</label>
-                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                    }}
+                  >
                     <input
                       type="date"
                       name="period_start"
@@ -349,7 +366,7 @@ const ProjectPage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* 업로드된 파일 목록 */}
                 {uploadedFiles.length > 0 && (
                   <div className="uploaded-files-list">
@@ -362,7 +379,10 @@ const ProjectPage = () => {
                 )}
 
                 {/* 링크 추가 */}
-                <label className="form-field-label" style={{ marginTop: "8px" }}>
+                <label
+                  className="form-field-label"
+                  style={{ marginTop: "8px" }}
+                >
                   링크 URL
                 </label>
                 <input
@@ -449,7 +469,8 @@ const ProjectPage = () => {
               <div className="text-frame">
                 <div className="first-text-line">Taken (교훈)</div>
                 <div className="second-text-line">
-                  이 경험을 통해 새롭게 깨달은 점이나 다음에 바꾸고 싶은 점이 있나요?
+                  이 경험을 통해 새롭게 깨달은 점이나 다음에 바꾸고 싶은 점이
+                  있나요?
                 </div>
               </div>
               <textarea
