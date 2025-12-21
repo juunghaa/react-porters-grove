@@ -133,9 +133,9 @@ const ProjectDetailPage = () => {
               <span className="activity-count">0</span>
             </div>
             <div className="activity-placeholder">
-              <span className="section-icon">🌱</span>
-              <img src={chipIcon} alt="chip" className="chip-icon" />
-              <span className="section-title">포함된 활동</span>
+              <span className="section-title">
+                <img src={chipIcon}></img>포함된 활동
+              </span>
               <div className="placeholder-icon">💭</div>
               <p className="placeholder-text">아직 정리한 활동이 없어요</p>
               <p className="placeholder-subtext">
