@@ -133,8 +133,8 @@ const ProjectDetailPage = () => {
             <div className="activity-placeholder">
               <span className="section-title">
                 <img src={chipIcon}></img>포함된 활동
+                <span className="activity-count">0</span>
               </span>
-              <span className="activity-count">0</span>
               <div className="placeholder-icon">
                 <img src={chipIcon1}></img>
               </div>
