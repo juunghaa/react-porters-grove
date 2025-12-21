@@ -14,23 +14,7 @@ const ProjectDetailPage = () => {
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
 
   // ⭐ 경험 노트 state 추가
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      date: "2025.05.22 11:05",
-      text: "오늘은 아이디어 세션 진행! 도심속 라스트마일 이동 문제를 주제로 3자리 토론했음 도출했음...",
-    },
-    {
-      id: 2,
-      date: "2025.05.29 16:32",
-      text: "사용자 리서치 설문 1차 결과 정리 완료. 이동 측 불편함과는 충분한 문제를...",
-    },
-    {
-      id: 3,
-      date: "2025.06.04 12:20",
-      text: "피그마로 서비스 지니펼편 시작했었다. UX 프로섹 협상 > 이동 > 주차 > 결제 단계로 구상...",
-    },
-  ]);
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     fetchActivityDetail();
