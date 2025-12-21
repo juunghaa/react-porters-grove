@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LeftPanel from "../LeftPanel/LeftPanel";
+
+import chipIcon from "../../assets/icons/colorpuzzle.svg";
 import "./ProjectDetailPage.css";
 
 const ProjectDetailPage = () => {
@@ -128,11 +130,12 @@ const ProjectDetailPage = () => {
           {/* 포함된 활동 */}
           <div className="activity-section">
             <div className="section-header">
-              <span className="section-icon">🌱</span>
-              <span className="section-title">포함된 활동</span>
               <span className="activity-count">0</span>
             </div>
             <div className="activity-placeholder">
+              <span className="section-icon">🌱</span>
+              <img src={chipIcon} alt="chip" className="chip-icon" />
+              <span className="section-title">포함된 활동</span>
               <div className="placeholder-icon">💭</div>
               <p className="placeholder-text">아직 정리한 활동이 없어요</p>
               <p className="placeholder-subtext">
