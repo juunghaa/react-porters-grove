@@ -87,15 +87,17 @@
 .detail-subtitle {
   font-size: 16px;
   color: #666;
-  margin: 0 0 32px 0;
+  margin: 0 0 24px 0;
+  padding-bottom: 24px;
   line-height: 1.6;
+  border-bottom: 1px solid #e9ecef;
 }
 
 /* 기본 정보 그리드 */
 .info-grid {
-  background: #f8f9fa;
+  /* background: #f8f9fa; - 배경 제거 */
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 0;
   margin-bottom: 32px;
 }
 
@@ -111,15 +113,24 @@
 
 .info-label {
   width: 120px;
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "SUIT Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.18px;
 }
 
 .info-value {
   flex: 1;
-  font-size: 14px;
-  color: #1a1a1a;
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.18px;
 }
 
 /* 프랑린 활동 섹션 */
@@ -214,9 +225,13 @@
 }
 
 .detail-block-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #2c3e50;
+  color: var(--Grove-Green, #126431);
+  font-family: "SUIT Variable";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.2px;
   margin: 0 0 12px 0;
 }
 

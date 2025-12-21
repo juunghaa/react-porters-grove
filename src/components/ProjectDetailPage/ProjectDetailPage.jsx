@@ -75,8 +75,6 @@ const ProjectDetailPage = () => {
           <div className="detail-header">
             <div className="breadcrumb">
               <span className="breadcrumb-item">프로젝트</span>
-              <span className="breadcrumb-separator">›</span>
-              <span className="breadcrumb-item active">프론트엔드</span>
             </div>
             <div className="header-actions">
               <button className="icon-btn">
@@ -127,18 +125,18 @@ const ProjectDetailPage = () => {
             </div>
           </div>
 
-          {/* 프랑린 활동 */}
+          {/* 포함된 활동 */}
           <div className="activity-section">
             <div className="section-header">
               <span className="section-icon">🌱</span>
-              <span className="section-title">프랑린 활동</span>
+              <span className="section-title">포함된 활동</span>
               <span className="activity-count">0</span>
             </div>
             <div className="activity-placeholder">
               <div className="placeholder-icon">💭</div>
               <p className="placeholder-text">아직 정리한 활동이 없어요</p>
               <p className="placeholder-subtext">
-                이 경험의 활동을 토픽별로사요
+                이 경험의 활동을 등록해보세요
               </p>
               <button className="add-activity-btn">+ 활동 등록하기</button>
             </div>
