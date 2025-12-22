@@ -205,3 +205,18 @@
   height: 18px;
   flex-shrink: 0;
 }
+/* ⭐ 카드 리스트 스타일 추가 */
+.experience-card {
+  margin-bottom: 16px; /* 카드 사이 간격 */
+}
+
+.experience-card:last-child {
+  margin-bottom: 0; /* 마지막 카드는 간격 없음 */
+}
+
+.experience-card-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
