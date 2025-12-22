@@ -99,6 +99,9 @@ export default function App() {
         {/* ✅ 공모전 페이지 */}
         <Route path="/contest" element={<ContestPage />} />
 
+        {/* 공모전 상세 페이지 */}
+        <Route path="/contest/:id" element={<ContestDetailPage />} />
+
         {/* ✅ 프로젝트 페이지 */}
         <Route path="/project" element={<ProjectPage />} />
 
