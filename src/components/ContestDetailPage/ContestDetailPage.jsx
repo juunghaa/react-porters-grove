@@ -8,6 +8,9 @@ import "./ProjectDetailPage.css";
 const ContestDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  console.log("🎯 ContestDetailPage 렌더링, ID:", id);
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activityData, setActivityData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,30 +18,44 @@ const ContestDetailPage = () => {
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
-    fetchActivityDetail();
-  }, [id]);
+    console.log("🚀 useEffect 실행, ID:", id);
 
-  const fetchActivityDetail = async () => {
-    try {
-      const access = localStorage.getItem("access");
-      const response = await fetch(`/api/activities/${id}/`, {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+    const fetchData = async () => {
+      console.log("🔍 fetchData 시작");
+      try {
+        const access = localStorage.getItem("access");
+        console.log("🔑 Access Token:", access ? "있음" : "없음");
 
-      if (!response.ok) throw new Error("Failed to fetch activity");
+        const response = await fetch(`/api/activities/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
 
-      const data = await response.json();
-      setActivityData(data);
-    } catch (error) {
-      console.error("Error fetching activity:", error);
-      alert("데이터를 불러오는데 실패했습니다.");
-      navigate("/");
-    } finally {
+        console.log("📡 Response:", response.status, response.statusText);
+
+        if (!response.ok) throw new Error("Failed to fetch activity");
+
+        const data = await response.json();
+        console.log("✅ 받은 데이터:", data);
+        setActivityData(data);
+      } catch (error) {
+        console.error("❌ Error:", error);
+        alert("데이터를 불러오는데 실패했습니다.");
+        navigate("/");
+      } finally {
+        console.log("✔️ 로딩 완료");
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
+      console.error("❌ ID가 없습니다!");
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
   const handleToggle = () => setIsCollapsed(!isCollapsed);
   const handleHomeClick = () => navigate("/");
@@ -80,12 +97,16 @@ const ContestDetailPage = () => {
   };
 
   if (loading) {
+    console.log("⏳ 로딩 중 화면 표시");
     return <div className="loading">로딩 중...</div>;
   }
 
   if (!activityData) {
+    console.log("❌ activityData 없음");
     return <div className="error">데이터를 찾을 수 없습니다.</div>;
   }
+
+  console.log("✅ 정상 렌더링, activityData:", activityData);
 
   return (
     <div className="project-detail-container">
@@ -180,7 +201,7 @@ const ContestDetailPage = () => {
             </div>
           </div>
 
-          {/* ⭐ 포함된 활동 - ProjectDetailPage와 완전히 동일하게 */}
+          {/* 포함된 활동 */}
           <div className="activity-section">
             <div className="section-header"></div>
             <div className="activity-placeholder">
