@@ -8,6 +8,18 @@ const formatDate = (dateStr) => {
 };
 
 const FullBox = ({ isPanelCollapsed, config, experienceData, onMenuClick }) => {
+  // ⭐ 디버깅 alert (React.useEffect 사용)
+  React.useEffect(() => {
+    if (experienceData) {
+      const count = Array.isArray(experienceData) ? experienceData.length : 0;
+      alert(
+        `📊 데이터 개수: ${count}\n배열 여부: ${
+          Array.isArray(experienceData) ? "예" : "아니오"
+        }`
+      );
+    }
+  }, [experienceData]);
+
   if (!config) return null;
 
   // 배열로 변환
