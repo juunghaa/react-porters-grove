@@ -80,7 +80,13 @@ const FullBox = ({
                 fillOpacity="0.4"
               />
             </svg>
-            <span>{data.startDate} ~</span>
+            <span>
+              {data.isSingleDate
+                ? formatDate(data.dateStart)
+                : `${formatDate(data.dateStart)} ~ ${
+                    formatDate(data.dateEnd) || "현재"
+                  }`}
+            </span>
           </div>
         </div>
       </div>
