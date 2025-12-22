@@ -1,6 +1,12 @@
 import React from "react";
 import "./FullBox.css";
 
+// 날짜 포맷팅
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  return dateStr.replace(/-/g, ".");
+};
+
 const FullBox = ({
   isPanelCollapsed,
   config,
