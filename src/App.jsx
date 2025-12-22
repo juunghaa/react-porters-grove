@@ -20,6 +20,7 @@ import GoogleCallback from "./pages/GoogleCallback"; // ✅ 추가
 import ChooseOption from "./components/ChooseOption/ChooseOption"; // ✅ 추가
 import MakingPortfolio from "./components/MakingPortfolio/MakingPortfolio"; // ✅ 추가
 import ContestPage from "./components/Experience/ContestPage"; //공모전
+import ContestDetailPage from "./components/ContestDetailPage/ContestDetailPage";
 import ProjectPage from "./components/Experience/Projectpage.jsx"; //프로젝트
 import ProjectDetailPage from "./components/ProjectDetailPage/ProjectDetailPage"; // ⭐ 이 줄 추가!
 import InUnivPage from "./components/Experience/InUnivPage.jsx"; //교내활동
