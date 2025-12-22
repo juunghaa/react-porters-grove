@@ -314,6 +314,7 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
 
     // 나의 경험 박스
     if (type === "ongoing") {
+      console.log("🔍 ongoing 박스 렌더링, activities:", activities); // ⭐ 디버깅
       if (activities.length > 0) {
         return (
           <FullBox
