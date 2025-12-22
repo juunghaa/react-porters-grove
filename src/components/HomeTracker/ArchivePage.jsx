@@ -316,6 +316,9 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
     }
   };
 
+  // ⭐ FullBox에 onClick 추가
+  <FullBox onClick={handleFirstExperienceClick} />;
+
   // ⭐ 전체 탭용 박스 렌더링 (수정됨)
   const renderBox = (type) => {
     const config = boxConfigs[type];
