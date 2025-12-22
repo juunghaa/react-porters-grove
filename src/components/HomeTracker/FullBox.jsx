@@ -1,25 +1,17 @@
 import React from "react";
 import "./FullBox.css";
 
-// 날짜 포맷팅
+// 날짜 포맷팅 (SpecCard와 동일)
 const formatDate = (dateStr) => {
-  if (!dateStr || dateStr.trim() === "") return "";
+  if (!dateStr) return "";
   return dateStr.replace(/-/g, ".");
 };
 
 const FullBox = ({ isPanelCollapsed, config, experienceData, onMenuClick }) => {
-  console.log("🎯 FullBox 렌더링"); // ⭐
-  console.log("📊 experienceData:", experienceData); // ⭐
-
-  if (!config) {
-    console.log("❌ config 없음");
-    return null;
-  }
+  if (!config) return null;
 
   // 배열로 변환
   const dataList = Array.isArray(experienceData) ? experienceData : [];
-  console.log("📊 dataList:", dataList); // ⭐
-  console.log("📊 dataList.length:", dataList.length); // ⭐
 
   return (
     <div className={`box-status ${isPanelCollapsed ? "expanded" : ""}`}>
@@ -49,18 +41,17 @@ const FullBox = ({ isPanelCollapsed, config, experienceData, onMenuClick }) => {
           </div>
         ) : (
           dataList.map((data, index) => {
-            console.log(`📅 카드 ${index}:`, data); // ⭐
+            // 날짜 처리
+            const dateStart = data.period_start;
+            const dateEnd = data.period_end;
+            const isSingleDate = !dateEnd || dateEnd === dateStart;
 
             return (
               <div key={data.id || index} className="experience-card">
                 {/* 태그와 역할 */}
                 <div className="card-tag-role">
-                  <div className="card-tag">
-                    {data.activity_type || data.tag || "경험"}
-                  </div>
-                  <span className="card-role">
-                    {data.organization || data.role || "-"}
-                  </span>
+                  <div className="card-tag">{data.activity_type || "경험"}</div>
+                  <span className="card-role">{data.organization || "-"}</span>
                 </div>
 
                 {/* 타이틀 섹션 */}
@@ -72,19 +63,19 @@ const FullBox = ({ isPanelCollapsed, config, experienceData, onMenuClick }) => {
                         ? "팀"
                         : data.participation_type === "individual"
                         ? "개인"
-                        : data.teamType || "-"}
+                        : "-"}
                     </span>
                     <span className="dot">·</span>
                     <span>{data.subject || "-"}</span>
                     <span className="dot">·</span>
-                    <span>{data.role || data.roleDetail || "-"}</span>
+                    <span>{data.role || "-"}</span>
                   </div>
                 </div>
 
                 {/* 구분선 */}
                 <div className="card-divider"></div>
 
-                {/* 날짜 */}
+                {/* 날짜 (SpecCard와 동일한 방식) */}
                 <div className="card-date">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -100,13 +91,11 @@ const FullBox = ({ isPanelCollapsed, config, experienceData, onMenuClick }) => {
                     />
                   </svg>
                   <span>
-                    {data.period_start && data.period_end
-                      ? `${formatDate(data.period_start)} ~ ${formatDate(
-                          data.period_end
-                        )}`
-                      : data.period_start
-                      ? formatDate(data.period_start)
-                      : "날짜 미정"}
+                    {isSingleDate
+                      ? formatDate(dateStart) || "날짜 미정"
+                      : `${formatDate(dateStart)} ~ ${
+                          formatDate(dateEnd) || "현재"
+                        }`}
                   </span>
                 </div>
               </div>
