@@ -1,7 +1,6 @@
 /* FullBox.css */
 
 /* 박스 기본 구조 */
-
 .box-status {
   flex: 1 1 0; /* ⭐ 균등 분배 */
   min-width: 0; /* ⭐ 핵심! flex item이 content보다 작아질 수 있게 */
