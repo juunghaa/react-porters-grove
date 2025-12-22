@@ -65,9 +65,36 @@ const ContestPage = () => {
     return cleaned;
   };
 
-  const createActivity = async (data) => {
+  /*const createActivity = async (data) => {
     const access = localStorage.getItem("access");
     const dataWithHost = { ...data, host: data.organization || "" };
+    const cleanedData = cleanFormData(dataWithHost);
+
+    console.log("📤 전송할 데이터:", cleanedData);
+
+    const response = await fetch("/api/activities/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanedData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ API 에러 응답:", errorText);
+      throw new Error(errorText || "활동 저장에 실패했습니다.");
+    }
+    return response.json();
+  };*/
+  const createActivity = async (data) => {
+    const access = localStorage.getItem("access");
+    const dataWithHost = {
+      ...data,
+      host: data.organization || "",
+      activity_type: "contest", // ⭐ 이 줄 추가!
+    };
     const cleanedData = cleanFormData(dataWithHost);
 
     console.log("📤 전송할 데이터:", cleanedData);
