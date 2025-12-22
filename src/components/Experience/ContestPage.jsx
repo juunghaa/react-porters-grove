@@ -99,7 +99,7 @@ const ContestPage = () => {
       const result = await createActivity(formData);
       console.log("✅ 공모전 저장 성공:", result);
       alert("저장되었습니다!");
-      navigate("/");
+      navigate(`/contest/${result.id}`);
     } catch (error) {
       console.error("❌ 공모전 저장 실패:", error);
       alert("저장에 실패했습니다. 다시 시도해주세요.");
