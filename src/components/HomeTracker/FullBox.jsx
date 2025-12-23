@@ -52,11 +52,9 @@ const FullBox = ({
           {/* 날짜 */}
           <p className="full-box-card-date">
             {experienceData.period_start && experienceData.period_end
-              ? `${experienceData.period_start} ~ ${
-                  experienceData.period_end || "진행 중"
+              ? `${activityData.period_start} ~ ${
+                  activityData.period_end || "진행 중"
                 }`
-              : experienceData.period_start
-              ? `${experienceData.period_start} ~ 진행 중`
               : "기간 미정"}
           </p>
 
