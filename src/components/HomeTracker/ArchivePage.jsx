@@ -22,14 +22,13 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ 스펙 데이터
+  // ⭐ 스펙 데이터 - 전체 목록 저장
   const [specCount, setSpecCount] = useState(0);
-  const [firstSpec, setFirstSpec] = useState(null);
-  const [firstSpecType, setFirstSpecType] = useState(null);
+  const [allSpecs, setAllSpecs] = useState([]); // ⭐ 모든 스펙 (타입 포함)
 
-  // ⭐ 포트폴리오 데이터
+  // ⭐ 포트폴리오 데이터 - 전체 목록 저장
   const [portfolioCount, setPortfolioCount] = useState(0);
-  const [firstPortfolio, setFirstPortfolio] = useState(null);
+  const [allPortfolios, setAllPortfolios] = useState([]);
 
   const [experiences, setExperiences] = useState({
     ongoing: [],
@@ -86,7 +85,7 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
         const activitiesData = await getData(activitiesRes);
         setActivities(activitiesData);
 
-        // 스펙 데이터
+        // 스펙 데이터 - 각 타입별로 가져와서 타입 정보와 함께 저장
         const [careers, awards, certifications, foreignlangs, globalexps] =
           await Promise.all([
             getData(careersRes),
@@ -96,43 +95,29 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
             getData(globalexpsRes),
           ]);
 
-        const totalSpecCount =
-          careers.length +
-          awards.length +
-          certifications.length +
-          foreignlangs.length +
-          globalexps.length;
+        // ⭐ 모든 스펙을 타입 정보와 함께 하나의 배열로 합침
+        const combinedSpecs = [
+          ...careers.map(spec => ({ spec, type: 'career' })),
+          ...awards.map(spec => ({ spec, type: 'award' })),
+          ...certifications.map(spec => ({ spec, type: 'certification' })),
+          ...foreignlangs.map(spec => ({ spec, type: 'foreignlang' })),
+          ...globalexps.map(spec => ({ spec, type: 'globalexp' })),
+        ];
+
+        setAllSpecs(combinedSpecs);
+        const totalSpecCount = combinedSpecs.length;
         setSpecCount(totalSpecCount);
 
-        // ⭐ 첫 번째 스펙 찾기 (전체 탭 표시용)
-        if (careers.length > 0) {
-          setFirstSpec(careers[0]);
-          setFirstSpecType("career");
-        } else if (awards.length > 0) {
-          setFirstSpec(awards[0]);
-          setFirstSpecType("award");
-        } else if (certifications.length > 0) {
-          setFirstSpec(certifications[0]);
-          setFirstSpecType("certification");
-        } else if (foreignlangs.length > 0) {
-          setFirstSpec(foreignlangs[0]);
-          setFirstSpecType("foreignlang");
-        } else if (globalexps.length > 0) {
-          setFirstSpec(globalexps[0]);
-          setFirstSpecType("globalexp");
-        }
-
-        // 포트폴리오 데이터
+        // ⭐ 포트폴리오 데이터 - 전체 저장
         const portfoliosData = await getData(portfoliosRes);
+        console.log("📦 포트폴리오 데이터:", portfoliosData);
+        setAllPortfolios(portfoliosData);
         setPortfolioCount(portfoliosData.length);
-        if (portfoliosData.length > 0) {
-          setFirstPortfolio(portfoliosData[0]);
-        }
 
         setExperiences({
           ongoing: activitiesData,
-          spec: Array(totalSpecCount).fill({}),
-          completed: Array(portfoliosData.length).fill({}),
+          spec: combinedSpecs,
+          completed: portfoliosData,
         });
       } catch (error) {
         console.error("데이터 로딩 실패:", error);
@@ -314,12 +299,19 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
     } else if (type === "PROJECT") {
       navigate(`/project/${activity.id}`);
     } else {
-      // 기본적으로 project 상세 페이지로 이동
       navigate(`/project/${activity.id}`);
     }
   };
 
-  // ⭐ 전체 탭용 박스 렌더링 (수정됨 - 모든 경험 카드 렌더링)
+  // ⭐ 포트폴리오 상세 페이지로 이동
+  const handlePortfolioClick = (portfolio) => {
+    console.log("📂 포트폴리오 클릭:", portfolio);
+    if (portfolio?.id) {
+      navigate(`/portfolio/${portfolio.id}`);
+    }
+  };
+
+  // ⭐ 전체 탭용 박스 렌더링 (수정됨 - 모든 항목 렌더링)
   const renderBox = (type) => {
     const config = boxConfigs[type];
 
@@ -331,9 +323,9 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
             key={type}
             isPanelCollapsed={isPanelCollapsed}
             config={config}
-            experienceData={activities} // ⭐ 모든 활동 전달
+            experienceData={activities}
             onMenuClick={() => handleMenuClick(type)}
-            onClick={handleGoToExperienceDetail} // ⭐ 클릭 시 상세 페이지로 이동
+            onClick={handleGoToExperienceDetail}
           />
         );
       } else {
@@ -349,9 +341,9 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
       }
     }
 
-    // ⭐ 나의 스펙 박스 - SpecCard 사용
+    // ⭐ 나의 스펙 박스 - 모든 SpecCard 렌더링
     if (type === "spec") {
-      if (specCount > 0 && firstSpec) {
+      if (specCount > 0 && allSpecs.length > 0) {
         return (
           <div
             key={type}
@@ -377,7 +369,16 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
                   </button>
                 </div>
               </div>
-              <SpecCard spec={firstSpec} type={firstSpecType} />
+              {/* ⭐ 모든 스펙 카드 렌더링 */}
+              <div className="spec-cards-container">
+                {allSpecs.map((item, index) => (
+                  <SpecCard 
+                    key={`${item.type}-${item.spec.id || index}`} 
+                    spec={item.spec} 
+                    type={item.type} 
+                  />
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -394,9 +395,9 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
       }
     }
 
-    // ⭐ 나의 포트폴리오 박스 - PortfolioCard 사용
+    // ⭐ 나의 포트폴리오 박스 - 모든 PortfolioCard 렌더링
     if (type === "completed") {
-      if (portfolioCount > 0 && firstPortfolio) {
+      if (portfolioCount > 0 && allPortfolios.length > 0) {
         return (
           <div
             key={type}
@@ -422,7 +423,16 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
                   </button>
                 </div>
               </div>
-              <PortfolioCard portfolio={firstPortfolio} onClick={() => {}} />
+              {/* ⭐ 모든 포트폴리오 카드 렌더링 */}
+              <div className="portfolio-cards-container">
+                {allPortfolios.map((portfolio) => (
+                  <PortfolioCard 
+                    key={portfolio.id} 
+                    portfolio={portfolio} 
+                    onClick={handlePortfolioClick} 
+                  />
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -488,7 +498,7 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
               key={activity.id}
               activity={activity}
               isPanelCollapsed={isPanelCollapsed}
-              onGoToEditor={() => handleGoToExperienceDetail(activity)} // ⭐ 수정됨
+              onGoToEditor={() => handleGoToExperienceDetail(activity)}
             />
           ))}
         </div>
