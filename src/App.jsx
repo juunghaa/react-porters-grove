@@ -31,6 +31,8 @@ import Overseas from "./components/Spec/Overseas.jsx";
 import Language from "./components/Spec/Language.jsx";
 import PortfolioCreationFlow from "./components/MakingPortfolio/PortfolioCreationFlow";
 import Activity from "./components/Activity/Activity.jsx";  // 경로 확인 필요
+import InUnivDetailPage from './components/InUnivDetailPage/InUnivDetailPage';
+import OutUnivDetailPage from './components/OutUnivDetailPage/OutUnivDetailPage';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
