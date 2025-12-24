@@ -260,27 +260,25 @@
   }
 }
 
-/* ⭐ 인라인 활동 추가 버튼 (리스트 하단) - 추가 */
+/* ⭐ 인라인 활동 추가 버튼 (리스트 하단) - 기존 디자인 유지 */
 .add-sub-activity-btn-inline {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 12px;
-  margin-top: 4px;
-  border: 2px dashed #e0e0e0;
-  border-radius: 12px;
-  background: transparent;
-  color: #808080;
+  padding: 10px 20px;
+  margin-top: 8px;
+  border: 1px solid #f3f3f3;
+  border-radius: 20px;
+  background: #fcfcfc;
+  color: rgba(0, 0, 0, 0.7);
   font-family: "SUIT Variable";
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .add-sub-activity-btn-inline:hover {
-  border-color: #5db075;
-  color: #5db075;
-  background: rgba(93, 176, 117, 0.05);
+  background: #f0f0f0;
 }
