@@ -1,0 +1,111 @@
+/* ⭐ LeftPanel과 함께 동작하는 레이아웃 */
+.portfolio-view-page-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+  }
+  
+  /* ⭐ 메인 콘텐츠 영역 - LeftPanel 너비만큼 마진 */
+  .portfolio-view-content {
+    flex: 1;
+    margin-left: 194px; /* LeftPanel 펼쳐진 상태 너비 */
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    transition: margin-left 0.3s ease;
+    background-color: #f7f7f7;
+    padding: 20px;
+  }
+  
+  /* LeftPanel이 접혀있을 때 */
+  .portfolio-view-content.expanded {
+    margin-left: 60px; /* LeftPanel 접힌 상태 너비 */
+  }
+  
+  /* ⭐ PortfolioViewer 컨테이너 오버라이드 - LeftPanel과 함께 사용할 때 */
+  .portfolio-view-content .portfolio-viewer-container {
+    width: 100%;
+    min-height: auto;
+    background: #F7F7F7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+  
+  /* 로딩 상태 */
+  .portfolio-view-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 16px;
+  }
+  
+  .portfolio-view-loading .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top: 3px solid #5db075;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .portfolio-view-loading p {
+    color: #666;
+    font-size: 16px;
+    font-family: "SUIT Variable", sans-serif;
+  }
+  
+  /* 에러 상태 */
+  .portfolio-view-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 16px;
+  }
+  
+  .portfolio-view-error p {
+    color: #666;
+    font-size: 16px;
+    font-family: "SUIT Variable", sans-serif;
+  }
+  
+  .portfolio-view-error button {
+    padding: 12px 24px;
+    background: #5db075;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: "SUIT Variable", sans-serif;
+  }
+  
+  .portfolio-view-error button:hover {
+    background: #4a9c64;
+  }
+  
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .portfolio-view-content {
+      margin-left: 0;
+      padding: 16px;
+    }
+    
+    .portfolio-view-content.expanded {
+      margin-left: 0;
+    }
+  }

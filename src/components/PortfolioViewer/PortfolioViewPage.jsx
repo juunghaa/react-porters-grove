@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import PortfolioViewer from '../PortfolioViewer/PortfolioViewer';
+import LeftPanel from '../LeftPanel/LeftPanel';
+import PortfolioViewer from './PortfolioViewer';
 import './PortfolioViewPage.css';
 
 // ⭐ 포트폴리오 상세 조회 API
@@ -48,6 +49,10 @@ const PortfolioViewPage = () => {
   const [portfolioData, setPortfolioData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // ⭐ LeftPanel 상태
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
 
   useEffect(() => {
     const loadPortfolio = async () => {
@@ -95,7 +100,7 @@ const PortfolioViewPage = () => {
         // 3. PortfolioViewer에 전달할 데이터 구조로 변환
         const viewerData = {
           id: portfolio.id,
-          title: portfolio.title || portfolio.name || '포트폴리오', // ⭐ 여러 필드명 체크
+          title: portfolio.title || portfolio.name || '포트폴리오',
           selectedItems: selectedItems,
           selectedTags: portfolio.selected_tags || portfolio.tags || [],
           workStyle: portfolio.work_style || portfolio.workStyle || '',
@@ -116,6 +121,18 @@ const PortfolioViewPage = () => {
     loadPortfolio();
   }, [id]);
 
+  // ⭐ LeftPanel 핸들러들
+  const handleToggle = () => setIsCollapsed(!isCollapsed);
+  const handleHomeClick = () => navigate('/');
+  const handleCreateNew = () => navigate('/choose');
+  const handleArchiveClick = () => navigate('/archive');
+  const handleOpenProfileSettings = () => setIsProfileSettingsOpen(true);
+  const handleLogout = () => {
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
+    navigate('/');
+  };
+
   // 닫기 핸들러 - 이전 페이지 또는 홈으로 이동
   const handleClose = () => {
     navigate(-1);
@@ -129,10 +146,22 @@ const PortfolioViewPage = () => {
   // 로딩 중
   if (loading) {
     return (
-      <div className="portfolio-view-page">
-        <div className="portfolio-view-loading">
-          <div className="loading-spinner"></div>
-          <p>포트폴리오를 불러오는 중...</p>
+      <div className="portfolio-view-page-container">
+        <LeftPanel
+          isCollapsed={isCollapsed}
+          onToggle={handleToggle}
+          onHomeClick={handleHomeClick}
+          onCreateNew={handleCreateNew}
+          onArchiveClick={handleArchiveClick}
+          onLogout={handleLogout}
+          isProfileSettingsOpen={isProfileSettingsOpen}
+          onOpenProfileSettings={handleOpenProfileSettings}
+        />
+        <div className={`portfolio-view-content ${isCollapsed ? 'expanded' : ''}`}>
+          <div className="portfolio-view-loading">
+            <div className="loading-spinner"></div>
+            <p>포트폴리오를 불러오는 중...</p>
+          </div>
         </div>
       </div>
     );
@@ -141,10 +170,22 @@ const PortfolioViewPage = () => {
   // 에러 발생
   if (error) {
     return (
-      <div className="portfolio-view-page">
-        <div className="portfolio-view-error">
-          <p>{error}</p>
-          <button onClick={() => navigate('/')}>홈으로 돌아가기</button>
+      <div className="portfolio-view-page-container">
+        <LeftPanel
+          isCollapsed={isCollapsed}
+          onToggle={handleToggle}
+          onHomeClick={handleHomeClick}
+          onCreateNew={handleCreateNew}
+          onArchiveClick={handleArchiveClick}
+          onLogout={handleLogout}
+          isProfileSettingsOpen={isProfileSettingsOpen}
+          onOpenProfileSettings={handleOpenProfileSettings}
+        />
+        <div className={`portfolio-view-content ${isCollapsed ? 'expanded' : ''}`}>
+          <div className="portfolio-view-error">
+            <p>{error}</p>
+            <button onClick={() => navigate('/')}>홈으로 돌아가기</button>
+          </div>
         </div>
       </div>
     );
@@ -153,23 +194,49 @@ const PortfolioViewPage = () => {
   // 데이터 없음
   if (!portfolioData) {
     return (
-      <div className="portfolio-view-page">
-        <div className="portfolio-view-error">
-          <p>포트폴리오를 찾을 수 없습니다.</p>
-          <button onClick={() => navigate('/')}>홈으로 돌아가기</button>
+      <div className="portfolio-view-page-container">
+        <LeftPanel
+          isCollapsed={isCollapsed}
+          onToggle={handleToggle}
+          onHomeClick={handleHomeClick}
+          onCreateNew={handleCreateNew}
+          onArchiveClick={handleArchiveClick}
+          onLogout={handleLogout}
+          isProfileSettingsOpen={isProfileSettingsOpen}
+          onOpenProfileSettings={handleOpenProfileSettings}
+        />
+        <div className={`portfolio-view-content ${isCollapsed ? 'expanded' : ''}`}>
+          <div className="portfolio-view-error">
+            <p>포트폴리오를 찾을 수 없습니다.</p>
+            <button onClick={() => navigate('/')}>홈으로 돌아가기</button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // PortfolioViewer 렌더링
+  // ⭐ LeftPanel + PortfolioViewer 렌더링
   return (
-    <PortfolioViewer
-      portfolioData={portfolioData}
-      onClose={handleClose}
-      onSaveSuccess={handleSaveSuccess}
-      isViewMode={true}  // ⭐ 보기 모드 플래그 (필요시 PortfolioViewer에서 활용)
-    />
+    <div className="portfolio-view-page-container">
+      <LeftPanel
+        isCollapsed={isCollapsed}
+        onToggle={handleToggle}
+        onHomeClick={handleHomeClick}
+        onCreateNew={handleCreateNew}
+        onArchiveClick={handleArchiveClick}
+        onLogout={handleLogout}
+        isProfileSettingsOpen={isProfileSettingsOpen}
+        onOpenProfileSettings={handleOpenProfileSettings}
+      />
+      <div className={`portfolio-view-content ${isCollapsed ? 'expanded' : ''}`}>
+        <PortfolioViewer
+          portfolioData={portfolioData}
+          onClose={handleClose}
+          onSaveSuccess={handleSaveSuccess}
+          isViewMode={true}
+        />
+      </div>
+    </div>
   );
 };
 
