@@ -1,76 +1,76 @@
 /* PortfolioCard.css */
-
 .portfolio-card {
-    display: flex;
-    width: 258px;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
+  display: flex;
+  width: 100%;
+  max-width: 258px;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-4px);
+  opacity: 0.9;
+}
+
+/* 포트폴리오 아이콘 */
+.portfolio-card-icon {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.portfolio-card-icon img {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* 포트폴리오 제목 */
+.portfolio-card-title {
+  margin: 0;
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.18px;
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* 경험 개수 */
+.portfolio-card-count {
+  color: rgba(0, 0, 0, 0.50);
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.14px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .portfolio-card {
+    max-width: 200px;
+    gap: 14px;
   }
-  
-  .portfolio-card:hover {
-    transform: translateY(-4px);
-    opacity: 0.9;
-  }
-  
-  /* 포트폴리오 아이콘 */
-  .portfolio-card-icon {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+
   .portfolio-card-icon img {
-    width: 100%;
-    max-width: 180px;
-    height: auto;
-    object-fit: contain;
+    max-width: 150px;
   }
-  
-  /* 포트폴리오 제목 */
+
   .portfolio-card-title {
-    margin: 0;
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: -0.18px;
-    text-align: center;
-    word-break: keep-all;
+    font-size: 16px;
   }
-  
-  /* 경험 개수 */
+
   .portfolio-card-count {
-    color: rgba(0, 0, 0, 0.50);
-    font-family: "SUIT Variable";
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: -0.14px;
+    font-size: 13px;
   }
-  
-  /* 반응형 */
-  @media (max-width: 768px) {
-    .portfolio-card {
-      width: 200px;
-      gap: 14px;
-    }
-  
-    .portfolio-card-icon img {
-      max-width: 200px;
-    }
-  
-    .portfolio-card-title {
-      font-size: 16px;
-    }
-  
-    .portfolio-card-count {
-      font-size: 13px;
-    }
-  }
+}
