@@ -46,12 +46,13 @@ const savePortfolio = async (portfolioData) => {
   return response.json();
 };
 
-const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess }) => {
-  const [portfolioName, setPortfolioName] = useState('');
+const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess, isViewMode }) => {
+  // ⭐ 포트폴리오 이름 초기값 설정 (portfolioData.title 사용)
+  const [portfolioName, setPortfolioName] = useState(portfolioData?.title || '');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFullView, setIsFullView] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [showSaveMenu, setShowSaveMenu] = useState(false); // ⭐ 저장 드롭다운 상태
+  const [showSaveMenu, setShowSaveMenu] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -67,6 +68,13 @@ const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess }) => {
   // 고정 크기 (A4 비율 기준)
   const FIXED_WIDTH = 952;
   const FIXED_HEIGHT = 1347;
+
+  // ⭐ portfolioData.title이 변경되면 portfolioName 업데이트
+  useEffect(() => {
+    if (portfolioData?.title && !portfolioName) {
+      setPortfolioName(portfolioData.title);
+    }
+  }, [portfolioData?.title]);
 
   // ⭐ 세부활동 로딩
   useEffect(() => {
@@ -294,36 +302,38 @@ const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess }) => {
               )}
             </button>
 
-            {/* ⭐ 저장 버튼 + 드롭다운 */}
-            <div className="save-options-wrapper">
-              <button 
-                className="portfolio-action-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSaveOptions();
-                }}
-                aria-label="저장"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <path d="M25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.219C4.28095 26.7189 4 26.0406 4 25.3333V6.66667C4 5.95942 4.28095 5.28115 4.78105 4.78105C5.28115 4.28095 5.95942 4 6.66667 4H21.3333L28 10.6667V25.3333C28 26.0406 27.719 26.7189 27.219 27.219C26.7189 27.719 26.0406 28 25.3333 28Z" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M22.6667 28V17.3333H9.33333V28" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M9.33333 4V10.6667H20" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+            {/* ⭐ 저장 버튼 + 드롭다운 (보기 모드가 아닐 때만 표시) */}
+            {!isViewMode && (
+              <div className="save-options-wrapper">
+                <button 
+                  className="portfolio-action-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSaveOptions();
+                  }}
+                  aria-label="저장"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.219C4.28095 26.7189 4 26.0406 4 25.3333V6.66667C4 5.95942 4.28095 5.28115 4.78105 4.78105C5.28115 4.28095 5.95942 4 6.66667 4H21.3333L28 10.6667V25.3333C28 26.0406 27.719 26.7189 27.219 27.219C26.7189 27.719 26.0406 28 25.3333 28Z" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M22.6667 28V17.3333H9.33333V28" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M9.33333 4V10.6667H20" stroke="black" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
 
-              {/* 저장 드롭다운 메뉴 */}
-              {showSaveMenu && (
-                <div className="save-options-menu" onClick={(e) => e.stopPropagation()}>
-                  <button 
-                    className="save-menu-item"
-                    onClick={handleSavePortfolio}
-                    disabled={isSaving || !portfolioName.trim()}
-                  >
-                    {isSaving ? '저장 중...' : isSaved ? '저장 완료!' : '저장하기'}
-                  </button>
-                </div>
-              )}
-            </div>
+                {/* 저장 드롭다운 메뉴 */}
+                {showSaveMenu && (
+                  <div className="save-options-menu" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className="save-menu-item"
+                      onClick={handleSavePortfolio}
+                      disabled={isSaving || !portfolioName.trim()}
+                    >
+                      {isSaving ? '저장 중...' : isSaved ? '저장 완료!' : '저장하기'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* 더보기 버튼 + 드롭다운 메뉴 */}
             <div className="more-options-wrapper">
@@ -385,15 +395,21 @@ const PortfolioViewer = ({ portfolioData, onClose, onSaveSuccess }) => {
                 />
               </div>
 
-              <h1 className="portfolio-viewer-title">포트폴리오가 완성되었어요!</h1>
-
-              <input
-                type="text"
-                className="portfolio-name-input"
-                placeholder="포트폴리오 이름을 입력하세요"
-                value={portfolioName}
-                onChange={(e) => setPortfolioName(e.target.value)}
-              />
+              {/* ⭐ 보기 모드일 때는 제목만 표시, 아닐 때는 입력 필드 */}
+              {isViewMode ? (
+                <h1 className="portfolio-viewer-title">{portfolioName || '포트폴리오'}</h1>
+              ) : (
+                <>
+                  <h1 className="portfolio-viewer-title">포트폴리오가 완성되었어요!</h1>
+                  <input
+                    type="text"
+                    className="portfolio-name-input"
+                    placeholder="포트폴리오 이름을 입력하세요"
+                    value={portfolioName}
+                    onChange={(e) => setPortfolioName(e.target.value)}
+                  />
+                </>
+              )}
 
               {/* 저장 성공 메시지 */}
               {isSaved && (

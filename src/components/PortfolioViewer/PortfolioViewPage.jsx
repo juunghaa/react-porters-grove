@@ -60,28 +60,45 @@ const PortfolioViewPage = () => {
       try {
         // 1. 포트폴리오 상세 조회
         const portfolio = await fetchPortfolioDetail(id);
-        console.log('📥 포트폴리오 데이터:', portfolio);
+        console.log('📥 포트폴리오 원본 데이터:', portfolio);
+        console.log('📥 포트폴리오 키 목록:', Object.keys(portfolio));
+
+        // ⭐ activity_ids 필드 확인 (여러 가능한 필드명 체크)
+        const activityIds = portfolio.activity_ids 
+          || portfolio.activities 
+          || portfolio.activity_list 
+          || portfolio.selected_activities
+          || [];
+        
+        console.log('📥 activity_ids:', activityIds);
 
         // 2. activity_ids로 각 활동 상세 정보 가져오기
-        const activityIds = portfolio.activity_ids || [];
         const selectedItems = [];
 
-        for (const activityId of activityIds) {
-          try {
-            const activity = await fetchActivityDetail(activityId);
-            selectedItems.push(activity);
-          } catch (err) {
-            console.error(`활동 ${activityId} 조회 실패:`, err);
+        // activityIds가 숫자 배열인지, 객체 배열인지 확인
+        for (const item of activityIds) {
+          const activityId = typeof item === 'object' ? item.id : item;
+          
+          if (activityId) {
+            try {
+              const activity = await fetchActivityDetail(activityId);
+              console.log(`✅ 활동 ${activityId} 조회 성공:`, activity);
+              selectedItems.push(activity);
+            } catch (err) {
+              console.error(`❌ 활동 ${activityId} 조회 실패:`, err);
+            }
           }
         }
+
+        console.log('📥 selectedItems 최종:', selectedItems);
 
         // 3. PortfolioViewer에 전달할 데이터 구조로 변환
         const viewerData = {
           id: portfolio.id,
-          title: portfolio.title,
+          title: portfolio.title || portfolio.name || '포트폴리오', // ⭐ 여러 필드명 체크
           selectedItems: selectedItems,
-          selectedTags: portfolio.selected_tags || [],
-          workStyle: portfolio.work_style || '',
+          selectedTags: portfolio.selected_tags || portfolio.tags || [],
+          workStyle: portfolio.work_style || portfolio.workStyle || '',
           strengths: portfolio.strengths || '',
         };
 
