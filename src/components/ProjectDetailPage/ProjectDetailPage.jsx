@@ -190,7 +190,12 @@ const ProjectDetailPage = () => {
               <p className="placeholder-subtext">
                 이 경험의 활동을 등록해보세요
               </p>
-              <button className="add-activity-btn">+ 활동 등록하기</button>
+              <button 
+                className="add-activity-btn"
+                onClick={() => navigate(`/activity/${id}`)}  
+              >
+                + 활동 등록하기
+              </button>
             </div>
           </div>
 

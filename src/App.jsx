@@ -30,6 +30,7 @@ import Award from "./components/Spec/Award.jsx";
 import Overseas from "./components/Spec/Overseas.jsx";
 import Language from "./components/Spec/Language.jsx";
 import PortfolioCreationFlow from "./components/MakingPortfolio/PortfolioCreationFlow";
+import Activity from "./components/Activity/Activity.jsx";  // 경로 확인 필요
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -89,6 +90,9 @@ export default function App() {
         <Route path="/project/:id" element={<ProjectDetailPage />} />
         <Route path="/campus" element={<InUnivPage />} />
         <Route path="/external" element={<OutUnivPage />} />
+
+        {/* ⭐ 활동(세부활동) 에디터 */}
+        <Route path="/activity/:activityId" element={<Activity />} />
 
         {/* ⭐ 스펙 관련 라우트 */}
         <Route path="/career" element={<Career />} />
