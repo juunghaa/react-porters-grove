@@ -4,12 +4,14 @@ import { Calendar, Plus, Minus } from "lucide-react";
 import "./Activity.css";
 
 const Activity = () => {
-  const { activityId } = useParams(); // 상위 활동 ID (ContestDetailPage 등에서 넘어옴)
+  const { activityId, subActivityId } = useParams(); // ⭐ subActivityId 추가
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false); // ⭐ 수정 모드 여부
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     // 1단계: 기본 정보
@@ -49,8 +51,53 @@ const Activity = () => {
     { id: 5, label: "자료첨부" },
   ];
 
-  // ⭐ 임시저장 불러오기
+  // ⭐ 기존 세부활동 데이터 불러오기
   useEffect(() => {
+    const fetchSubActivityData = async () => {
+      if (!subActivityId) return;
+
+      setLoading(true);
+      setIsEditMode(true);
+
+      try {
+        const access = localStorage.getItem("access");
+        
+        // 세부활동 상세 조회 API
+        const response = await fetch(
+          `/api/activities/${activityId}/sub-activities/${subActivityId}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("세부활동 조회 실패");
+        }
+
+        const data = await response.json();
+        console.log("📥 불러온 세부활동 데이터:", data);
+
+        // ⭐ API 데이터를 formData 형식으로 변환
+        const convertedData = convertApiToFormData(data);
+        setFormData(convertedData);
+        
+      } catch (error) {
+        console.error("❌ 세부활동 불러오기 실패:", error);
+        // 실패해도 새로 작성할 수 있도록
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubActivityData();
+  }, [activityId, subActivityId]);
+
+  // ⭐ 임시저장 불러오기 (새 활동일 때만)
+  useEffect(() => {
+    if (subActivityId) return; // 수정 모드면 임시저장 불러오지 않음
+
     const draftKey = activityId
       ? `activity_draft_${activityId}`
       : "activity_draft_new";
@@ -64,7 +111,48 @@ const Activity = () => {
         console.error("임시저장 파싱 실패:", e);
       }
     }
-  }, [activityId]);
+  }, [activityId, subActivityId]);
+
+  // ⭐ API 응답 데이터를 formData 형식으로 변환
+  const convertApiToFormData = (apiData) => {
+    // role_items를 roles와 customRoles로 변환
+    const roles = { planning: 0, design: 0, development: 0 };
+    const customRoles = {};
+    
+    const roleNameToKey = {
+      "기획": "planning",
+      "디자인": "design",
+      "개발": "development",
+    };
+
+    if (apiData.role_items && Array.isArray(apiData.role_items)) {
+      apiData.role_items.forEach((item) => {
+        const key = roleNameToKey[item.name];
+        if (key) {
+          roles[key] = item.count || 0;
+        } else {
+          customRoles[item.name] = item.count || 0;
+        }
+      });
+    }
+
+    return {
+      activityName: apiData.title || "",
+      startDate: apiData.period_start || "",
+      endDate: apiData.period_end || "",
+      organization: apiData.organization || "",
+      roles,
+      customRoles,
+      primaryTags: apiData.primary_tags?.map(t => t.name).join(", ") || "",
+      secondaryTags: apiData.secondary_tags?.map(t => t.name).join(", ") || "",
+      activityGoal: apiData.situation || "",
+      mainRole: apiData.task_detail || "",
+      achievement: apiData.result_detail || "",
+      lesson: apiData.takeaway || "",
+      files: [],
+      linkUrl: apiData.link_url || "",
+    };
+  };
 
   const totalMembers =
     Object.values(formData.roles).reduce((a, b) => a + b, 0) +
@@ -149,15 +237,15 @@ const Activity = () => {
   const buildApiPayload = () => {
     const payload = {
       title: formData.activityName,
-      activity_type: "OTHER", // 세부활동이므로 OTHER 또는 적절한 타입
+      activity_type: "OTHER",
       organization: formData.organization,
       period_start: formData.startDate || null,
       period_end: formData.endDate || null,
       role_items: buildRoleItems(),
-      situation: formData.activityGoal, // 활동 목표를 situation에 매핑
-      task_detail: formData.mainRole, // 주요 역할을 task_detail에 매핑
-      result_detail: formData.achievement, // 주요 성과
-      takeaway: formData.lesson, // 배운 점
+      situation: formData.activityGoal,
+      task_detail: formData.mainRole,
+      result_detail: formData.achievement,
+      takeaway: formData.lesson,
       link_url: formData.linkUrl || null,
     };
 
@@ -173,7 +261,7 @@ const Activity = () => {
     return cleanedPayload;
   };
 
-  // ⭐ 세부활동 저장 API 호출
+  // ⭐ 세부활동 저장/수정 API 호출
   const handleSubmit = async () => {
     if (!formData.activityName.trim()) {
       alert("활동명을 입력해주세요.");
@@ -189,20 +277,29 @@ const Activity = () => {
 
       console.log("📤 전송할 데이터:", payload);
       console.log("📍 상위 활동 ID:", activityId);
+      console.log("📍 세부활동 ID:", subActivityId);
+      console.log("📍 수정 모드:", isEditMode);
 
       let response;
       let endpoint;
+      let method;
 
-      if (activityId) {
-        // 상위 활동이 있으면 세부활동으로 생성
+      if (isEditMode && subActivityId) {
+        // ⭐ 수정 모드 - PUT/PATCH
+        endpoint = `/api/activities/${activityId}/sub-activities/${subActivityId}/`;
+        method = "PUT";
+      } else if (activityId) {
+        // 새 세부활동 생성
         endpoint = `/api/activities/${activityId}/sub-activities/`;
+        method = "POST";
       } else {
         // 상위 활동이 없으면 새 활동으로 생성
         endpoint = `/api/activities/`;
+        method = "POST";
       }
 
       response = await fetch(endpoint, {
-        method: "POST",
+        method: method,
         headers: {
           Authorization: `Bearer ${access}`,
           "Content-Type": "application/json",
@@ -225,14 +322,12 @@ const Activity = () => {
         : "activity_draft_new";
       localStorage.removeItem(draftKey);
 
-      alert("저장되었습니다!");
+      alert(isEditMode ? "수정되었습니다!" : "저장되었습니다!");
 
       // 저장 후 이동
       if (activityId) {
-        // 상위 활동 상세 페이지로 돌아가기
         navigate(-1);
       } else {
-        // 새 활동이면 홈으로
         navigate("/");
       }
     } catch (error) {
@@ -266,6 +361,17 @@ const Activity = () => {
   };
 
   const preview = getPreviewData();
+
+  // ⭐ 로딩 중 표시
+  if (loading) {
+    return (
+      <div className="activity-page">
+        <div className="loading-container">
+          <p>활동 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="activity-page">
@@ -305,7 +411,9 @@ const Activity = () => {
           }`}
         >
           <div className="main-header">
-            <h1 className="main-title">활동정리</h1>
+            <h1 className="main-title">
+              {isEditMode ? "활동 수정" : "활동정리"}
+            </h1>
             <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
               {isSidebarVisible ? "단계 숨기기" : "단계 띄우기"}
             </button>
@@ -657,7 +765,11 @@ const Activity = () => {
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "저장 중..." : "작성 완료"}
+                    {isSubmitting
+                      ? "저장 중..."
+                      : isEditMode
+                      ? "수정 완료"
+                      : "작성 완료"}
                   </button>
                 )}
               </div>

@@ -103,6 +103,7 @@ export default function App() {
         <Route path="/outuniv/:id" element={<OutUnivDetailPage />} /> {/* 상세 보기 (필요시 생성) */}
 
         {/* ⭐ 활동(세부활동) 에디터 */}
+        <Route path="/activity/:activityId/:subActivityId" element={<Activity />} />  {/* 기존 활동 수정 */}
         <Route path="/activity/:activityId" element={<Activity />} />
         <Route path="/activity" element={<Activity />} />  {/* 새 활동 생성용 */}
 

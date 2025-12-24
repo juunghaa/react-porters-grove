@@ -102,14 +102,18 @@ const ContestDetailPage = () => {
     });
   };
 
-  // ⭐ 활동 등록하기 버튼 클릭
+  // ⭐ 새 활동 등록하기 버튼 클릭
   const handleAddActivity = () => {
     navigate(`/activity/${id}`);
   };
 
-  // ⭐ 세부활동 카드 클릭 (나중에 상세 보기 구현 시 사용)
+  // ⭐ 세부활동 카드 클릭 - 기존 데이터가 채워진 에디터로 이동
   const handleSubActivityClick = (subActivity) => {
     console.log("세부활동 클릭:", subActivity);
+    if (subActivity?.id) {
+      // activityId와 subActivityId 전달
+      navigate(`/activity/${id}/${subActivity.id}`);
+    }
   };
 
   const handleAddNote = () => {

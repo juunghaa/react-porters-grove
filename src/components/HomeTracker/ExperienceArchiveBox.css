@@ -259,3 +259,28 @@
     height: 28px;
   }
 }
+
+/* ⭐ 인라인 활동 추가 버튼 (리스트 하단) - 추가 */
+.add-sub-activity-btn-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  margin-top: 4px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 12px;
+  background: transparent;
+  color: #808080;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-sub-activity-btn-inline:hover {
+  border-color: #5db075;
+  color: #5db075;
+  background: rgba(93, 176, 117, 0.05);
+}

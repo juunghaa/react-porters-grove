@@ -61,8 +61,21 @@ const ExperienceArchiveBox = ({ activity, isPanelCollapsed, onGoToEditor }) => {
     if (activity.primary_tags && activity.primary_tags.length > 0) {
       return activity.primary_tags[0].name;
     }
-    // 기본 태그
-    return "경험";
+    // activity_type으로 태그 표시
+    const typeMap = {
+      CONTEST: "공모전",
+      PROJECT: "프로젝트",
+      CLUB: "동아리",
+      CAMPUS: "교내활동",
+      EXTRACURRICULAR: "대외활동",
+      HACKATHON: "해커톤",
+      RESEARCH: "연구",
+      EDUCATION: "교육",
+      STARTUP: "창업",
+      VOLUNTEER: "봉사",
+      OTHER: "기타",
+    };
+    return typeMap[activity.activity_type] || "경험";
   };
 
   // ⭐ 더보기 버튼 클릭 - 경험 상세 페이지로 이동
@@ -73,11 +86,19 @@ const ExperienceArchiveBox = ({ activity, isPanelCollapsed, onGoToEditor }) => {
     }
   };
 
-  // ⭐ 세부활동 카드 클릭 - 활동 에디터로 이동
+  // ⭐ 세부활동 카드 클릭 - 활동 에디터로 이동 (기존 데이터 포함)
   const handleSubActivityClick = (subActivity, e) => {
     e.stopPropagation();
     if (subActivity?.id && activity?.id) {
-      // 세부활동 에디터로 이동 (activityId를 함께 전달)
+      // 세부활동 에디터로 이동 (activityId와 subActivityId 전달)
+      navigate(`/activity/${activity.id}/${subActivity.id}`);
+    }
+  };
+
+  // ⭐ 새 활동 추가 버튼 클릭
+  const handleAddSubActivity = (e) => {
+    e.stopPropagation();
+    if (activity?.id) {
       navigate(`/activity/${activity.id}`);
     }
   };
@@ -169,7 +190,7 @@ const ExperienceArchiveBox = ({ activity, isPanelCollapsed, onGoToEditor }) => {
               <p>아직 세부 활동이 없어요</p>
               <button
                 className="add-sub-activity-btn"
-                onClick={handleMoreClick}
+                onClick={handleAddSubActivity}
               >
                 + 세부 활동 추가하기
               </button>
@@ -188,6 +209,13 @@ const ExperienceArchiveBox = ({ activity, isPanelCollapsed, onGoToEditor }) => {
                   />
                 </div>
               ))}
+              {/* ⭐ 활동 추가 버튼 */}
+              <button
+                className="add-sub-activity-btn-inline"
+                onClick={handleAddSubActivity}
+              >
+                + 활동 추가하기
+              </button>
             </div>
           )}
         </div>
