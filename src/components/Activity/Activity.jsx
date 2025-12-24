@@ -1,21 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, Plus, Minus } from "lucide-react";
 import "./Activity.css";
 
 const Activity = () => {
+  const { activityId } = useParams(); // 상위 활동 ID (ContestDetailPage 등에서 넘어옴)
+  const navigate = useNavigate();
+
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true); // 사이드바 보이기/숨기기 상태 추가
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
+    // 1단계: 기본 정보
     activityName: "",
     startDate: "",
     endDate: "",
     organization: "",
     roles: {
-      planning: 1,
+      planning: 0,
       design: 0,
-      development: 2,
+      development: 0,
     },
     customRoles: {},
+
+    // 2단계: 태그 설정
+    primaryTags: "",
+    secondaryTags: "",
+
+    // 3단계: 활동 상세
+    activityGoal: "",
+    mainRole: "",
+
+    // 4단계: 성과 & 결과
+    achievement: "",
+    lesson: "",
+
+    // 5단계: 자료첨부
+    files: [],
+    linkUrl: "",
   });
 
   const steps = [
@@ -25,6 +48,23 @@ const Activity = () => {
     { id: 4, label: "성과 & 결과" },
     { id: 5, label: "자료첨부" },
   ];
+
+  // ⭐ 임시저장 불러오기
+  useEffect(() => {
+    const draftKey = activityId
+      ? `activity_draft_${activityId}`
+      : "activity_draft_new";
+    const savedDraft = localStorage.getItem(draftKey);
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        setFormData(parsed);
+        console.log("📂 임시저장 불러옴:", parsed);
+      } catch (e) {
+        console.error("임시저장 파싱 실패:", e);
+      }
+    }
+  }, [activityId]);
 
   const totalMembers =
     Object.values(formData.roles).reduce((a, b) => a + b, 0) +
@@ -66,9 +106,166 @@ const Activity = () => {
     }
   };
 
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
+
+  // ⭐ role_items 형식으로 변환
+  const buildRoleItems = () => {
+    const roleItems = [];
+    const roleNameMap = {
+      planning: "기획",
+      design: "디자인",
+      development: "개발",
+    };
+
+    // 기본 역할
+    Object.entries(formData.roles).forEach(([key, count]) => {
+      if (count > 0) {
+        roleItems.push({
+          name: roleNameMap[key] || key,
+          count: count,
+        });
+      }
+    });
+
+    // 커스텀 역할
+    Object.entries(formData.customRoles).forEach(([name, count]) => {
+      if (count > 0) {
+        roleItems.push({ name, count });
+      }
+    });
+
+    return roleItems;
+  };
+
+  // ⭐ 백엔드 API 형식으로 데이터 변환
+  const buildApiPayload = () => {
+    const payload = {
+      title: formData.activityName,
+      activity_type: "OTHER", // 세부활동이므로 OTHER 또는 적절한 타입
+      organization: formData.organization,
+      period_start: formData.startDate || null,
+      period_end: formData.endDate || null,
+      role_items: buildRoleItems(),
+      situation: formData.activityGoal, // 활동 목표를 situation에 매핑
+      task_detail: formData.mainRole, // 주요 역할을 task_detail에 매핑
+      result_detail: formData.achievement, // 주요 성과
+      takeaway: formData.lesson, // 배운 점
+      link_url: formData.linkUrl || null,
+    };
+
+    // 빈 값 제거
+    const cleanedPayload = {};
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        if (Array.isArray(value) && value.length === 0) return;
+        cleanedPayload[key] = value;
+      }
+    });
+
+    return cleanedPayload;
+  };
+
+  // ⭐ 세부활동 저장 API 호출
+  const handleSubmit = async () => {
+    if (!formData.activityName.trim()) {
+      alert("활동명을 입력해주세요.");
+      setCurrentStep(1);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const access = localStorage.getItem("access");
+      const payload = buildApiPayload();
+
+      console.log("📤 전송할 데이터:", payload);
+      console.log("📍 상위 활동 ID:", activityId);
+
+      let response;
+      let endpoint;
+
+      if (activityId) {
+        // 상위 활동이 있으면 세부활동으로 생성
+        endpoint = `/api/activities/${activityId}/sub-activities/`;
+      } else {
+        // 상위 활동이 없으면 새 활동으로 생성
+        endpoint = `/api/activities/`;
+      }
+
+      response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ API 에러:", errorText);
+        throw new Error(errorText || "저장에 실패했습니다.");
+      }
+
+      const result = await response.json();
+      console.log("✅ 저장 성공:", result);
+
+      // 임시저장 삭제
+      const draftKey = activityId
+        ? `activity_draft_${activityId}`
+        : "activity_draft_new";
+      localStorage.removeItem(draftKey);
+
+      alert("저장되었습니다!");
+
+      // 저장 후 이동
+      if (activityId) {
+        // 상위 활동 상세 페이지로 돌아가기
+        navigate(-1);
+      } else {
+        // 새 활동이면 홈으로
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("❌ 저장 실패:", error);
+      alert("저장에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ⭐ 임시저장 (로컬스토리지)
+  const handleDraftSave = () => {
+    const draftKey = activityId
+      ? `activity_draft_${activityId}`
+      : "activity_draft_new";
+    localStorage.setItem(draftKey, JSON.stringify(formData));
+    alert("임시저장되었습니다.");
+  };
+
+  // ⭐ 미리보기 데이터
+  const getPreviewData = () => {
+    return {
+      title: formData.activityName || "새 활동",
+      date:
+        formData.startDate && formData.endDate
+          ? `${formData.startDate} ~ ${formData.endDate}`
+          : "날짜 미정",
+      organization: formData.organization || "소속 미정",
+      teamSize: totalMembers > 0 ? `${totalMembers}명` : "팀 구성 미정",
+    };
+  };
+
+  const preview = getPreviewData();
 
   return (
     <div className="activity-page">
@@ -76,7 +273,11 @@ const Activity = () => {
         {/* 좌측 단계 네비게이션 */}
         {isSidebarVisible && (
           <div className="activity-sidebar">
-            <div className="sidebar-logo">
+            <div
+              className="sidebar-logo"
+              onClick={() => navigate("/")}
+              style={{ cursor: "pointer" }}
+            >
               <span className="logo-icon">●</span> Grove
             </div>
             <div className="step-list">
@@ -105,7 +306,6 @@ const Activity = () => {
         >
           <div className="main-header">
             <h1 className="main-title">활동정리</h1>
-            {/* 사이드바 토글 버튼 */}
             <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
               {isSidebarVisible ? "단계 숨기기" : "단계 띄우기"}
             </button>
@@ -140,12 +340,11 @@ const Activity = () => {
 
                   {/* 활동기간 */}
                   <div className="form-group">
-                    <label>활동 기간*</label>
+                    <label>활동 기간 *</label>
                     <div className="date-row">
                       <div className="date-input-container">
                         <input
-                          type="text"
-                          placeholder="년-월-일"
+                          type="date"
                           value={formData.startDate}
                           onChange={(e) =>
                             setFormData({
@@ -153,16 +352,13 @@ const Activity = () => {
                               startDate: e.target.value,
                             })
                           }
-                          onFocus={(e) => (e.target.type = "date")}
-                          onBlur={(e) => (e.target.type = "text")}
                         />
                         <Calendar size={18} className="calendar-icon" />
                       </div>
                       <span className="date-separator">~</span>
                       <div className="date-input-container">
                         <input
-                          type="text"
-                          placeholder="년-월-일"
+                          type="date"
                           value={formData.endDate}
                           onChange={(e) =>
                             setFormData({
@@ -170,8 +366,6 @@ const Activity = () => {
                               endDate: e.target.value,
                             })
                           }
-                          onFocus={(e) => (e.target.type = "date")}
-                          onBlur={(e) => (e.target.type = "text")}
                         />
                         <Calendar size={18} className="calendar-icon" />
                       </div>
@@ -180,7 +374,7 @@ const Activity = () => {
 
                   {/* 소속 */}
                   <div className="form-group">
-                    <label>소속 팀/회사*</label>
+                    <label>소속 팀/회사 *</label>
                     <input
                       type="text"
                       value={formData.organization}
@@ -196,7 +390,7 @@ const Activity = () => {
 
                   {/* 팀 구성 섹션 */}
                   <div className="form-group team-composition-group">
-                    <label>팀 구성*</label>
+                    <label>팀 구성 *</label>
                     <div className="team-composition-content">
                       <div className="team-roles-input">
                         <div className="role-tags">
@@ -239,6 +433,9 @@ const Activity = () => {
                             placeholder="직접 입력하여 역할 추가하기"
                             value={newRole}
                             onChange={(e) => setNewRole(e.target.value)}
+                            onKeyPress={(e) =>
+                              e.key === "Enter" && addCustomRole()
+                            }
                           />
                           <button onClick={addCustomRole}>+</button>
                           <span>추가</span>
@@ -254,18 +451,28 @@ const Activity = () => {
                         </p>
                         <p className="role-breakdown">
                           {Object.entries({
-                            ...formData.roles,
+                            planning: formData.roles.planning,
+                            design: formData.roles.design,
+                            development: formData.roles.development,
                             ...formData.customRoles,
                           })
                             .filter(([_, count]) => count > 0)
-                            .map(([role, count]) => `${role} ${count}명`)
-                            .join(", ")}
+                            .map(([role, count]) => {
+                              const nameMap = {
+                                planning: "기획",
+                                design: "디자인",
+                                development: "개발",
+                              };
+                              return `${nameMap[role] || role} ${count}명`;
+                            })
+                            .join(", ") || "역할을 추가해주세요"}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
+
               {currentStep === 2 && (
                 <div className="form-section">
                   <div className="section-intro">
@@ -274,17 +481,34 @@ const Activity = () => {
                       활동과 관련된 태그를 설정해주세요.
                     </p>
                   </div>
-                  {/* 태그 설정 관련 입력 필드 */}
                   <div className="form-group">
                     <label>주요 태그</label>
-                    <input type="text" placeholder="예: 프로젝트, 웹 개발" />
+                    <input
+                      type="text"
+                      placeholder="예: 프로젝트, 웹 개발"
+                      value={formData.primaryTags}
+                      onChange={(e) =>
+                        setFormData({ ...formData, primaryTags: e.target.value })
+                      }
+                    />
                   </div>
                   <div className="form-group">
                     <label>보조 태그</label>
-                    <input type="text" placeholder="예: 프론트엔드, 백엔드" />
+                    <input
+                      type="text"
+                      placeholder="예: 프론트엔드, 백엔드"
+                      value={formData.secondaryTags}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          secondaryTags: e.target.value,
+                        })
+                      }
+                    />
                   </div>
                 </div>
               )}
+
               {currentStep === 3 && (
                 <div className="form-section">
                   <div className="section-intro">
@@ -298,6 +522,13 @@ const Activity = () => {
                     <textarea
                       placeholder="활동의 목표를 자세히 작성해주세요."
                       rows="4"
+                      value={formData.activityGoal}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          activityGoal: e.target.value,
+                        })
+                      }
                     ></textarea>
                   </div>
                   <div className="form-group">
@@ -305,10 +536,15 @@ const Activity = () => {
                     <textarea
                       placeholder="활동에서의 주요 역할을 작성해주세요."
                       rows="4"
+                      value={formData.mainRole}
+                      onChange={(e) =>
+                        setFormData({ ...formData, mainRole: e.target.value })
+                      }
                     ></textarea>
                   </div>
                 </div>
               )}
+
               {currentStep === 4 && (
                 <div className="form-section">
                   <div className="section-intro">
@@ -322,6 +558,10 @@ const Activity = () => {
                     <textarea
                       placeholder="정량적/정성적 성과를 작성해주세요."
                       rows="4"
+                      value={formData.achievement}
+                      onChange={(e) =>
+                        setFormData({ ...formData, achievement: e.target.value })
+                      }
                     ></textarea>
                   </div>
                   <div className="form-group">
@@ -329,10 +569,15 @@ const Activity = () => {
                     <textarea
                       placeholder="활동을 통해 배우고 성장한 점을 작성해주세요."
                       rows="4"
+                      value={formData.lesson}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lesson: e.target.value })
+                      }
                     ></textarea>
                   </div>
                 </div>
               )}
+
               {currentStep === 5 && (
                 <div className="form-section">
                   <div className="section-intro">
@@ -343,13 +588,33 @@ const Activity = () => {
                   </div>
                   <div className="form-group">
                     <label>파일 첨부</label>
-                    <input type="file" multiple />
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          files: Array.from(e.target.files),
+                        })
+                      }
+                    />
+                    {formData.files.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#666" }}>
+                        {formData.files.map((file, idx) => (
+                          <div key={idx}>📄 {file.name}</div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="form-group">
                     <label>링크 첨부</label>
                     <input
-                      type="text"
-                      placeholder="관련 링크를 입력해주세요."
+                      type="url"
+                      placeholder="https://..."
+                      value={formData.linkUrl}
+                      onChange={(e) =>
+                        setFormData({ ...formData, linkUrl: e.target.value })
+                      }
                     />
                   </div>
                 </div>
@@ -360,17 +625,41 @@ const Activity = () => {
             <div className="preview-panel">
               <div className="preview-card">
                 <p className="preview-title-small">작성 미리보기</p>
-                <h3 className="preview-title-large">새 활동</h3>
+                <h3 className="preview-title-large">{preview.title}</h3>
                 <div className="preview-content">
-                  <p>날짜 미정</p>
-                  <p className="subtext">날짜를 입력해주세요</p>
+                  <p>
+                    <strong>기간:</strong> {preview.date}
+                  </p>
+                  <p>
+                    <strong>소속:</strong> {preview.organization}
+                  </p>
+                  <p>
+                    <strong>팀 규모:</strong> {preview.teamSize}
+                  </p>
                 </div>
               </div>
               <div className="button-group">
-                <button className="btn-draft">임시저장</button>
-                <button className="btn-next" onClick={handleNextStep}>
-                  다음
+                {currentStep > 1 && (
+                  <button className="btn-prev" onClick={handlePrevStep}>
+                    이전
+                  </button>
+                )}
+                <button className="btn-draft" onClick={handleDraftSave}>
+                  임시저장
                 </button>
+                {currentStep < steps.length ? (
+                  <button className="btn-next" onClick={handleNextStep}>
+                    다음
+                  </button>
+                ) : (
+                  <button
+                    className="btn-next"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "저장 중..." : "작성 완료"}
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -93,6 +93,7 @@ export default function App() {
 
         {/* ⭐ 활동(세부활동) 에디터 */}
         <Route path="/activity/:activityId" element={<Activity />} />
+        <Route path="/activity" element={<Activity />} />  {/* 새 활동 생성용 */}
 
         {/* ⭐ 스펙 관련 라우트 */}
         <Route path="/career" element={<Career />} />
