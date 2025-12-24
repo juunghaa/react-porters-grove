@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PortfolioCard from './PortfolioCard';
 import './PortfolioTabContent.css';
 
@@ -23,6 +24,7 @@ const fetchPortfolios = async () => {
 };
 
 const PortfolioTabContent = ({ onGoToChooseOption, onPortfolioClick }) => {
+  const navigate = useNavigate();
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,12 +44,13 @@ const PortfolioTabContent = ({ onGoToChooseOption, onPortfolioClick }) => {
     loadPortfolios();
   }, []);
 
+  // ⭐ 포트폴리오 카드 클릭 - 상세 페이지로 이동
   const handlePortfolioClick = (portfolio) => {
     if (onPortfolioClick) {
       onPortfolioClick(portfolio);
-    } else {
-      console.log('포트폴리오 클릭:', portfolio);
-      // 기본 동작: 상세 페이지로 이동 등
+    } else if (portfolio?.id) {
+      // 포트폴리오 상세 페이지로 이동
+      navigate(`/portfolio/${portfolio.id}`);
     }
   };
 

@@ -33,6 +33,7 @@ import PortfolioCreationFlow from "./components/MakingPortfolio/PortfolioCreatio
 import Activity from "./components/Activity/Activity.jsx";  // 경로 확인 필요
 import InUnivDetailPage from './components/InUnivDetailPage/InUnivDetailPage';
 import OutUnivDetailPage from './components/OutUnivDetailPage/OutUnivDetailPage';
+import PortfolioViewPage from './components/PortfolioViewer/PortfolioViewPage';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -115,6 +116,7 @@ export default function App() {
         <Route path="/language" element={<Language />} />
 
         {/* ⭐ 포트폴리오 관련 라우트 */}
+        <Route path="/portfolio/:id" element={<PortfolioViewPage />} />
         <Route path="/portfolio-creation" element={<PortfolioCreationFlow />} />
         <Route path="/making-portfolio" element={<MakingPortfolio />} />
 
