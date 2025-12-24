@@ -1,15 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import LeftPanel from "../LeftPanel/LeftPanel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./OutUnivPage.css";
 import chipIcon from "../../assets/icons/external.png";
 import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 
 const OutUnivPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const location = useLocation();
+  const isEditMode = !!id;
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(isEditMode);
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -26,6 +31,67 @@ const OutUnivPage = () => {
     takeaway: "",
     link_url: "",
   });
+
+  useEffect(() => {
+    const loadActivityData = async () => {
+      if (!isEditMode) return;
+
+      try {
+        if (location.state?.activityData) {
+          const data = location.state.activityData;
+          setFormData({
+            title: data.title || "",
+            subject: data.subject || "",
+            role: data.role || "",
+            work_title: data.work_title || "",
+            period_start: data.period_start || "",
+            period_end: data.period_end || "",
+            situation: data.situation || "",
+            task_detail: data.task_detail || "",
+            action_detail: data.action_detail || "",
+            result_detail: data.result_detail || "",
+            takeaway: data.takeaway || "",
+            link_url: data.link_url || "",
+          });
+          setLoading(false);
+          return;
+        }
+
+        const access = localStorage.getItem("access");
+        const response = await fetch(`/api/activities/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("데이터 로딩 실패");
+
+        const data = await response.json();
+        setFormData({
+          title: data.title || "",
+          subject: data.subject || "",
+          role: data.role || "",
+          work_title: data.work_title || "",
+          period_start: data.period_start || "",
+          period_end: data.period_end || "",
+          situation: data.situation || "",
+          task_detail: data.task_detail || "",
+          action_detail: data.action_detail || "",
+          result_detail: data.result_detail || "",
+          takeaway: data.takeaway || "",
+          link_url: data.link_url || "",
+        });
+      } catch (error) {
+        console.error("데이터 로딩 실패:", error);
+        alert("데이터를 불러오는데 실패했습니다.");
+        navigate(-1);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadActivityData();
+  }, [id, isEditMode, location.state, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +111,6 @@ const OutUnivPage = () => {
     }));
   };
 
-  // ⭐ 빈 값 필터링 함수
   const cleanFormData = (data) => {
     const cleaned = {};
     Object.keys(data).forEach((key) => {
@@ -69,8 +134,6 @@ const OutUnivPage = () => {
     };
     const cleanedData = cleanFormData(dataWithType);
 
-    console.log("📤 전송할 데이터:", cleanedData);
-
     const response = await fetch("/api/activities/", {
       method: "POST",
       headers: {
@@ -82,8 +145,31 @@ const OutUnivPage = () => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ API 에러 응답:", errorText);
       throw new Error(errorText || "활동 저장에 실패했습니다.");
+    }
+    return response.json();
+  };
+
+  const updateActivity = async (data) => {
+    const access = localStorage.getItem("access");
+    const dataWithType = {
+      ...data,
+      activity_type: "EXTRACURRICULAR",  
+    };
+    const cleanedData = cleanFormData(dataWithType);
+
+    const response = await fetch(`/api/activities/${id}/`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanedData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "활동 수정에 실패했습니다.");
     }
     return response.json();
   };
@@ -95,12 +181,17 @@ const OutUnivPage = () => {
     }
     setIsSubmitting(true);
     try {
-      const result = await createActivity(formData);
-      console.log("✅ 대외활동 저장 성공:", result);
-      alert("저장되었습니다!");
-      navigate("/");
+      let result;
+      if (isEditMode) {
+        result = await updateActivity(formData);
+        alert("수정되었습니다!");
+      } else {
+        result = await createActivity(formData);
+        alert("저장되었습니다!");
+      }
+      navigate(`/outuniv/${result.id}`);
     } catch (error) {
-      console.error("❌ 대외활동 저장 실패:", error);
+      console.error("저장/수정 실패:", error);
       alert("저장에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
@@ -148,6 +239,10 @@ const OutUnivPage = () => {
     return roleReverseMap[formData.work_title] || "";
   };
 
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
   return (
     <div className="outuniv-page-container">
       <LeftPanel
@@ -166,14 +261,16 @@ const OutUnivPage = () => {
             </button>
             <div className="top-bar-center">
               <img src={chipIcon} alt="chip" className="chip-icon" />
-              <span className="top-bar-title">경험 정리하기</span>
+              <span className="top-bar-title">
+                {isEditMode ? "경험 수정하기" : "경험 정리하기"}
+              </span>
             </div>
             <button
               className="complete-button"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "저장 중..." : "작성 완료"}
+              {isSubmitting ? "저장 중..." : isEditMode ? "수정 완료" : "작성 완료"}
             </button>
           </div>
 
@@ -267,17 +364,10 @@ const OutUnivPage = () => {
                 </div>
               </div>
 
-              {/* ⭐ 수정된 활동 기간 부분 */}
               <div className="form-row">
                 <div className="form-field-frame field-duration">
                   <label className="form-field-label">활동 기간</label>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <input
                       type="date"
                       name="period_start"
@@ -338,10 +428,7 @@ const OutUnivPage = () => {
                     ))}
                   </div>
                 )}
-                <label
-                  className="form-field-label"
-                  style={{ marginTop: "8px" }}
-                >
+                <label className="form-field-label" style={{ marginTop: "8px" }}>
                   링크 URL
                 </label>
                 <input

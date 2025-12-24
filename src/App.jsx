@@ -86,10 +86,19 @@ export default function App() {
         <Route path="/choose" element={<ChooseOptionWrapper />} />
         <Route path="/contest" element={<ContestPage />} />
         <Route path="/contest/:id" element={<ContestDetailPage />} />
+        <Route path="/contest/edit/:id" element={<ContestPage />} />  {/* 편집 모드 */}
         <Route path="/project" element={<ProjectPage />} />
         <Route path="/project/:id" element={<ProjectDetailPage />} />
+        <Route path="/project/edit/:id" element={<ProjectPage />} />  {/* 편집 모드 */}
         <Route path="/campus" element={<InUnivPage />} />
         <Route path="/external" element={<OutUnivPage />} />
+        
+        <Route path="/inuniv" element={<InUnivPage />} />             {/* 신규 작성 */}
+        <Route path="/inuniv/edit/:id" element={<InUnivPage />} />    {/* 편집 모드 */}
+        <Route path="/inuniv/:id" element={<InUnivDetailPage />} />   {/* 상세 보기 (필요시 생성) */}
+        <Route path="/outuniv" element={<OutUnivPage />} />           {/* 신규 작성 */}
+        <Route path="/outuniv/edit/:id" element={<OutUnivPage />} />  {/* 편집 모드 */}
+        <Route path="/outuniv/:id" element={<OutUnivDetailPage />} /> {/* 상세 보기 (필요시 생성) */}
 
         {/* ⭐ 활동(세부활동) 에디터 */}
         <Route path="/activity/:activityId" element={<Activity />} />

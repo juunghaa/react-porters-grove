@@ -95,6 +95,13 @@ const ContestDetailPage = () => {
     navigate("/");
   };
 
+  // ⭐ 편집 버튼 클릭 - 공모전 에디터로 이동 (데이터 전달)
+  const handleEditClick = () => {
+    navigate(`/contest/edit/${id}`, { 
+      state: { activityData } 
+    });
+  };
+
   // ⭐ 활동 등록하기 버튼 클릭
   const handleAddActivity = () => {
     navigate(`/activity/${id}`);
@@ -103,8 +110,6 @@ const ContestDetailPage = () => {
   // ⭐ 세부활동 카드 클릭 (나중에 상세 보기 구현 시 사용)
   const handleSubActivityClick = (subActivity) => {
     console.log("세부활동 클릭:", subActivity);
-    // 나중에 세부활동 상세/수정 페이지로 이동 가능
-    // navigate(`/activity/${id}/sub/${subActivity.id}`);
   };
 
   const handleAddNote = () => {
@@ -186,8 +191,32 @@ const ContestDetailPage = () => {
                   </svg>
                 </span>
               </button>
-              <button className="icon-btn">
-                <span>⋯</span>
+              {/* ⭐ 편집 버튼 - 연필 아이콘으로 변경 */}
+              <button className="icon-btn" onClick={handleEditClick} title="편집">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M16.474 5.40835L18.592 7.52535L16.474 5.40835ZM17.836 3.54335L12.109 9.27035C11.8131 9.56598 11.6113 9.94296 11.529 10.3523L11 12.9993L13.647 12.4703C14.0563 12.3881 14.4333 12.1863 14.729 11.8903L20.456 6.16335C20.6286 5.99085 20.7656 5.78589 20.8594 5.5599C20.9532 5.33391 21.0017 5.09142 21.0022 4.84647C21.0026 4.60153 20.954 4.35885 20.8611 4.13251C20.7682 3.90616 20.632 3.70067 20.46 3.52753C20.2879 3.3544 20.0832 3.21693 19.8575 3.12272C19.6317 3.0285 19.3892 2.97868 19.1443 2.97793C18.8993 2.97719 18.6566 3.02554 18.4302 3.11838C18.2039 3.21123 17.9983 3.34746 17.825 3.51935L17.836 3.54335Z"
+                    stroke="black"
+                    strokeOpacity="0.4"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M19 15V18C19 18.5304 18.7893 19.0391 18.4142 19.4142C18.0391 19.7893 17.5304 20 17 20H6C5.46957 20 4.96086 19.7893 4.58579 19.4142C4.21071 19.0391 4 18.5304 4 18V7C4 6.46957 4.21071 5.96086 4.58579 5.58579C4.96086 5.21071 5.46957 5 6 5H9"
+                    stroke="black"
+                    strokeOpacity="0.4"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
               <button className="icon-btn" onClick={() => navigate(-1)}>
                 <span>✕</span>

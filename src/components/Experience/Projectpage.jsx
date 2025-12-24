@@ -1,19 +1,23 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import LeftPanel from "../LeftPanel/LeftPanel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./ProjectPage.css";
 import chipIcon from "../../assets/icons/ProjectChip.png";
 import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 
 const ProjectPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const location = useLocation();
+  const isEditMode = !!id;
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
+  const [loading, setLoading] = useState(isEditMode);
   const fileInputRef = useRef(null);
 
-  // 폼 데이터 state
   const [formData, setFormData] = useState({
     title: "",
     subject: "",
@@ -34,59 +38,105 @@ const ProjectPage = () => {
     award_detail: "",
   });
 
-  // 입력값 변경 핸들러
+  useEffect(() => {
+    const loadActivityData = async () => {
+      if (!isEditMode) return;
+
+      try {
+        if (location.state?.activityData) {
+          const data = location.state.activityData;
+          setFormData({
+            title: data.title || "",
+            subject: data.subject || "",
+            participation_type: data.participation_type || "",
+            role: data.role || "",
+            period_start: data.period_start || "",
+            period_end: data.period_end || "",
+            situation: data.situation || "",
+            task_detail: data.task_detail || "",
+            action_detail: data.action_detail || "",
+            result_detail: data.result_detail || "",
+            takeaway: data.takeaway || "",
+            link_url: data.link_url || "",
+            organization: data.organization || "",
+            host: data.host || "",
+            work_title: data.work_title || "",
+            is_awarded: data.is_awarded || false,
+            award_detail: data.award_detail || "",
+          });
+          setLoading(false);
+          return;
+        }
+
+        const access = localStorage.getItem("access");
+        const response = await fetch(`/api/activities/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("데이터 로딩 실패");
+
+        const data = await response.json();
+        setFormData({
+          title: data.title || "",
+          subject: data.subject || "",
+          participation_type: data.participation_type || "",
+          role: data.role || "",
+          period_start: data.period_start || "",
+          period_end: data.period_end || "",
+          situation: data.situation || "",
+          task_detail: data.task_detail || "",
+          action_detail: data.action_detail || "",
+          result_detail: data.result_detail || "",
+          takeaway: data.takeaway || "",
+          link_url: data.link_url || "",
+          organization: data.organization || "",
+          host: data.host || "",
+          work_title: data.work_title || "",
+          is_awarded: data.is_awarded || false,
+          award_detail: data.award_detail || "",
+        });
+      } catch (error) {
+        console.error("데이터 로딩 실패:", error);
+        alert("데이터를 불러오는데 실패했습니다.");
+        navigate(-1);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadActivityData();
+  }, [id, isEditMode, location.state, navigate]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 라디오 버튼 변경 핸들러
   const handleRadioChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      participation_type: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, participation_type: e.target.value }));
   };
 
-  // ⭐ 빈 값 필터링 함수
   const cleanFormData = (data) => {
     const cleaned = {};
-
     Object.keys(data).forEach((key) => {
       const value = data[key];
-
-      // null, undefined, 빈 문자열은 제외
-      if (value === null || value === undefined || value === "") {
-        return;
-      }
-
-      // 문자열이면 trim
+      if (value === null || value === undefined || value === "") return;
       if (typeof value === "string") {
         const trimmed = value.trim();
-        if (trimmed) {
-          cleaned[key] = trimmed;
-        }
+        if (trimmed) cleaned[key] = trimmed;
       } else {
         cleaned[key] = value;
       }
     });
-
     return cleaned;
   };
 
-  // API 호출 함수
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
-    const dataWithType = {
-      ...data,
-      activity_type: "PROJECT",  // ⭐ 추가
-    };
+    const dataWithType = { ...data, activity_type: "PROJECT" };
     const cleanedData = cleanFormData(dataWithType);
-
-    console.log("📤 전송할 데이터:", cleanedData);
 
     const response = await fetch("/api/activities/", {
       method: "POST",
@@ -97,74 +147,70 @@ const ProjectPage = () => {
       body: JSON.stringify(cleanedData),
     });
 
-    // ⭐ 에러 응답 상세 로깅
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ API 에러 응답:", errorText);
-
-      try {
-        const errorData = JSON.parse(errorText);
-        throw new Error(JSON.stringify(errorData));
-      } catch {
-        throw new Error(errorText || "활동 저장에 실패했습니다.");
-      }
+      throw new Error(errorText || "활동 저장에 실패했습니다.");
     }
-
     return response.json();
   };
 
-  // 작성 완료 버튼 클릭
+  const updateActivity = async (data) => {
+    const access = localStorage.getItem("access");
+    const dataWithType = { ...data, activity_type: "PROJECT" };
+    const cleanedData = cleanFormData(dataWithType);
+
+    const response = await fetch(`/api/activities/${id}/`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanedData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "활동 수정에 실패했습니다.");
+    }
+    return response.json();
+  };
+
   const handleSubmit = async () => {
-    // 필수값 검증
     if (!formData.title.trim()) {
       alert("프로젝트명을 입력해주세요.");
       return;
     }
 
     setIsSubmitting(true);
-
     try {
-      const result = await createActivity(formData);
-      console.log("✅ 활동 저장 성공:", result);
-
-      // 저장 성공 후 상세 페이지로 이동
-      alert("저장되었습니다!");
+      let result;
+      if (isEditMode) {
+        result = await updateActivity(formData);
+        alert("수정되었습니다!");
+      } else {
+        result = await createActivity(formData);
+        alert("저장되었습니다!");
+      }
       navigate(`/project/${result.id}`);
     } catch (error) {
-      console.error("❌ 활동 저장 실패:", error);
+      console.error("저장/수정 실패:", error);
       alert("저장에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 취소 버튼
   const handleCancel = () => {
     if (window.confirm("작성을 취소하시겠습니까? 입력한 내용이 사라집니다.")) {
       navigate(-1);
     }
   };
 
-  const handleToggle = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
-  const handleHomeClick = () => {
-    navigate("/");
-  };
-
-  const handleCreateNew = () => {
-    navigate("/choose");
-  };
-
-  const handleArchiveClick = () => {
-    navigate("/archive");
-  };
-
-  const handleOpenProfileSettings = () => {
-    setIsProfileSettingsOpen(true);
-  };
-
+  const handleToggle = () => setIsCollapsed(!isCollapsed);
+  const handleHomeClick = () => navigate("/");
+  const handleCreateNew = () => navigate("/choose");
+  const handleArchiveClick = () => navigate("/archive");
+  const handleOpenProfileSettings = () => setIsProfileSettingsOpen(true);
   const handleLogout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
@@ -175,22 +221,21 @@ const ProjectPage = () => {
     const files = Array.from(event.target.files);
     setUploadedFiles([...uploadedFiles, ...files]);
   };
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
+  const handleUploadClick = () => fileInputRef.current?.click();
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
-
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     const files = Array.from(e.dataTransfer.files);
     setUploadedFiles([...uploadedFiles, ...files]);
   };
+
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
 
   return (
     <div className="project-page-container">
@@ -212,27 +257,26 @@ const ProjectPage = () => {
             </button>
             <div className="top-bar-center">
               <img src={chipIcon} alt="chip" className="ProjectChip.png" />
-              <span className="top-bar-title">경험 정리하기</span>
+              <span className="top-bar-title">
+                {isEditMode ? "경험 수정하기" : "경험 정리하기"}
+              </span>
             </div>
             <button
               className="complete-button"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "저장 중..." : "작성 완료"}
+              {isSubmitting ? "저장 중..." : isEditMode ? "수정 완료" : "작성 완료"}
             </button>
           </div>
 
-          {/* 기본정보 + 관련자료 컨테이너 */}
           <div className="project-main-content">
-            {/*큰 박스: 기본정보*/}
             <div className="project-form-container">
               <div className="form-section-header">
                 <h2 className="form-section-title">기본정보</h2>
               </div>
               <div className="divider-line"></div>
 
-              {/* 프로젝트명 */}
               <div className="form-field-frame">
                 <label className="form-field-label">프로젝트명</label>
                 <input
@@ -245,7 +289,6 @@ const ProjectPage = () => {
                 />
               </div>
 
-              {/* 내용 설명 */}
               <div className="form-row">
                 <div className="form-field-frame field-topic">
                   <label className="form-field-label">내용 설명</label>
@@ -260,7 +303,6 @@ const ProjectPage = () => {
                 </div>
               </div>
 
-              {/* 참여 형태 */}
               <div className="form-row">
                 <div className="form-field-frame field-participation-type">
                   <label className="form-field-label">참여 형태</label>
@@ -289,7 +331,6 @@ const ProjectPage = () => {
                 </div>
               </div>
 
-              {/* 역할 */}
               <div className="form-row">
                 <div className="form-field-frame field-team-role">
                   <label className="form-field-label">역할</label>
@@ -304,17 +345,10 @@ const ProjectPage = () => {
                 </div>
               </div>
 
-              {/* 진행 기간 */}
               <div className="form-row">
                 <div className="form-field-frame field-duration">
                   <label className="form-field-label">진행 기간</label>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <input
                       type="date"
                       name="period_start"
@@ -337,13 +371,11 @@ const ProjectPage = () => {
               </div>
             </div>
 
-            {/* 관련자료 컴포넌트 */}
             <div className="related-materials-container">
               <div className="form-section-header">
                 <h2 className="form-section-title">관련자료</h2>
               </div>
               <div className="file-divider-line"></div>
-
               <div className="materials-content">
                 <label className="form-field-label">파일 업로드</label>
                 <div className="file-upload-box">
@@ -368,8 +400,6 @@ const ProjectPage = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* 업로드된 파일 목록 */}
                 {uploadedFiles.length > 0 && (
                   <div className="uploaded-files-list">
                     {uploadedFiles.map((file, index) => (
@@ -379,12 +409,7 @@ const ProjectPage = () => {
                     ))}
                   </div>
                 )}
-
-                {/* 링크 추가 */}
-                <label
-                  className="form-field-label"
-                  style={{ marginTop: "8px" }}
-                >
+                <label className="form-field-label" style={{ marginTop: "8px" }}>
                   링크 URL
                 </label>
                 <input
@@ -399,15 +424,12 @@ const ProjectPage = () => {
             </div>
           </div>
 
-          {/* 세부 내용 */}
           <div className="detail-content-container">
             <div className="form-section-header">
               <h2 className="form-section-title">세부 내용</h2>
             </div>
             <div className="divider-line"></div>
-
             <div className="detail-fields">
-              {/* Situation */}
               <div className="text-frame">
                 <div className="first-text-line">Situation (상황)</div>
                 <div className="second-text-line">
@@ -422,7 +444,6 @@ const ProjectPage = () => {
                 onChange={handleInputChange}
               />
 
-              {/* Task */}
               <div className="text-frame">
                 <div className="first-text-line">Task (과제)</div>
                 <div className="second-text-line">
@@ -437,7 +458,6 @@ const ProjectPage = () => {
                 onChange={handleInputChange}
               />
 
-              {/* Action */}
               <div className="text-frame">
                 <div className="first-text-line">Action (행동)</div>
                 <div className="second-text-line">
@@ -452,7 +472,6 @@ const ProjectPage = () => {
                 onChange={handleInputChange}
               />
 
-              {/* Result */}
               <div className="text-frame">
                 <div className="first-text-line">Result (결과)</div>
                 <div className="second-text-line">
@@ -467,7 +486,6 @@ const ProjectPage = () => {
                 onChange={handleInputChange}
               />
 
-              {/* Taken */}
               <div className="text-frame">
                 <div className="first-text-line">Taken (교훈)</div>
                 <div className="second-text-line">

@@ -1,15 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import LeftPanel from "../LeftPanel/LeftPanel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./ContestPage.css";
 import chipIcon from "../../assets/icons/Chip.png";
 import uploadIcon from "../../assets/icons/cloud-arrow-up-fill.svg";
 
 const ContestPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // ⭐ 편집 모드일 때 ID
+  const location = useLocation();
+  const isEditMode = !!id; // ⭐ ID가 있으면 편집 모드
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(isEditMode); // 편집 모드일 때만 로딩
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -30,6 +35,78 @@ const ContestPage = () => {
     takeaway: "",
     link_url: "",
   });
+
+  // ⭐ 편집 모드: 기존 데이터 불러오기
+  useEffect(() => {
+    const loadActivityData = async () => {
+      if (!isEditMode) return;
+
+      try {
+        // 1. location.state에서 데이터가 전달된 경우
+        if (location.state?.activityData) {
+          const data = location.state.activityData;
+          setFormData({
+            title: data.title || "",
+            subject: data.subject || "",
+            organization: data.organization || data.host || "",
+            work_title: data.work_title || "",
+            is_awarded: data.is_awarded || false,
+            award_detail: data.award_detail || "",
+            participation_type: data.participation_type || "",
+            role: data.role || "",
+            period_start: data.period_start || "",
+            period_end: data.period_end || "",
+            situation: data.situation || "",
+            task_detail: data.task_detail || "",
+            action_detail: data.action_detail || "",
+            result_detail: data.result_detail || "",
+            takeaway: data.takeaway || "",
+            link_url: data.link_url || "",
+          });
+          setLoading(false);
+          return;
+        }
+
+        // 2. API에서 직접 데이터 불러오기
+        const access = localStorage.getItem("access");
+        const response = await fetch(`/api/activities/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("데이터 로딩 실패");
+
+        const data = await response.json();
+        setFormData({
+          title: data.title || "",
+          subject: data.subject || "",
+          organization: data.organization || data.host || "",
+          work_title: data.work_title || "",
+          is_awarded: data.is_awarded || false,
+          award_detail: data.award_detail || "",
+          participation_type: data.participation_type || "",
+          role: data.role || "",
+          period_start: data.period_start || "",
+          period_end: data.period_end || "",
+          situation: data.situation || "",
+          task_detail: data.task_detail || "",
+          action_detail: data.action_detail || "",
+          result_detail: data.result_detail || "",
+          takeaway: data.takeaway || "",
+          link_url: data.link_url || "",
+        });
+      } catch (error) {
+        console.error("데이터 로딩 실패:", error);
+        alert("데이터를 불러오는데 실패했습니다.");
+        navigate(-1);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadActivityData();
+  }, [id, isEditMode, location.state, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -65,6 +142,7 @@ const ContestPage = () => {
     return cleaned;
   };
 
+  // ⭐ 활동 생성 API
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
     const dataWithHost = {
@@ -93,6 +171,35 @@ const ContestPage = () => {
     return response.json();
   };
 
+  // ⭐ 활동 수정 API
+  const updateActivity = async (data) => {
+    const access = localStorage.getItem("access");
+    const dataWithHost = {
+      ...data,
+      host: data.organization || "",
+      activity_type: "CONTEST",
+    };
+    const cleanedData = cleanFormData(dataWithHost);
+
+    console.log("📤 수정할 데이터:", cleanedData);
+
+    const response = await fetch(`/api/activities/${id}/`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${access}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cleanedData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ API 에러 응답:", errorText);
+      throw new Error(errorText || "활동 수정에 실패했습니다.");
+    }
+    return response.json();
+  };
+
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
       alert("공모전명을 입력해주세요.");
@@ -100,12 +207,21 @@ const ContestPage = () => {
     }
     setIsSubmitting(true);
     try {
-      const result = await createActivity(formData);
-      console.log("✅ 공모전 저장 성공:", result);
-      alert("저장되었습니다!");
+      let result;
+      if (isEditMode) {
+        // ⭐ 편집 모드: 수정 API 호출
+        result = await updateActivity(formData);
+        console.log("✅ 공모전 수정 성공:", result);
+        alert("수정되었습니다!");
+      } else {
+        // ⭐ 신규 작성 모드: 생성 API 호출
+        result = await createActivity(formData);
+        console.log("✅ 공모전 저장 성공:", result);
+        alert("저장되었습니다!");
+      }
       navigate(`/contest/${result.id}`);
     } catch (error) {
-      console.error("❌ 공모전 저장 실패:", error);
+      console.error("❌ 공모전 저장/수정 실패:", error);
       alert("저장에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
@@ -143,6 +259,11 @@ const ContestPage = () => {
     setUploadedFiles([...uploadedFiles, ...files]);
   };
 
+  // ⭐ 로딩 중일 때
+  if (loading) {
+    return <div className="loading">로딩 중...</div>;
+  }
+
   return (
     <div className="contest-page-container">
       <LeftPanel
@@ -161,14 +282,16 @@ const ContestPage = () => {
             </button>
             <div className="top-bar-center">
               <img src={chipIcon} alt="chip" className="chip-icon" />
-              <span className="top-bar-title">경험 정리하기</span>
+              <span className="top-bar-title">
+                {isEditMode ? "경험 수정하기" : "경험 정리하기"}
+              </span>
             </div>
             <button
               className="complete-button"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "저장 중..." : "작성 완료"}
+              {isSubmitting ? "저장 중..." : isEditMode ? "수정 완료" : "작성 완료"}
             </button>
           </div>
 
