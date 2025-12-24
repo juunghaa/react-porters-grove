@@ -30,6 +30,7 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
   // ⭐ 포트폴리오 데이터
   const [portfolioCount, setPortfolioCount] = useState(0);
   const [firstPortfolio, setFirstPortfolio] = useState(null);
+  const [allPortfolios, setAllPortfolios] = useState([]); // ⭐ 전체 포트폴리오 목록
 
   const [experiences, setExperiences] = useState({
     ongoing: [],
@@ -122,8 +123,10 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
           setFirstSpecType("globalexp");
         }
 
-        // 포트폴리오 데이터
+        // ⭐ 포트폴리오 데이터
         const portfoliosData = await getData(portfoliosRes);
+        console.log("📦 포트폴리오 데이터:", portfoliosData); // 디버깅용
+        setAllPortfolios(portfoliosData); // 전체 포트폴리오 저장
         setPortfolioCount(portfoliosData.length);
         if (portfoliosData.length > 0) {
           setFirstPortfolio(portfoliosData[0]);
@@ -319,6 +322,14 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
     }
   };
 
+  // ⭐ 포트폴리오 상세 페이지로 이동
+  const handlePortfolioClick = (portfolio) => {
+    console.log("📂 포트폴리오 클릭:", portfolio);
+    if (portfolio?.id) {
+      navigate(`/portfolio/${portfolio.id}`);
+    }
+  };
+
   // ⭐ 전체 탭용 박스 렌더링 (수정됨 - 모든 경험 카드 렌더링)
   const renderBox = (type) => {
     const config = boxConfigs[type];
@@ -394,7 +405,7 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
       }
     }
 
-    // ⭐ 나의 포트폴리오 박스 - PortfolioCard 사용
+    // ⭐ 나의 포트폴리오 박스 - PortfolioCard 사용 (수정됨)
     if (type === "completed") {
       if (portfolioCount > 0 && firstPortfolio) {
         return (
@@ -422,7 +433,11 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
                   </button>
                 </div>
               </div>
-              <PortfolioCard portfolio={firstPortfolio} onClick={() => {}} />
+              {/* ⭐ 수정: onClick 핸들러 연결 */}
+              <PortfolioCard 
+                portfolio={firstPortfolio} 
+                onClick={handlePortfolioClick} 
+              />
             </div>
           </div>
         );
