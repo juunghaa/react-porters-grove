@@ -1,6 +1,6 @@
 import React from "react";
 import "./FullBox.css";
-
+  
 const FullBox = ({
   isPanelCollapsed,
   config,
@@ -52,9 +52,7 @@ const FullBox = ({
           {/* 날짜 */}
           <p className="full-box-card-date">
             {experienceData.period_start && experienceData.period_end
-              ? `${activityData.period_start} ~ ${
-                  activityData.period_end || "진행 중"
-                }`
+              ? `${experienceData.period_start} ~ ${experienceData.period_end || "진행 중"}`
               : "기간 미정"}
           </p>
 

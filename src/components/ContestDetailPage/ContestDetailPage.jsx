@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import LeftPanel from "../LeftPanel/LeftPanel";
 import chipIcon1 from "../../assets/icons/puzzle.svg";
 import chipIcon from "../../assets/icons/colorpuzzle.svg";
-import "./ProjectDetailPage.css";
+import "./ContestDetailPage.css";
 
 const ContestDetailPage = () => {
   const { id } = useParams();
