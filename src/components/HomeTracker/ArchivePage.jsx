@@ -304,19 +304,22 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
     console.log(`${type} 메뉴 클릭`);
   };
 
-  // ⭐ 경험 상세 페이지로 이동 (수정됨)
-  const handleGoToExperienceEditor = (activityId) => {
-    navigate(`/project/${activityId}`);
-  };
+  // ⭐ 경험 상세 페이지로 이동 (activity_type에 따라)
+  const handleGoToExperienceDetail = (activity) => {
+    if (!activity || !activity.id) return;
 
-  // ⭐ 전체 탭에서 첫 번째 경험 카드 클릭 시 이동
-  const handleFirstExperienceClick = () => {
-    if (activities.length > 0 && activities[0].id) {
-      navigate(`/project/${activities[0].id}`);
+    const type = activity.activity_type;
+    if (type === "CONTEST") {
+      navigate(`/contest/${activity.id}`);
+    } else if (type === "PROJECT") {
+      navigate(`/project/${activity.id}`);
+    } else {
+      // 기본적으로 project 상세 페이지로 이동
+      navigate(`/project/${activity.id}`);
     }
   };
 
-  // ⭐ 전체 탭용 박스 렌더링 (수정됨)
+  // ⭐ 전체 탭용 박스 렌더링 (수정됨 - 모든 경험 카드 렌더링)
   const renderBox = (type) => {
     const config = boxConfigs[type];
 
@@ -328,9 +331,9 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
             key={type}
             isPanelCollapsed={isPanelCollapsed}
             config={config}
-            experienceData={activities[0]}
+            experienceData={activities} // ⭐ 모든 활동 전달
             onMenuClick={() => handleMenuClick(type)}
-            onClick={handleFirstExperienceClick} // ⭐ 클릭 시 상세 페이지로 이동
+            onClick={handleGoToExperienceDetail} // ⭐ 클릭 시 상세 페이지로 이동
           />
         );
       } else {
@@ -485,7 +488,7 @@ const ArchivePage = ({ isPanelCollapsed, onGoToChooseOption }) => {
               key={activity.id}
               activity={activity}
               isPanelCollapsed={isPanelCollapsed}
-              onGoToEditor={() => handleGoToExperienceEditor(activity.id)} // ⭐ 클릭 시 상세 페이지로 이동
+              onGoToEditor={() => handleGoToExperienceDetail(activity)} // ⭐ 수정됨
             />
           ))}
         </div>

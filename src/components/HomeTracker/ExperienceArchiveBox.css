@@ -1,229 +1,261 @@
 /* ExperienceArchiveBox.css */
 
 .experience-archive-box {
-    /* ⭐ EmptyBox/FullBox의 .box-status와 완전히 동일 */
-    flex: 1 1 0;
-    min-width: 0;
-    max-width: 100%;
-    display: flex;
-    padding: 15px 10px 10px 10px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
-    transition: all 0.3s ease;
-    border-radius: 30px;
-    background: rgba(0, 0, 0, 0.03);
-    box-sizing: border-box;
-  }
-  
-  .experience-archive-box.expanded {
-    flex: 1 1 0;
-    min-width: 0;
-    max-width: none;
-  }
-  
-  /* 헤더 */
-  .archive-box-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    box-sizing: border-box;
-  }
-  
-  .archive-box-header:hover {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 20px;
-  }
-  
-  .archive-box-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-  }
-  
-  /* 태그 */
-  .archive-box-tag {
-    display: inline-flex;
-    padding: 4px 12px;
-    border-radius: 12px;
-    background: rgba(93, 176, 117, 0.10);
-    color: #5DB075;
-    font-family: "SUIT Variable";
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.14px;
-    flex-shrink: 0;
-  }
-  
-  /* 제목 */
+  /* ⭐ EmptyBox/FullBox의 .box-status와 완전히 동일 */
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  padding: 15px 10px 10px 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  transition: all 0.3s ease;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.experience-archive-box:hover {
+  border-color: #5db075;
+  box-shadow: 0 4px 16px rgba(93, 176, 117, 0.15);
+}
+
+.experience-archive-box.expanded {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+}
+
+/* 헤더 */
+.archive-box-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.archive-box-header:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 20px;
+}
+
+.archive-box-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 태그 */
+.archive-box-tag {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(93, 176, 117, 0.1);
+  color: #5db075;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.14px;
+  flex-shrink: 0;
+}
+
+/* 제목 */
+.archive-box-title {
+  margin: 0;
+  color: #000;
+  font-family: "SUIT Variable";
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.archive-box-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* 세부활동 개수 */
+.archive-box-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: #126431;
+  color: #fff;
+  font-family: "SUIT Variable";
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ⭐ 더보기 버튼 - 대각선 화살표 스타일 */
+.archive-box-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.archive-box-more-btn:hover {
+  background: rgba(93, 176, 117, 0.1);
+}
+
+.archive-box-more-btn:hover svg path {
+  stroke: #5db075;
+}
+
+/* 펼침/접힘 버튼 */
+.archive-box-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.archive-box-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* 콘텐츠 영역 */
+.archive-box-content {
+  width: 100%;
+  padding: 0 5px 10px 5px;
+  box-sizing: border-box;
+}
+
+/* 로딩 */
+.archive-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #999;
+  font-family: "SUIT Variable";
+  font-size: 14px;
+}
+
+/* 빈 상태 */
+.archive-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.archive-empty p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-sub-activity-btn {
+  padding: 10px 20px;
+  border: 1px solid #f3f3f3;
+  border-radius: 20px;
+  background: #fcfcfc;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: "SUIT Variable";
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-sub-activity-btn:hover {
+  background: #f0f0f0;
+}
+
+/* 세부활동 리스트 */
+.sub-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ⭐ 세부활동 클릭 가능 래퍼 */
+.sub-activity-clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+}
+
+.sub-activity-clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(93, 176, 117, 0.12);
+}
+
+.sub-activity-clickable:active {
+  transform: translateY(0);
+}
+
+/* 반응형 */
+@media (max-width: 1200px) {
   .archive-box-title {
-    margin: 0;
-    color: #000;
-    font-family: "SUIT Variable";
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.18px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 16px;
   }
-  
-  .archive-box-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+
+  .archive-box-tag {
+    font-size: 12px;
+    padding: 3px 10px;
   }
-  
-  /* 세부활동 개수 */
-  .archive-box-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 8px;
-    border-radius: 12px;
-    background: #126431;
-    color: #fff;
-    font-family: "SUIT Variable";
-    font-size: 13px;
-    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .experience-archive-box {
+    padding: 12px 8px 8px 8px;
   }
-  
-  /* 더보기 버튼 */
-  .archive-box-more-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+
+  .archive-box-header {
+    padding: 6px 8px;
   }
-  
-  .archive-box-more-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
+
+  .archive-box-title {
+    font-size: 16px;
   }
-  
-  /* 펼침/접힘 버튼 */
-  .archive-box-toggle-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+
+  .archive-box-tag {
+    font-size: 12px;
+    padding: 3px 10px;
   }
-  
-  .archive-box-toggle-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-  
-  /* 콘텐츠 영역 */
-  .archive-box-content {
-    width: 100%;
-    padding: 0 5px 10px 5px;
-    box-sizing: border-box;
-  }
-  
-  /* 로딩 */
-  .archive-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    color: #999;
-    font-family: "SUIT Variable";
-    font-size: 14px;
-  }
-  
-  /* 빈 상태 */
-  .archive-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    gap: 16px;
-  }
-  
-  .archive-empty p {
-    margin: 0;
-    color: rgba(0, 0, 0, 0.50);
-    font-family: "SUIT Variable";
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .add-sub-activity-btn {
-    padding: 10px 20px;
-    border: 1px solid #F3F3F3;
-    border-radius: 20px;
-    background: #FCFCFC;
-    color: rgba(0, 0, 0, 0.70);
-    font-family: "SUIT Variable";
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .add-sub-activity-btn:hover {
-    background: #f0f0f0;
-  }
-  
-  /* 세부활동 리스트 */
+
   .sub-activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
+    gap: 10px;
   }
-  
-  /* 반응형 */
-  @media (max-width: 1200px) {
-    .archive-box-title {
-      font-size: 16px;
-    }
-  
-    .archive-box-tag {
-      font-size: 12px;
-      padding: 3px 10px;
-    }
+
+  .archive-box-more-btn {
+    width: 28px;
+    height: 28px;
   }
-  
-  @media (max-width: 768px) {
-    .experience-archive-box {
-      padding: 12px 8px 8px 8px;
-    }
-  
-    .archive-box-header {
-      padding: 6px 8px;
-    }
-  
-    .archive-box-title {
-      font-size: 16px;
-    }
-  
-    .archive-box-tag {
-      font-size: 12px;
-      padding: 3px 10px;
-    }
-  
-    .sub-activity-list {
-      gap: 10px;
-    }
-  }
+}

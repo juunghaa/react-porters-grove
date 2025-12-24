@@ -304,25 +304,36 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
     console.log(`${type} 메뉴 클릭`);
   };
 
-  const handleGoToExperienceEditor = (activityId) => {
-    console.log("경험 에디터로 이동:", activityId);
+  // ⭐ 경험 상세 페이지로 이동 (activity_type에 따라)
+  const handleGoToExperienceDetail = (activity) => {
+    if (!activity || !activity.id) return;
+
+    const type = activity.activity_type;
+    if (type === "CONTEST") {
+      navigate(`/contest/${activity.id}`);
+    } else if (type === "PROJECT") {
+      navigate(`/project/${activity.id}`);
+    } else {
+      // 기본적으로 project 상세 페이지로 이동
+      navigate(`/project/${activity.id}`);
+    }
   };
 
-  // ⭐ 전체 탭용 박스 렌더링 (수정됨)
+  // ⭐ 전체 탭용 박스 렌더링 (수정됨 - 모든 경험 카드 렌더링)
   const renderBox = (type) => {
     const config = boxConfigs[type];
 
     // 나의 경험 박스
     if (type === "ongoing") {
-      console.log("🔍 ongoing 박스 렌더링, activities:", activities); // ⭐ 디버깅
       if (activities.length > 0) {
         return (
           <FullBox
             key={type}
             isPanelCollapsed={isPanelCollapsed}
             config={config}
-            experienceData={activities}
+            experienceData={activities} // ⭐ 모든 활동 전달
             onMenuClick={() => handleMenuClick(type)}
+            onClick={handleGoToExperienceDetail} // ⭐ 클릭 시 상세 페이지로 이동
           />
         );
       } else {
@@ -477,7 +488,7 @@ const HomeTracker = ({ isPanelCollapsed, onGoToChooseOption }) => {
               key={activity.id}
               activity={activity}
               isPanelCollapsed={isPanelCollapsed}
-              onGoToEditor={() => handleGoToExperienceEditor(activity.id)}
+              onGoToEditor={() => handleGoToExperienceDetail(activity)} // ⭐ 수정됨
             />
           ))}
         </div>
