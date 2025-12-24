@@ -16,8 +16,9 @@ const ProjectDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
   const [notes, setNotes] = useState([]);
+  const [noteSaving, setNoteSaving] = useState(false);
 
-  // ⭐ 활동 상세 + 세부활동 목록 불러오기
+  // ⭐ 활동 상세 + 세부활동 목록 + 경험 노트 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,6 +36,23 @@ const ProjectDetailPage = () => {
         const data = await response.json();
         console.log("✅ 받은 데이터:", data);
         setActivityData(data);
+
+        // ⭐ 경험 노트 설정 (API 응답의 experience_notes 배열 사용)
+        if (data.experience_notes && Array.isArray(data.experience_notes)) {
+          console.log("✅ 경험 노트 원본:", data.experience_notes);
+          const formattedNotes = data.experience_notes.map(note => ({
+            id: note.id,
+            date: note.date,
+            displayDate: formatDisplayDate(note.date),
+            text: note.content || "",
+            isFromServer: true,
+          }));
+          console.log("✅ 포맷된 노트:", formattedNotes);
+          setNotes(formattedNotes);
+        } else {
+          console.log("⚠️ experience_notes가 없거나 배열이 아님");
+          setNotes([]);
+        }
 
         // 2. 세부활동 목록 조회
         if (data.sub_activities && data.sub_activities.length > 0) {
@@ -68,6 +86,25 @@ const ProjectDetailPage = () => {
     }
   }, [id, navigate]);
 
+  // ⭐ 날짜 포맷 헬퍼 함수 (YYYY-MM-DD → YYYY.MM.DD 형식)
+  const formatDisplayDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  // ⭐ 오늘 날짜를 YYYY-MM-DD 형식으로 반환
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleToggle = () => setIsCollapsed(!isCollapsed);
   const handleHomeClick = () => navigate("/");
   const handleCreateNew = () => navigate("/choose");
@@ -95,37 +132,152 @@ const ProjectDetailPage = () => {
   const handleSubActivityClick = (subActivity) => {
     console.log("세부활동 클릭:", subActivity);
     if (subActivity?.id) {
-      // activityId와 subActivityId 전달
       navigate(`/activity/${id}/${subActivity.id}`);
     }
   };
 
+  // ⭐ 경험 노트 추가 (날짜별로 하나만 - 같은 날짜가 있으면 추가 불가)
   const handleAddNote = () => {
+    const todayDate = getTodayDate();
+    
+    // 같은 날짜의 노트가 이미 있는지 확인
+    const existingNote = notes.find(note => note.date === todayDate);
+    if (existingNote) {
+      alert("오늘 날짜의 노트가 이미 있습니다. 기존 노트를 수정해주세요.");
+      return;
+    }
+
     const now = new Date();
-    const dateString = `${now.getFullYear()}.${String(
+    const displayDate = `${now.getFullYear()}.${String(
       now.getMonth() + 1
     ).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")} ${String(
       now.getHours()
     ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
     const newNote = {
-      id: Date.now(),
-      date: dateString,
+      id: `temp-${Date.now()}`,
+      date: todayDate,
+      displayDate: displayDate,
       text: "",
+      isNew: true,
+      isFromServer: false,
     };
     setNotes([...notes, newNote]);
   };
 
-  const handleDeleteNote = (noteId) => {
+  // ⭐ 경험 노트 저장 (PUT API - Upsert)
+  const saveNoteToServer = async (note) => {
+    if (!note.text.trim()) {
+      console.log("⚠️ 빈 노트는 저장하지 않음");
+      return;
+    }
+
+    setNoteSaving(true);
+    try {
+      const access = localStorage.getItem("access");
+      
+      const payload = {
+        date: note.date,
+        content: note.text.trim(),
+        activity_id: parseInt(id),
+        project_id: null,
+      };
+
+      console.log("📤 노트 저장 요청:", payload);
+
+      const response = await fetch("/api/dashboard/notes/", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${access}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ 노트 저장 실패 응답:", errorText);
+        throw new Error("노트 저장 실패");
+      }
+
+      const savedNote = await response.json();
+      console.log("✅ 노트 저장 성공:", savedNote);
+
+      // 저장된 노트로 업데이트 (서버에서 받은 ID로 교체)
+      setNotes(prevNotes => 
+        prevNotes.map(n => 
+          n.date === note.date 
+            ? { 
+                ...n, 
+                id: savedNote.id, 
+                isNew: false, 
+                isFromServer: true,
+                text: savedNote.content || n.text,
+              }
+            : n
+        )
+      );
+    } catch (error) {
+      console.error("❌ 노트 저장 실패:", error);
+      alert("노트 저장에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setNoteSaving(false);
+    }
+  };
+
+  // ⭐ 경험 노트 삭제 (DELETE API)
+  const handleDeleteNote = async (noteId) => {
+    const noteToDelete = notes.find(n => n.id === noteId);
+    
+    if (!noteToDelete) {
+      console.error("❌ 삭제할 노트를 찾을 수 없음");
+      return;
+    }
+
+    // 서버에 저장된 노트면 API로 삭제
+    if (noteToDelete.isFromServer && noteToDelete.date) {
+      try {
+        const access = localStorage.getItem("access");
+        console.log("📤 노트 삭제 요청:", noteToDelete.date);
+        
+        const response = await fetch(`/api/dashboard/notes/?date=${noteToDelete.date}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        });
+
+        if (!response.ok && response.status !== 204) {
+          const errorText = await response.text();
+          console.error("❌ 노트 삭제 실패 응답:", errorText);
+          throw new Error("노트 삭제 실패");
+        }
+        console.log("✅ 노트 삭제 성공");
+      } catch (error) {
+        console.error("❌ 노트 삭제 실패:", error);
+        alert("노트 삭제에 실패했습니다. 다시 시도해주세요.");
+        return;
+      }
+    }
+
+    // 로컬 state에서 제거
     setNotes(notes.filter((note) => note.id !== noteId));
   };
 
+  // ⭐ 경험 노트 텍스트 변경
   const handleNoteTextChange = (noteId, newText) => {
     setNotes(
       notes.map((note) =>
         note.id === noteId ? { ...note, text: newText } : note
       )
     );
+  };
+
+  // ⭐ 노트 blur 시 저장
+  const handleNoteBlur = (note) => {
+    if (note.text.trim()) {
+      saveNoteToServer(note);
+    }
   };
 
   if (loading) {
@@ -395,28 +547,36 @@ const ProjectDetailPage = () => {
       <div className="right-sidebar">
         <div className="sidebar-header">
           <h3>경험 노트</h3>
+          {noteSaving && <span className="saving-indicator">저장 중...</span>}
         </div>
         <div className="notes-list">
-          {notes.map((note) => (
-            <div key={note.id} className="note-item">
-              <div className="note-header">
-                <div className="note-date">📅 {note.date}</div>
-                <button
-                  className="note-delete-btn"
-                  onClick={() => handleDeleteNote(note.id)}
-                  title="삭제"
-                >
-                  ✕
-                </button>
-              </div>
-              <textarea
-                className="note-text-input"
-                value={note.text}
-                onChange={(e) => handleNoteTextChange(note.id, e.target.value)}
-                placeholder="메모를 입력하세요..."
-              />
+          {notes.length === 0 ? (
+            <div className="no-notes-message">
+              아직 작성된 노트가 없습니다.
             </div>
-          ))}
+          ) : (
+            notes.map((note) => (
+              <div key={note.id} className="note-item">
+                <div className="note-header">
+                  <div className="note-date">📅 {note.displayDate || note.date}</div>
+                  <button
+                    className="note-delete-btn"
+                    onClick={() => handleDeleteNote(note.id)}
+                    title="삭제"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <textarea
+                  className="note-text-input"
+                  value={note.text}
+                  onChange={(e) => handleNoteTextChange(note.id, e.target.value)}
+                  onBlur={() => handleNoteBlur(note)}
+                  placeholder="메모를 입력하세요..."
+                />
+              </div>
+            ))
+          )}
           <button className="add-note-btn" onClick={handleAddNote}>
             + 메모 추가하기
           </button>

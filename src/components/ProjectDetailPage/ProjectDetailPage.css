@@ -552,3 +552,82 @@
   font-size: 13px;
   margin-left: 4px;
 }
+
+/* ========================================
+   경험 노트 관련 추가 스타일
+   - 이 내용을 ProjectDetailPage.css 또는 ContestDetailPage.css 하단에 추가하세요
+   ======================================== */
+
+/* 저장 중 인디케이터 */
+.saving-indicator {
+  font-size: 12px;
+  color: #5db075;
+  margin-left: 8px;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 노트 없음 메시지 */
+.no-notes-message {
+  text-align: center;
+  color: #868e96;
+  font-size: 14px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* 사이드바 헤더 개선 */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sidebar-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* 노트 아이템 hover 효과 */
+.note-item:hover {
+  border-color: #5db075;
+}
+
+/* 노트 텍스트 입력 포커스 */
+.note-text-input:focus {
+  background: #fff;
+}
+
+/* 메모 추가 버튼 스타일 개선 */
+.add-note-btn {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid #e5e5e5;
+  background: #f7f7f7;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.add-note-btn:hover {
+  border-color: #126431;
+  color: #126431;
+  background: rgba(18, 100, 49, 0.05);
+}
