@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import LeftPanel from "../LeftPanel/LeftPanel";
+import SubActivityCard from "./SubActivityCard";
 import chipIcon1 from "../../assets/icons/puzzle.svg";
 import chipIcon from "../../assets/icons/colorpuzzle.svg";
 import "./ContestDetailPage.css";
+import "./SubActivityCard.css";
 
 const ContestDetailPage = () => {
   const { id } = useParams();
@@ -13,10 +15,12 @@ const ContestDetailPage = () => {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activityData, setActivityData] = useState(null);
+  const [subActivities, setSubActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isProfileSettingsOpen, setIsProfileSettingsOpen] = useState(false);
   const [notes, setNotes] = useState([]);
 
+  // ⭐ 활동 상세 + 세부활동 목록 불러오기
   useEffect(() => {
     console.log("🚀 useEffect 실행, ID:", id);
 
@@ -26,6 +30,7 @@ const ContestDetailPage = () => {
         const access = localStorage.getItem("access");
         console.log("🔑 Access Token:", access ? "있음" : "없음");
 
+        // 1. 활동 상세 조회
         const response = await fetch(`/api/activities/${id}/`, {
           headers: {
             Authorization: `Bearer ${access}`,
@@ -39,6 +44,28 @@ const ContestDetailPage = () => {
         const data = await response.json();
         console.log("✅ 받은 데이터:", data);
         setActivityData(data);
+
+        // 2. 세부활동 목록 조회 (API 응답에 포함되어 있으면 그것 사용)
+        if (data.sub_activities && data.sub_activities.length > 0) {
+          console.log("✅ 세부활동 (응답에 포함):", data.sub_activities);
+          setSubActivities(data.sub_activities);
+        } else {
+          // 별도 API로 세부활동 조회
+          try {
+            const subResponse = await fetch(`/api/activities/${id}/sub-activities/`, {
+              headers: {
+                Authorization: `Bearer ${access}`,
+              },
+            });
+            if (subResponse.ok) {
+              const subData = await subResponse.json();
+              console.log("✅ 세부활동 (별도 조회):", subData);
+              setSubActivities(Array.isArray(subData) ? subData : subData.results || []);
+            }
+          } catch (subError) {
+            console.log("세부활동 조회 실패 (없을 수 있음):", subError);
+          }
+        }
       } catch (error) {
         console.error("❌ Error:", error);
         alert("데이터를 불러오는데 실패했습니다.");
@@ -66,6 +93,18 @@ const ContestDetailPage = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     navigate("/");
+  };
+
+  // ⭐ 활동 등록하기 버튼 클릭
+  const handleAddActivity = () => {
+    navigate(`/activity/${id}`);
+  };
+
+  // ⭐ 세부활동 카드 클릭 (나중에 상세 보기 구현 시 사용)
+  const handleSubActivityClick = (subActivity) => {
+    console.log("세부활동 클릭:", subActivity);
+    // 나중에 세부활동 상세/수정 페이지로 이동 가능
+    // navigate(`/activity/${id}/sub/${subActivity.id}`);
   };
 
   const handleAddNote = () => {
@@ -107,6 +146,7 @@ const ContestDetailPage = () => {
   }
 
   console.log("✅ 정상 렌더링, activityData:", activityData);
+  console.log("✅ 세부활동 개수:", subActivities.length);
 
   return (
     <div className="project-detail-container">
@@ -149,7 +189,7 @@ const ContestDetailPage = () => {
               <button className="icon-btn">
                 <span>⋯</span>
               </button>
-              <button className="icon-btn">
+              <button className="icon-btn" onClick={() => navigate(-1)}>
                 <span>✕</span>
               </button>
             </div>
@@ -201,28 +241,54 @@ const ContestDetailPage = () => {
             </div>
           </div>
 
-          {/* 포함된 활동 */}
+          {/* ⭐ 포함된 활동 - 세부활동 렌더링 */}
           <div className="activity-section">
             <div className="section-header"></div>
-            <div className="activity-placeholder">
+            
+            {/* 헤더 */}
+            <div className="activity-section-header">
               <span className="section-title">
-                <img src={chipIcon} alt="chip"></img>포함된 활동
-                <span className="activity-count">0</span>
+                <img src={chipIcon} alt="chip" />
+                포함된 활동
+                <span className="activity-count">{subActivities.length}</span>
               </span>
-              <div className="placeholder-icon">
-                <img src={chipIcon1} alt="puzzle"></img>
-              </div>
-              <p className="placeholder-text">아직 정리한 활동이 없어요</p>
-              <p className="placeholder-subtext">
-                이 경험의 활동을 등록해보세요
-              </p>
-              <button 
-                className="add-activity-btn"
-                onClick={() => navigate(`/activity/${id}`)} 
-              >
-                + 활동 등록하기
-              </button>
             </div>
+
+            {/* 세부활동이 있으면 카드 리스트, 없으면 placeholder */}
+            {subActivities.length > 0 ? (
+              <div className="sub-activities-list">
+                {subActivities.map((subActivity) => (
+                  <SubActivityCard
+                    key={subActivity.id}
+                    subActivity={subActivity}
+                    onClick={() => handleSubActivityClick(subActivity)}
+                  />
+                ))}
+                {/* 추가 버튼 */}
+                <button 
+                  className="add-activity-btn-inline"
+                  onClick={handleAddActivity}
+                >
+                  + 활동 추가하기
+                </button>
+              </div>
+            ) : (
+              <div className="activity-placeholder">
+                <div className="placeholder-icon">
+                  <img src={chipIcon1} alt="puzzle" />
+                </div>
+                <p className="placeholder-text">아직 정리한 활동이 없어요</p>
+                <p className="placeholder-subtext">
+                  이 경험의 활동을 등록해보세요
+                </p>
+                <button 
+                  className="add-activity-btn"
+                  onClick={handleAddActivity}
+                >
+                  + 활동 등록하기
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 세부 내용 */}
@@ -274,7 +340,7 @@ const ContestDetailPage = () => {
           {/* 파일 */}
           {activityData.files && activityData.files.length > 0 && (
             <div className="files-section">
-              <h2 className="section-title-main">정부 파일</h2>
+              <h2 className="section-title-main">첨부 파일</h2>
               <div className="files-list">
                 {activityData.files.map((file, index) => (
                   <div key={index} className="file-item">

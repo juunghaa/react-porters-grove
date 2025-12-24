@@ -1,0 +1,93 @@
+/* ContestDetailPage.css 에 추가할 스타일 */
+
+/* ⭐ 포함된 활동 섹션 헤더 */
+.activity-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.activity-section-header .section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "SUIT Variable", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.activity-section-header .section-title img {
+  width: 20px;
+  height: 20px;
+}
+
+/* ⭐ 세부활동 리스트 */
+.sub-activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+}
+
+/* ⭐ 인라인 추가 버튼 (세부활동이 있을 때) */
+.add-activity-btn-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 14px;
+  border: 2px dashed #d0d0d0;
+  border-radius: 12px;
+  background: transparent;
+  color: #808080;
+  font-family: "SUIT Variable", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-activity-btn-inline:hover {
+  border-color: #5db075;
+  color: #5db075;
+  background: rgba(93, 176, 117, 0.05);
+}
+
+/* ⭐ 기존 placeholder 내부의 section-title 스타일 재정의 */
+.activity-placeholder .section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "SUIT Variable", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+}
+
+/* ⭐ 활동 카운트 배지 */
+.activity-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background: #5db075;
+  color: white;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+/* 세부활동이 없을 때는 회색 배지 */
+.activity-placeholder .activity-count {
+  background: #e0e0e0;
+  color: #808080;
+}
