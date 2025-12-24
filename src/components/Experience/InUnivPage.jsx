@@ -50,7 +50,11 @@ const InUnivPage = () => {
 
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
-    const dataWithHost = { ...data, host: data.organization || "" };
+    const dataWithHost = { 
+      ...data, 
+      host: data.organization || "",
+      activity_type: "CAMPUS",  
+    };
     const cleanedData = cleanFormData(dataWithHost);
 
     console.log("📤 전송할 데이터:", cleanedData);

@@ -80,9 +80,11 @@ const ProjectPage = () => {
   // API 호출 함수
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
-
-    // ⭐ 빈 값 제거
-    const cleanedData = cleanFormData(data);
+    const dataWithType = {
+      ...data,
+      activity_type: "PROJECT",  // ⭐ 추가
+    };
+    const cleanedData = cleanFormData(dataWithType);
 
     console.log("📤 전송할 데이터:", cleanedData);
 

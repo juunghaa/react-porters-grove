@@ -63,7 +63,11 @@ const OutUnivPage = () => {
 
   const createActivity = async (data) => {
     const access = localStorage.getItem("access");
-    const cleanedData = cleanFormData(data);
+    const dataWithType = {
+      ...data,
+      activity_type: "EXTRACURRICULAR",  
+    };
+    const cleanedData = cleanFormData(dataWithType);
 
     console.log("📤 전송할 데이터:", cleanedData);
 

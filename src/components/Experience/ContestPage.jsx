@@ -70,7 +70,7 @@ const ContestPage = () => {
     const dataWithHost = {
       ...data,
       host: data.organization || "",
-      activity_type: "contest",
+      activity_type: "CONTEST",
     };
     const cleanedData = cleanFormData(dataWithHost);
 
