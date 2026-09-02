@@ -125,7 +125,9 @@ export default function App() {
           path="/"
           element={
             <div className="App">
-              {isLoggedIn ? (
+              {/* 데모용: 로그인 없이 메인페이지 바로 표시 */}
+              <MainPage onLogout={handleLogout} />
+              /* {isLoggedIn ? (
                 <MainPage onLogout={handleLogout} />
               ) : (
                 <>
@@ -142,7 +144,7 @@ export default function App() {
                     />
                   )}
                 </>
-              )}
+              )} */
             </div>
           }
         />
